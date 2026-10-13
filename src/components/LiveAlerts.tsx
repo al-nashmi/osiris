@@ -5,21 +5,21 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ChevronDown, ChevronUp, MapPin, ExternalLink, Radio, Maximize2, Minimize2,
-  بحث, X, تحديثCw, Image as ImageIcon, Play, Eye, Repeat2, CornerDownRight, Waves, Layers, AlertTriangle,
+  Search, X, RefreshCw, Image as ImageIcon, Play, Eye, Repeat2, CornerDownRight, Waves, Layers, AlertTriangle,
 } from 'lucide-react';
 import AiOverview from './AiOverview';
 import {
   ALERT_KINDS, BLOCS, BLOC_ORDER, buildThreads, groupStatements, timeAgo, type AlertKind, type Bloc, type DigestReport,
 } from '@/lib/alert-digest';
 
-interface المصدرHealth { handle: string; name: string; lean: string; bloc: Bloc; kind?: 'telegram' | 'wire'; count: number; latest: string | null }
+interface SourceHealth { handle: string; name: string; lean: string; bloc: Bloc; kind?: 'telegram' | 'wire'; count: number; latest: string | null }
 
 /** The slice of dashboard state this panel reads. */
 interface LiveAlertsData {
   news?: unknown[];
   earthquakes?: unknown[];
   weather_events?: unknown[];
-  news_meta?: { sources?: المصدرHealth[]; fetchedAt?: string | null };
+  news_meta?: { sources?: SourceHealth[]; fetchedAt?: string | null };
 }
 
 /** Where to fly: `alertId` also opens that report's pin on the map. */
@@ -35,7 +35,7 @@ interface LiveAlertsProps {
   onPinnedChange?: (ids: string[]) => void;
   onWatchFeed?: (url: string, name: string) => void;
   /** Re-pull /api/news. */
-  onتحديث?: () => Promise<unknown> | void;
+  onRefresh?: () => Promise<unknown> | void;
 }
 
 const ACCENT = '#FF4081';
@@ -45,7 +45,7 @@ const BUILTIN_FEEDS = [
   // ── North America ──
   { name: 'NBC News NOW', city: 'New York', country: 'US', lat: 40.759, lng: -73.980, url: 'https://www.youtube-nocookie.com/embed/live_stream?channel=UCeY0bbntWzzVIaj2z3QigXg&autoplay=1&mute=1', category: 'mainstream', region: 'americas' },
   { name: 'CBS News 24/7', city: 'New York', country: 'US', lat: 40.764, lng: -73.973, url: 'https://www.youtube-nocookie.com/embed/live_stream?channel=UC8p1vwvWtl6T73JiExfWs1g&autoplay=1&mute=1', category: 'mainstream', region: 'americas' },
-  { name: 'ABC News Live', city: 'New York', country: 'US', lat: 40.763, lng: -73.979, url: 'https://www.youtube-nocookie.com/embed/live_stream?channel=UCBi2mrWuNuyYy4gbM6fU18Q&autoplay=1&mute=1', category: 'mainstream', region: 'americas' },
+  { name: 'ABC News مباشر', city: 'New York', country: 'US', lat: 40.763, lng: -73.979, url: 'https://www.youtube-nocookie.com/embed/live_stream?channel=UCBi2mrWuNuyYy4gbM6fU18Q&autoplay=1&mute=1', category: 'mainstream', region: 'americas' },
   { name: 'Bloomberg TV', city: 'New York', country: 'US', lat: 40.756, lng: -73.988, url: 'https://www.youtube-nocookie.com/embed/live_stream?channel=UC_vQ72b7v5n2938v9d5c80w&autoplay=1&mute=1', category: 'finance', region: 'americas' },
   { name: 'C-SPAN', city: 'Washington DC', country: 'US', lat: 38.897, lng: -77.036, url: 'https://www.youtube-nocookie.com/embed/live_stream?channel=UCb--64Gl51jIEVE-GLDAVTg&autoplay=1&mute=1', category: 'government', region: 'americas' },
   { name: 'CBC News', city: 'Toronto', country: 'CA', lat: 43.644, lng: -79.387, url: 'https://www.youtube-nocookie.com/embed/live_stream?channel=UCKy1dAqELon0zgzZPOz9SVw&autoplay=1&mute=1', category: 'mainstream', region: 'americas' },
@@ -178,10 +178,10 @@ function toNews(raw: unknown): NewsAlert | null {
 
   const carriers: Carrier[] = (Array.isArray(a.also_reported_by) ? a.also_reported_by : []).map(item => {
     const c = rec(item);
-    const cالمصدر = str(c.source) ?? 'unknown';
+    const cSource = str(c.source) ?? 'unknown';
     return {
-      source: cالمصدر,
-      source_name: str(c.source_name) ?? cالمصدر,
+      source: cSource,
+      source_name: str(c.source_name) ?? cSource,
       lean: str(c.lean),
       bloc: isBloc(c.bloc) ? c.bloc : null,
       link: webUrl(c.link),
@@ -407,7 +407,7 @@ function NewsCard({ item, now, open, wide, onToggle, onLocate }: {
               controls
               playsInline
               preload="none"
-              onخطأ={() => setVideoFailed(true)}
+              onError={() => setVideoFailed(true)}
               className="block max-h-64 w-full max-w-[560px] rounded-md border border-white/5 bg-black"
             />
           )}
@@ -420,7 +420,7 @@ function NewsCard({ item, now, open, wide, onToggle, onLocate }: {
                 alt=""
                 loading="lazy"
                 referrerPolicy="no-referrer"
-                onخطأ={() => setMediaFailed(true)}
+                onError={() => setMediaFailed(true)}
                 className="max-h-52 w-full object-cover"
               />
               {item.media.kind === 'video' && (
@@ -459,7 +459,7 @@ function NewsCard({ item, now, open, wide, onToggle, onLocate }: {
                     {c.lean && <span className="truncate uppercase text-[8.5px]" style={{ color: blocColor(c.bloc) }}>{c.lean}</span>}
                     <span className="ml-auto flex-shrink-0 text-[#5C5A54]">{c.published ? timeAgo(c.published, now) : ''}</span>
                     {c.link && (
-                      <a href={c.link} target="_blank" rel="noopener noreferrer" className="flex-shrink-0 text-[var(--cyan-primary)] hover:opacity-70" aria-label={`فتح ${c.source_name} post`}>
+                      <a href={c.link} target="_blank" rel="noopener noreferrer" className="flex-shrink-0 text-[var(--cyan-primary)] hover:opacity-70" aria-label={`Open ${c.source_name} post`}>
                         <ExternalLink className="w-2.5 h-2.5" />
                       </a>
                     )}
@@ -477,7 +477,7 @@ function NewsCard({ item, now, open, wide, onToggle, onLocate }: {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 rounded border border-[var(--cyan-primary)]/30 bg-[var(--cyan-primary)]/10 px-2 py-1 text-[9.5px] font-mono tracking-wider text-[var(--cyan-primary)] hover:bg-[var(--cyan-primary)]/20"
               >
-                <ExternalLink className="w-2.5 h-2.5" /> OPEN POST
+                <ExternalLink className="w-2.5 h-2.5" /> فتح POST
               </a>
             )}
             {item.reply_to && (
@@ -568,7 +568,7 @@ function StatementCard({ speaker, items, now, open, wide, onToggle }: {
               {item.media && (item.media.kind === 'video' ? <Play className="w-2.5 h-2.5" /> : <ImageIcon className="w-2.5 h-2.5" />)}
               {timeAgo(item.ts, now).replace(' ago', '')}
               {item.link && (
-                <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-[var(--cyan-primary)] hover:opacity-70" aria-label="فتح this statement on Telegram">
+                <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-[var(--cyan-primary)] hover:opacity-70" aria-label="Open this statement on Telegram">
                   <ExternalLink className="w-2.5 h-2.5" />
                 </a>
               )}
@@ -614,7 +614,7 @@ function QuakeCard({ item, now, onLocate }: { item: QuakeAlert; now: number; onL
             <MapPin className="w-3 h-3" />
           </button>
           {item.url && (
-            <a href={item.url} target="_blank" rel="noopener noreferrer" className="p-1 rounded text-[var(--cyan-primary)] hover:bg-white/10" aria-label="فتح USGS event page">
+            <a href={item.url} target="_blank" rel="noopener noreferrer" className="p-1 rounded text-[var(--cyan-primary)] hover:bg-white/10" aria-label="Open USGS event page">
               <ExternalLink className="w-3 h-3" />
             </a>
           )}
@@ -671,7 +671,7 @@ function WarningCard({ item, now, onLocate }: { item: WarningAlert; now: number;
               <MapPin className="w-2.5 h-2.5" /> SHOW
             </button>
             {item.url && (
-              <a href={item.url} target="_blank" rel="noopener noreferrer" className="p-1 rounded text-[var(--cyan-primary)] hover:bg-white/10" aria-label={`فتح the ${item.provider} notice`}>
+              <a href={item.url} target="_blank" rel="noopener noreferrer" className="p-1 rounded text-[var(--cyan-primary)] hover:bg-white/10" aria-label={`Open the ${item.provider} notice`}>
                 <ExternalLink className="w-3 h-3" />
               </a>
             )}
@@ -682,7 +682,7 @@ function WarningCard({ item, now, onLocate }: { item: WarningAlert; now: number;
   );
 }
 
-export default function LiveAlerts({ data, onLocate, onWatchFeed, onتحديث, pinsOn = false, onTogglePins, onPinnedChange }: LiveAlertsProps) {
+export default function مباشرAlerts({ data, onLocate, onWatchFeed, onتحديث, pinsOn = false, onTogglePins, onPinnedChange }: مباشرAlertsProps) {
   const [expanded, setExpanded] = useState(true);
   const [maximized, setMaximized] = useState(false);
   const [tab, setTab] = useState<Tab>('all');
@@ -757,7 +757,7 @@ export default function LiveAlerts({ data, onLocate, onWatchFeed, onتحديث, 
 
   // A new tab or filter starts at the top, not wherever the last list was scrolled to.
   useEffect(() => { listRef.current?.scrollTo({ top: 0 }); }, [tab, bloc, threadId, q]);
-  const newsتصفيةsActive = Boolean(activeThread) || bloc !== 'all' || newsKind !== null;
+  const newsFiltersActive = Boolean(activeThread) || bloc !== 'all' || newsKind !== null;
   const threadIds = useMemo(() => (activeThread ? new Set(activeThread.itemIds) : null), [activeThread]);
 
   const visibleNews = useMemo(() => news.filter(n =>
@@ -778,10 +778,10 @@ export default function LiveAlerts({ data, onLocate, onWatchFeed, onتحديث, 
     /* Thread and perspective filters are about reports; warnings and quakes
        step aside while they apply. In the mixed list a severe warning leads
        its hour, since that is the one a reader has to act on. */
-    if (newsتصفيةsActive) return visibleNews;
+    if (newsFiltersActive) return visibleNews;
     return [...visibleNews, ...visibleQuakes, ...visibleWarnings]
       .sort((a, b) => b.ts - a.ts || urgency(b) - urgency(a));
-  }, [tab, visibleNews, visibleQuakes, visibleWarnings, newsتصفيةsActive]);
+  }, [tab, visibleNews, visibleQuakes, visibleWarnings, newsFiltersActive]);
 
   /* The reports the filters leave showing that have a place — what the map pins. */
   const pinned = useMemo(
@@ -821,14 +821,14 @@ export default function LiveAlerts({ data, onLocate, onWatchFeed, onتحديث, 
     return out;
   }, [units, now, tab]);
 
-  const sources: المصدرHealth[] = data.news_meta?.sources ?? [];
-  const liveالمصدرs = sources.filter(s => s.count > 0).length;
+  const sources: SourceHealth[] = data.news_meta?.sources ?? [];
+  const liveSources = sources.filter(s => s.count > 0).length;
   const fetchedAt: string | null = data.news_meta?.fetchedAt ?? null;
   const breakingCount = news.filter(n => n.flag).length;
   const loading = data.news === undefined;
-  const filtersActive = newsتصفيةsActive || Boolean(q);
+  const filtersActive = newsFiltersActive || Boolean(q);
 
-  const clearتصفيةs = useCallback(() => { setQuery(''); setBloc('all'); setThreadId(null); setNewsKind(null); }, []);
+  const clearFilters = useCallback(() => { setQuery(''); setBloc('all'); setThreadId(null); setNewsKind(null); }, []);
 
   /*
    * What a reader would want to know before reading anything: warnings in
@@ -845,10 +845,10 @@ export default function LiveAlerts({ data, onLocate, onWatchFeed, onتحديث, 
   }, [warnings, news, quakes, now]);
 
   const refresh = useCallback(async () => {
-    if (!onتحديث || refreshing) return;
-    setتحديثing(true);
-    try { await onتحديث(); } finally { setتحديثing(false); setNow(Date.now()); }
-  }, [onتحديث, refreshing]);
+    if (!onRefresh || refreshing) return;
+    setRefreshing(true);
+    try { await onRefresh(); } finally { setRefreshing(false); setNow(Date.now()); }
+  }, [onRefresh, refreshing]);
 
   const selectThread = useCallback((id: string | null) => {
     setThreadId(id);
@@ -950,15 +950,15 @@ export default function LiveAlerts({ data, onLocate, onWatchFeed, onتحديث, 
       <div className="flex gap-1.5">
         <label className="relative flex-1 min-w-0">
           <span className="sr-only">البحث في التنبيهات</span>
-          <بحث className="pointer-events-none absolute left-2 top-1/2 h-3 w-3 -translate-y-1/2 text-[#5C5A54]" />
+          <Search className="pointer-events-none absolute left-2 top-1/2 h-3 w-3 -translate-y-1/2 text-[#5C5A54]" />
           <input
             value={query}
             onChange={e => setQuery(e.target.value)}
-            placeholder={tab === 'feeds' ? 'بحث feeds…' : 'بحث headlines, places, channels…'}
+            placeholder={tab === 'feeds' ? 'Search feeds…' : 'Search headlines, places, channels…'}
             className="w-full rounded border border-[#2A2A28] bg-black/30 py-1 pl-6 pr-6 text-[11px] text-[#E8E6E0] placeholder:text-[#5C5A54] outline-none focus:border-[var(--cyan-primary)]/50"
           />
           {query && (
-            <button onClick={() => setQuery('')} className="absolute right-1.5 top-1/2 -translate-y-1/2 text-[#5C5A54] hover:text-white" aria-label="مسح search">
+            <button onClick={() => setQuery('')} className="absolute right-1.5 top-1/2 -translate-y-1/2 text-[#5C5A54] hover:text-white" aria-label="Clear search">
               <X className="h-3 w-3" />
             </button>
           )}
@@ -967,7 +967,7 @@ export default function LiveAlerts({ data, onLocate, onWatchFeed, onتحديث, 
           <select
             value={bloc}
             onChange={e => setBloc(e.target.value as Bloc | 'all')}
-            aria-label="تصفية by perspective"
+            aria-label="Filter by perspective"
             className="w-[108px] flex-shrink-0 rounded border border-[#2A2A28] bg-[#0c0c10] px-1 py-1 text-[10px] font-mono text-[#C9C5BC] outline-none focus:border-[var(--cyan-primary)]/50"
             style={bloc !== 'all' ? { color: BLOCS[bloc].color, borderColor: `${BLOCS[bloc].color}66` } : undefined}
           >
@@ -987,7 +987,7 @@ export default function LiveAlerts({ data, onLocate, onWatchFeed, onتحديث, 
             accent={ACCENT}
             activeThreadId={threadId}
             onThreadSelect={selectThread}
-            onفتحChange={setOverviewفتح}
+            onOpenChange={setOverviewOpen}
           />
         </div>
       )}
@@ -1021,7 +1021,7 @@ export default function LiveAlerts({ data, onLocate, onWatchFeed, onتحديث, 
           <span className="truncate">
             SHOWING {list.length}{activeThread ? ` · ${activeThread.label.toUpperCase()}` : ''}{bloc !== 'all' ? ` · ${BLOCS[bloc].short}` : ''}{newsKind ? ` · ${newsKind.toUpperCase()} ONLY` : ''}
           </span>
-          <button onClick={clearتصفيةs} className="flex-shrink-0 text-[var(--cyan-primary)] hover:underline">مسح</button>
+          <button onClick={clearFilters} className="flex-shrink-0 text-[var(--cyan-primary)] hover:underline">مسح</button>
         </div>
       )}
     </div>
@@ -1053,7 +1053,7 @@ export default function LiveAlerts({ data, onLocate, onWatchFeed, onتحديث, 
           </section>
         );
       })}
-      {visibleFeeds.length === 0 && <EmptyState text="No feeds match" onمسح={clearتصفيةs} />}
+      {visibleFeeds.length === 0 && <EmptyState text="No feeds match" onClear={clearFilters} />}
     </div>
   ) : loading ? (
     <div className="space-y-2" aria-busy="true">
@@ -1064,8 +1064,8 @@ export default function LiveAlerts({ data, onLocate, onWatchFeed, onتحديث, 
     </div>
   ) : list.length === 0 ? (
     filtersActive
-      ? <EmptyState text="No alerts match these filters" onمسح={clearتصفيةs} />
-      : <EmptyState text={tab === 'quakes' ? 'No recent earthquakes' : tab === 'warnings' ? 'No warnings in force' : 'No reports — the sources did not answer'} onإعادة المحاولة={onتحديث ? refresh : undefined} />
+      ? <EmptyState text="No alerts match these filters" onClear={clearFilters} />
+      : <EmptyState text={tab === 'quakes' ? 'No recent earthquakes' : tab === 'warnings' ? 'No warnings in force' : 'No reports — the sources did not answer'} onRetry={onRefresh ? refresh : undefined} />
   ) : (
     <div className="space-y-3">
       {grouped.map(group => (
@@ -1084,7 +1084,7 @@ export default function LiveAlerts({ data, onLocate, onWatchFeed, onتحديث, 
                     now={now}
                     open={openId === unit.key}
                     wide={maximized && openId === unit.key}
-                    onToggle={() => setفتحId(openId === unit.key ? null : unit.key)}
+                    onToggle={() => setOpenId(openId === unit.key ? null : unit.key)}
                   />
                 );
               }
@@ -1098,7 +1098,7 @@ export default function LiveAlerts({ data, onLocate, onWatchFeed, onتحديث, 
                   now={now}
                   open={openId === item.id}
                   wide={maximized && openId === item.id}
-                  onToggle={() => setفتحId(openId === item.id ? null : item.id)}
+                  onToggle={() => setOpenId(openId === item.id ? null : item.id)}
                   onLocate={locate}
                 />
               );
@@ -1115,7 +1115,7 @@ export default function LiveAlerts({ data, onLocate, onWatchFeed, onتحديث, 
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: 0.15, duration: 0.4 }}
       role={maximized ? 'dialog' : undefined}
-      aria-label={maximized ? 'التنبيهات المباشرة' : undefined}
+      aria-label={maximized ? 'Live alerts' : undefined}
       className={`glass-panel flex flex-col overflow-hidden pointer-events-auto transition-all duration-300 ${maximized ? 'fixed inset-4 z-[9999] bg-[#0a0a09]/95 backdrop-blur-3xl' : 'shrink-0 h-[560px] max-h-[82vh] resize-y'}`}
     >
       {/* Header: title and controls, then a status line */}
@@ -1147,8 +1147,8 @@ export default function LiveAlerts({ data, onLocate, onWatchFeed, onتحديث, 
               </button>
             )}
             {onتحديث && (
-              <button onClick={refresh} disabled={refreshing} className="p-1 rounded hover:bg-white/10 transition-colors" title="تحديث (channels are re-read every 3 minutes)" aria-label="تحديث alerts">
-                <تحديثCw className={`w-3 h-3 text-[var(--text-muted)] ${refreshing ? 'animate-spin' : ''}`} />
+              <button onClick={refresh} disabled={refreshing} className="p-1 rounded hover:bg-white/10 transition-colors" title="Refresh (channels are re-read every 3 minutes)" aria-label="Refresh alerts">
+                <RefreshCw className={`w-3 h-3 text-[var(--text-muted)] ${refreshing ? 'animate-spin' : ''}`} />
               </button>
             )}
             <button
@@ -1169,7 +1169,7 @@ export default function LiveAlerts({ data, onLocate, onWatchFeed, onتحديث, 
             <span
               title={sourcesTitle}
               className="flex items-center gap-1 cursor-help"
-              style={{ color: liveالمصدرs === sources.length ? '#00E676' : '#FF9500' }}
+              style={{ color: liveSources === sources.length ? '#00E676' : '#FF9500' }}
             >
               <span className="h-1.5 w-1.5 rounded-full animate-osiris-pulse" style={{ background: 'currentColor' }} />
               {liveالمصدرs}/{sources.length} SOURCES مباشر
@@ -1218,12 +1218,12 @@ export default function LiveAlerts({ data, onLocate, onWatchFeed, onتحديث, 
   return content;
 }
 
-function EmptyState({ text, onمسح, onإعادة المحاولة }: { text: string; onمسح?: () => void; onإعادة المحاولة?: () => void }) {
+function EmptyState({ text, onClear, onRetry }: { text: string; onClear?: () => void; onRetry?: () => void }) {
   return (
     <div className="py-6 text-center">
       <div className="text-[11px] font-mono text-[var(--text-muted)]">{text}</div>
-      {onمسح && <button onClick={onمسح} className="mt-2 text-[10px] font-mono text-[var(--cyan-primary)] hover:underline">مسح عوامل التصفية</button>}
-      {onإعادة المحاولة && <button onClick={onإعادة المحاولة} className="mt-2 text-[10px] font-mono text-[var(--cyan-primary)] hover:underline">إعادة المحاولة</button>}
+      {onClear && <button onClick={onClear} className="mt-2 text-[10px] font-mono text-[var(--cyan-primary)] hover:underline">مسح عوامل التصفية</button>}
+      {onإعادة المحاولة && <button onClick={onRetry} className="mt-2 text-[10px] font-mono text-[var(--cyan-primary)] hover:underline">إعادة المحاولة</button>}
     </div>
   );
 }
