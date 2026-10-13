@@ -22,7 +22,7 @@ interface MarketChartProps {
 
 /* Lowercase m is minutes, uppercase M is months — the convention every
    trading tool uses, and what the API's range keys mean. */
-const RANGES = ['1m', '15m', '24H', '1W', '1M', '6M', '1Y'] as const;
+const RANGES = ['1m', '15m', '24H', 'أسبوع', 'شهر', '6M', 'سنة'] as const;
 type Range = typeof RANGES[number];
 
 /** Bars finer than a day need the clock on the axis, not just the date. */
@@ -57,13 +57,13 @@ function formatVolume(v: number): string {
   return String(v);
 }
 
-export default function MarketChart({ symbol, name, onClose, large = false }: MarketChartProps) {
+export default function MarketChart({ symbol, name, onإغلاق, large = false }: MarketChartProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
   const candleRef = useRef<ISeriesApi<'Candlestick'> | null>(null);
   const volumeRef = useRef<ISeriesApi<'Histogram'> | null>(null);
 
-  const [range, setRange] = useState<Range>('1M');
+  const [range, setRange] = useState<Range>('شهر');
   /* Keyed by the request it answers, so status is derived rather than set on
      the way in — a synchronous setState in the effect body would cascade. */
   const [result, setResult] = useState<{ key: string; rows: Candle[] | null }>({ key: '', rows: null });
