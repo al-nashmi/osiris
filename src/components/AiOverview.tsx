@@ -149,13 +149,13 @@ export default function AiOverview({
 }: AiOverviewProps) {
   const [open, setOpenState] = useState(false);
   const setOpen = useCallback((next: boolean) => {
-    setفتحState(next);
-    onفتحChange?.(next);
-  }, [onفتحChange]);
+    setOpenState(next);
+    onOpenChange?.(next);
+  }, [onOpenChange]);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<OverviewResult | null>(null);
   const [resultSignature, setResultSignature] = useState<string | undefined>(undefined);
-  const [error, setخطأ] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const generate = useCallback(async () => {
     setLoading(true);
@@ -179,9 +179,9 @@ export default function AiOverview({
 
   const handleClick = useCallback(() => {
     const next = !open;
-    setفتح(next);
+    setOpen(next);
     if (next && !result && !loading) generate();
-  }, [open, result, loading, generate, setفتح]);
+  }, [open, result, loading, generate, setOpen]);
 
   const stale = Boolean(result && signature && resultSignature && signature !== resultSignature);
   const brief = result?.brief;
