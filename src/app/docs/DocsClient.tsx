@@ -544,7 +544,7 @@ docker compose up -d`}</Pre>
 curl -s -X POST ${origin}/api/oi/runs \\
   -H "Content-Type: application/json" \\
   -H "X-OI-Provider: openai" \\
-  -H "X-OI-Key: $فتحAI_API_KEY" \\
+  -H "X-OI-Key: $OPENAI_API_KEY" \\
   -d '{"question": "Will the Fed cut rates at its next meeting?", "depth": "quick"}'
 
 # Wait up to 55 s for the prediction (repeat until status is "done")
@@ -584,7 +584,7 @@ mcp_servers:
                   lang: 'bash',
                   code: `claude mcp add --transport http osiris ${origin}/api/mcp \\
   --header "X-OI-Provider: openai" \\
-  --header "X-OI-Key: $فتحAI_API_KEY"`,
+  --header "X-OI-Key: $OPENAI_API_KEY"`,
                 },
                 {
                   label: 'Cursor / JSON',
