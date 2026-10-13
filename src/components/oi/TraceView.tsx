@@ -38,7 +38,7 @@ export function TraceView({ s }: { s: RunState }) {
 
   return (
     <section aria-label="Execution trace">
-      <SectionTitle right={<span className="text-[10px] font-mono tabular-nums tracking-[0.04em] text-[var(--text-secondary)]">{formatالمدة(total)}</span>}>Execution</SectionTitle>
+      <SectionTitle right={<span className="text-[10px] font-mono tabular-nums tracking-[0.04em] text-[var(--text-secondary)]">{formatDuration(total)}</span>}>Execution</SectionTitle>
       <ol className="relative flex flex-col">
         {steps.map((st, i) => {
           const running = st.status === 'active';
@@ -52,7 +52,7 @@ export function TraceView({ s }: { s: RunState }) {
                 <div className="flex items-baseline gap-2">
                   <span className={`flex-1 text-[12px] font-semibold truncate ${quiet ? 'text-[var(--text-muted)]' : running ? 'text-[var(--gold-light)]' : 'text-[var(--text-heading)]'}`}>{st.title}</span>
                   <span className={`text-[10px] font-mono tabular-nums flex-shrink-0 ${running ? 'text-[var(--gold-light)]' : 'text-[var(--text-muted)]'}`}>
-                    {duration !== null ? formatالمدة(duration) : st.status === 'skipped' ? 'not reached' : 'pending'}
+                    {duration !== null ? formatDuration(duration) : st.status === 'skipped' ? 'not reached' : 'pending'}
                   </span>
                 </div>
                 {st.detail && !quiet && <p className="mt-0.5 text-[11px] leading-snug text-[var(--text-secondary)] truncate">{st.detail}</p>}
