@@ -15,7 +15,7 @@ export function buildPaletteItems(guideSections: { id: string; title: string }[]
   const guide: PaletteItem[] = guideSections.map(s => ({
     id: s.id,
     label: s.title,
-    hint: 'دليل section',
+    hint: 'Guide section',
     kind: 'دليل',
   }));
 
@@ -46,7 +46,7 @@ export default function CommandPalette({
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
-  const نتيجة = useMemo(() => {
+  const results = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return items.slice(0, 40);
     return items
@@ -93,7 +93,7 @@ export default function CommandPalette({
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      setCursor(c => Math.min(c + 1, نتيجة.length - 1));
+      setCursor(c => Math.min(c + 1, results.length - 1));
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       setCursor(c => Math.max(c - 1, 0));
@@ -145,7 +145,7 @@ export default function CommandPalette({
               No matches for “{query}”
             </div>
           )}
-          {نتيجة.map((it, i) => (
+          {results.map((it, i) => (
             <button
               key={`${it.kind}-${it.id}`}
               data-active={i === cursor}
