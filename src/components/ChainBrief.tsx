@@ -102,7 +102,7 @@ function ChainBriefInner() {
     <div>
       {/* window selector */}
       <div className="flex items-center gap-1 mb-2">
-        <span className="text-[10px] font-mono text-[var(--text-muted)] mr-1">الفترة</span>
+        <span className="text-[10px] font-mono text-[var(--text-muted)] mr-1">WINDOW</span>
         {[7, 30, 90].map(d => (
           <button
             key={d}
@@ -129,7 +129,7 @@ function ChainBriefInner() {
       {loading && !brief && (
         <div className="flex items-center gap-2 py-6 justify-center">
           <Loader2 className="w-4 h-4 animate-spin" style={{ color: ACCENT }} />
-          <span className="text-[11px] font-mono text-[var(--text-muted)]">جارٍ إعداد الموجز…</span>
+          <span className="text-[11px] font-mono text-[var(--text-muted)]">Building brief…</span>
         </div>
       )}
       {error && <div className="text-[11px] font-mono text-red-400 py-2">{error}</div>}
@@ -167,7 +167,7 @@ function ChainBriefInner() {
 
           <Head title="عمليات الاستغلال على البلوك تشين" icon={Flame} color="#FF3D3D" right={`${brief.exploits.length} shown`} />
           {brief.exploits.length === 0 && (
-            <div className="text-[10px] font-mono text-[var(--text-muted)] py-1">لا توجد بيانات خلال هذه الفترة.</div>
+            <div className="text-[10px] font-mono text-[var(--text-muted)] py-1">None in window.</div>
           )}
           {brief.exploits.slice(0, 12).map((e: any, i: number) => (
             <div key={i} className="py-1.5 border-b border-[var(--border-secondary)]/20 last:border-0">
@@ -178,7 +178,7 @@ function ChainBriefInner() {
               <div className="flex items-center gap-2 text-[10px] font-mono text-[var(--text-muted)] mt-0.5">
                 <span>{String(e.date).slice(0, 10)}</span>
                 <span className="text-[var(--text-secondary)]">{e.chain}</span>
-                {e.bridge_hack && <span className="text-[#E040FB]">جسر بلوك تشين</span>}
+                {e.bridge_hack && <span className="text-[#E040FB]">BRIDGE</span>}
               </div>
               <div className="text-[10px] font-mono text-[var(--text-secondary)] leading-snug">{e.technique}</div>
             </div>
@@ -186,7 +186,7 @@ function ChainBriefInner() {
 
           <Head title="ثغرات العملات الرقمية" icon={Bug} color="#E040FB" right={`${brief.cves.length} shown`} />
           {brief.cves.length === 0 && (
-            <div className="text-[10px] font-mono text-[var(--text-muted)] py-1">لم تُنشر بيانات خلال هذه الفترة.</div>
+            <div className="text-[10px] font-mono text-[var(--text-muted)] py-1">None published in window.</div>
           )}
           {brief.cves.slice(0, 10).map((c: any, i: number) => {
             const col = SEV_COLOR[String(c.severity || '').toLowerCase()] || '#9B978E';
@@ -218,7 +218,7 @@ function ChainBriefInner() {
 
           {brief.degraded?.length > 0 && (
             <div className="mt-3 px-2 py-1.5 rounded border border-white/10 bg-white/[0.03]">
-              <span className="text-[10px] font-mono text-[var(--text-muted)] block mb-0.5">مصادر متدهورة</span>
+              <span className="text-[10px] font-mono text-[var(--text-muted)] block mb-0.5">DEGRADED SOURCES</span>
               {brief.degraded.map((d: string, i: number) => (
                 <div key={i} className="text-[10px] font-mono text-[var(--text-secondary)] leading-snug">↳ {d}</div>
               ))}
