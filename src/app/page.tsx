@@ -3,13 +3,13 @@
 import { useEffect, useLayoutEffect, useState, useRef, useCallback, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import { motion, AnimatePresence } from 'framer-motion';
-import { الطبقات, BarChart3, Newspaper, بحث, X, Globe, MapPinned, Route, Radar, Satellite, Moon, ExternalLink, AlertTriangle, Activity, Database, Wifi, Play, Network, Crosshair, Bluetooth, Pentagon, Radio , PenLine, Orbit } from 'lucide-react';
+import { Layers, BarChart3, Newspaper, Search, X, Globe, MapPinned, Route, Radar, Satellite, Moon, ExternalLink, AlertTriangle, Activity, Database, Wifi, Play, Network, Crosshair, Bluetooth, Pentagon, Radio , PenLine, Orbit } from 'lucide-react';
 import { type TerrainStatus } from '@/lib/map-terrain';
 import { loadCameraCatalog, mergeCameraCatalog } from '@/lib/camera-catalog';
 import IntelFeed from '@/components/IntelFeed';
 import MarketsPanel from '@/components/MarketsPanel';
 import ScmPanel from '@/components/ScmPanel';
-import بحثBar from '@/components/بحثBar';
+import SearchBar from '@/components/SearchBar';
 import DirectionsBar, { type RouteResult, type LiveLocation } from '@/components/DirectionsBar';
 import NavigationView from '@/components/NavigationView';
 import FlightWatchPanel, { type WatchedFlight, type FlightTelemetry, type AircraftDetail, type Airport } from '@/components/FlightWatchPanel';
@@ -416,7 +416,7 @@ export default function Dashboard() {
   // A shared link (?oi=<run>) opens the panel on that run, and the camera
   // goes to the run rather than to the visitor's city.
   useEffect(() => {
-    const id = new URLبحثParams(window.location.search).get('oi');
+    const id = new URLSearchParams(window.location.search).get('oi');
     if (!id) return;
     autoLocateإلغاءled.current = true;
     setOiMode('forecast');
@@ -670,7 +670,7 @@ export default function Dashboard() {
     if (typeof window === 'undefined') return;
 
     // Restore active layers from URL if present
-    const p = new URLبحثParams(window.location.search);
+    const p = new URLSearchParams(window.location.search);
     const layers = p.get('layers');
     if (layers) {
       const active = layers.split(',');
@@ -737,7 +737,7 @@ export default function Dashboard() {
     urlTimer.current = setTimeout(() => {
       const active = Object.entries(activeالطبقات).filter(([,v]) => v).map(([k]) => k).join(',');
       // A forecast being watched keeps its place in the address, so the address bar stays shareable.
-      const oiRun = new URLبحثParams(window.location.search).get('oi');
+      const oiRun = new URLSearchParams(window.location.search).get('oi');
       const url = `${window.location.pathname}?layers=${active}${oiRun ? `&oi=${encodeURIComponent(oiRun)}` : ''}`;
       window.history.replaceState(null, '', url);
     }, 1500);
