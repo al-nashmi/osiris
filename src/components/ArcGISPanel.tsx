@@ -59,11 +59,11 @@ export interface ArcGISPanelProps {
 }
 
 const CATEGORIES = [
-  { label: 'Pipelines', query: 'pipeline' },
-  { label: 'Power Grid', query: 'power grid transmission' },
-  { label: 'Infrastructure', query: 'critical infrastructure' },
-  { label: 'Military', query: 'military base installation' },
-  { label: 'Emergency', query: 'emergency shelter evacuation' },
+  { label: 'خطوط الأنابيب', query: 'pipeline' },
+  { label: 'شبكة الكهرباء', query: 'power grid transmission' },
+  { label: 'البنية التحتية', query: 'critical infrastructure' },
+  { label: 'عسكري', query: 'military base installation' },
+  { label: 'طوارئ', query: 'emergency shelter evacuation' },
 ] as const;
 
 const LAYER_COLORS = [
