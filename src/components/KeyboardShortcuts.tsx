@@ -5,15 +5,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Keyboard, X } from 'lucide-react';
 
 const SHORTCUTS = [
-  { key: 'F', desc: 'Toggle fullscreen' },
-  { key: 'S', desc: 'Share current view' },
-  { key: 'L', desc: 'Toggle layer panel' },
-  { key: 'M', desc: 'Toggle markets panel' },
-  { key: 'O', desc: 'Ask OI' },
-  { key: 'I', desc: 'Toggle intel feed' },
-  { key: 'R', desc: 'Reset to global view' },
-  { key: '?', desc: 'Show this help' },
-  { key: 'ESC', desc: 'Close panels / popups' },
+  { key: 'F', desc: 'تبديل وضع ملء الشاشة' },
+  { key: 'S', desc: 'مشاركة العرض الحالي' },
+  { key: 'L', desc: 'إظهار/إخفاء لوحة الطبقات' },
+  { key: 'M', desc: 'إظهار/إخفاء لوحة الأسواق' },
+  { key: 'O', desc: 'اسأل المساعد الذكي' },
+  { key: 'I', desc: 'إظهار/إخفاء موجز الاستخبارات' },
+  { key: 'R', desc: 'إعادة العرض العالمي' },
+  { key: '?', desc: 'عرض هذه المساعدة' },
+  { key: 'ESC', desc: 'إغلاق اللوحات والنوافذ' },
 ];
 
 export default function KeyboardShortcuts() {
@@ -47,7 +47,7 @@ export default function KeyboardShortcuts() {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <Keyboard className="w-4 h-4 text-[var(--gold-primary)]" />
-                <span className="text-sm font-mono font-bold text-[var(--text-heading)] tracking-wider">SHORTCUTS</span>
+                <span className="text-sm font-mono font-bold text-[var(--text-heading)] tracking-wider">اختصارات لوحة المفاتيح</span>
               </div>
               <button onClick={() => setIsOpen(false)} className="text-[var(--text-muted)] hover:text-[var(--text-primary)]">
                 <X className="w-4 h-4" />
