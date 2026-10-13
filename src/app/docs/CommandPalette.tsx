@@ -7,7 +7,7 @@ export interface PaletteItem {
   id: string;
   label: string;
   hint: string;
-  kind: 'Guide' | 'Endpoint';
+  kind: 'دليل' | 'نقطة نهاية';
   group?: string;
 }
 
@@ -15,8 +15,8 @@ export function buildPaletteItems(guideSections: { id: string; title: string }[]
   const guide: PaletteItem[] = guideSections.map(s => ({
     id: s.id,
     label: s.title,
-    hint: 'Guide section',
-    kind: 'Guide',
+    hint: 'دليل section',
+    kind: 'دليل',
   }));
 
   const endpoints: PaletteItem[] = API_GROUPS.flatMap(g =>
@@ -24,7 +24,7 @@ export function buildPaletteItems(guideSections: { id: string; title: string }[]
       id: endpointId(ep),
       label: ep.path,
       hint: ep.summary,
-      kind: 'Endpoint' as const,
+      kind: 'نقطة نهاية' as const,
       group: g.title,
     }))
   );
@@ -46,7 +46,7 @@ export default function CommandPalette({
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
-  const results = useMemo(() => {
+  const نتيجة = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return items.slice(0, 40);
     return items
@@ -93,13 +93,13 @@ export default function CommandPalette({
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      setCursor(c => Math.min(c + 1, results.length - 1));
+      setCursor(c => Math.min(c + 1, نتيجة.length - 1));
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       setCursor(c => Math.max(c - 1, 0));
     } else if (e.key === 'Enter') {
       e.preventDefault();
-      if (results[cursor]) go(results[cursor].id);
+      if (نتيجة[cursor]) go(نتيجة[cursor].id);
     } else if (e.key === 'Escape') {
       e.preventDefault();
       onClose();
@@ -114,7 +114,7 @@ export default function CommandPalette({
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-label="Search documentation"
+      aria-label="ابحث في التوثيق"
     >
       <div
         onClick={e => e.stopPropagation()}
@@ -130,8 +130,8 @@ export default function CommandPalette({
             value={query}
             onChange={e => setQuery(e.target.value)}
             onKeyDown={onKeyDown}
-            placeholder="Search sections and endpoints…"
-            aria-label="Search documentation"
+            placeholder="ابحث في الأقسام ونقاط API…"
+            aria-label="ابحث في التوثيق"
             className="flex-1 bg-transparent text-[12px] font-mono text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none"
           />
           <kbd className="text-[10px] font-mono px-1.5 py-0.5 rounded border border-white/10 text-[var(--text-muted)]">
@@ -140,12 +140,12 @@ export default function CommandPalette({
         </div>
 
         <div ref={listRef} className="max-h-[52vh] overflow-y-auto styled-scrollbar py-1.5">
-          {results.length === 0 && (
+          {نتيجة.length === 0 && (
             <div className="px-4 py-8 text-center text-[11px] font-mono text-[var(--text-muted)]">
               No matches for “{query}”
             </div>
           )}
-          {results.map((it, i) => (
+          {نتيجة.map((it, i) => (
             <button
               key={`${it.kind}-${it.id}`}
               data-active={i === cursor}
@@ -157,12 +157,12 @@ export default function CommandPalette({
             >
               <span
                 className={`text-[9px] font-mono tracking-widest uppercase px-1.5 py-0.5 rounded border shrink-0 ${
-                  it.kind === 'Endpoint'
+                  it.kind === 'نقطة نهاية'
                     ? 'text-[var(--cyan-primary)] border-[var(--cyan-primary)]/25'
                     : 'text-[var(--gold-primary)] border-[var(--gold-primary)]/25'
                 }`}
               >
-                {it.kind === 'Endpoint' ? 'API' : 'Doc'}
+                {it.kind === 'نقطة نهاية' ? 'API' : 'مستند'}
               </span>
               <span className="min-w-0 flex-1">
                 <span className="block font-mono text-[11px] text-[var(--text-primary)] truncate">{it.label}</span>
@@ -180,12 +180,12 @@ export default function CommandPalette({
         <div className="flex items-center gap-4 px-4 h-9 border-t border-white/[0.07] text-[10px] font-mono text-[var(--text-muted)]">
           <span className="flex items-center gap-1">
             <kbd className="px-1 py-0.5 rounded border border-white/10">↑</kbd>
-            <kbd className="px-1 py-0.5 rounded border border-white/10">↓</kbd> navigate
+            <kbd className="px-1 py-0.5 rounded border border-white/10">↓</kbd> تنقّل
           </span>
           <span className="flex items-center gap-1">
-            <kbd className="px-1 py-0.5 rounded border border-white/10">↵</kbd> jump
+            <kbd className="px-1 py-0.5 rounded border border-white/10">↵</kbd> انتقال
           </span>
-          <span className="ml-auto">{results.length} results</span>
+          <span className="ml-auto">{نتيجة.length} نتيجة</span>
         </div>
       </div>
     </div>
