@@ -333,7 +333,7 @@ export default function مستندsClient() {
 
           <Section id="quickstart" eyebrow="دليل" title="البدء السريع">
             <p>
-              كل نقطة نهاية للقراءة هي طلب بسيط <Code>GET</Code> returning JSON. Nothing below needs authentication —
+              Every read endpoint is a plain <Code>GET</Code> returning JSON. Nothing below needs authentication —
               paste any of it into a terminal.
             </p>
             <CodeBlock
