@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback, useId } from 'react';
-import { Loader2, Navigation, Route, بحث, بحثX, X } from 'lucide-react';
+import { Loader2, Navigation, Route, Search, SearchX, X } from 'lucide-react';
 import { forgetRecent, loadRecent, rememberPlace, type RecentPlace } from '@/lib/recent-places';
 import { Key, PlaceRow, type PlaceLike } from './places';
 
@@ -19,12 +19,12 @@ interface Hit extends PlaceLike {
   zoom: number;
 }
 
-interface بحثBarProps {
+interface SearchBarProps {
   onLocate: (lat: number, lng: number, zoom?: number) => void;
   /** Where the map is looking. Results near it rank first, and each shows how far it is. */
   center?: { lat: number; lng: number } | null;
   /** إغلاق the panel: Esc on an empty box, a click elsewhere, or a pick. */
-  onإغلاق?: () => void;
+  onClose?: () => void;
   /** Hand a place to Directions as the destination. */
   onDirections?: (place: PlaceLike) => void;
   /** Inside another container (the phone drawer): no frame of its own. */
@@ -52,7 +52,7 @@ const parseCoords = (s: string): { lat: number; lng: number } | null => {
   return lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180 ? { lat, lng } : null;
 };
 
-export default function بحثBar({ onLocate, center = null, onإغلاق, onDirections, embedded = false }: بحثBarProps) {
+export default function SearchBar({ onLocate, center = null, onClose, onDirections, embedded = false }: SearchBarProps) {
   const [value, setValue] = useState('');
   const [results, setResults] = useState<Hit[]>([]);
   const [loading, setLoading] = useState(false);
@@ -86,15 +86,15 @@ export default function بحثBar({ onLocate, center = null, onإغلاق, onDir
 
   // A click anywhere else closes it, except on the button that toggles it (which closes it itself).
   useEffect(() => {
-    if (!onإغلاق || embedded) return;
+    if (!onClose || embedded) return;
     const handler = (e: MouseEvent) => {
       const t = e.target as Element | null;
       if (boxRef.current?.contains(t as Node) || t?.closest('[data-search-toggle]')) return;
-      onإغلاق();
+      onClose();
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
-  }, [onإغلاق, embedded]);
+  }, [onClose, embedded]);
 
   const typing = value.trim().length > 0;
   const you: Hit = { label: 'Your location', context: locateNote || 'Fly to where you are', lat: 0, lng: 0, kind: 'current', zoom: 14 };
@@ -156,7 +156,7 @@ export default function بحثBar({ onLocate, center = null, onإغلاق, onDir
     if (fix) {
       onLocate(fix.coords.latitude, fix.coords.longitude, 15);
       setLocating(false);
-      onإغلاق?.();
+      onClose?.();
       return;
     }
     try {
@@ -164,13 +164,13 @@ export default function بحثBar({ onLocate, center = null, onإغلاق, onDir
       if (d?.lat && d?.lon) {
         onLocate(d.lat, d.lon, 11);
         setLocating(false);
-        onإغلاق?.();
+        onClose?.();
         return;
       }
     } catch { /* fall through to the note */ }
     setLocateNote('Location unavailable: allow it in the browser, or search instead');
     setLocating(false);
-  }, [onLocate, onإغلاق]);
+  }, [onLocate, onClose]);
 
   const go = (h: Hit) => {
     if (h.kind === 'current') { void locate(); return; }
@@ -178,7 +178,7 @@ export default function بحثBar({ onLocate, center = null, onإغلاق, onDir
     setRecent(rememberPlace({ label: h.label, context: h.context, lat: h.lat, lng: h.lng, kind: h.kind }));
     setValue('');
     setResults([]);
-    onإغلاق?.();
+    onClose?.();
   };
 
   const directions = (h: Hit) => {
@@ -190,7 +190,7 @@ export default function بحثBar({ onLocate, center = null, onإغلاق, onDir
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
       e.preventDefault();
-      if (value) { search(''); } else onإغلاق?.();
+      if (value) { search(''); } else onClose?.();
       return;
     }
     if (e.key === 'ArrowDown') { e.preventDefault(); setSelected(i => Math.min(i + 1, items.length - 1)); }
