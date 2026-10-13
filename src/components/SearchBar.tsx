@@ -6,7 +6,7 @@ import { forgetRecent, loadRecent, rememberPlace, type RecentPlace } from '@/lib
 import { Key, PlaceRow, type PlaceLike } from './places';
 
 /* ═══════════════════════════════════════════════════════════════
-   OSIRIS — بحث
+   OSIRIS — Search
    A place, an address, a landmark or a pair of coordinates, and the map
    flies there. Before anything is typed it offers where you are and where
    you went last; each result can be handed to Directions as the destination.
@@ -23,7 +23,7 @@ interface SearchBarProps {
   onLocate: (lat: number, lng: number, zoom?: number) => void;
   /** Where the map is looking. Results near it rank first, and each shows how far it is. */
   center?: { lat: number; lng: number } | null;
-  /** إغلاق the panel: Esc on an empty box, a click elsewhere, or a pick. */
+  /** Close the panel: Esc on an empty box, a click elsewhere, or a pick. */
   onClose?: () => void;
   /** Hand a place to Directions as the destination. */
   onDirections?: (place: PlaceLike) => void;
@@ -55,11 +55,11 @@ const parseCoords = (s: string): { lat: number; lng: number } | null => {
 export default function SearchBar({ onLocate, center = null, onClose, onDirections, embedded = false }: SearchBarProps) {
   const [value, setValue] = useState('');
   const [results, setResults] = useState<Hit[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setجارٍ التحميل] = useState(false);
   // The query the current results answer, so "no results" is never shown for a search still on its way.
   const [answered, setAnswered] = useState('');
   const [selected, setSelected] = useState(0);
-  const [recent, setRecent] = useState<RecentPlace[]>(() => (typeof window === 'undefined' ? [] : loadRecent()));
+  const [recent, setالأخيرة] = useState<RecentPlace[]>(() => (typeof window === 'undefined' ? [] : loadالأخيرة()));
   const [locating, setLocating] = useState(false);
   const [locateNote, setLocateNote] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
@@ -109,7 +109,7 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
     const coords = parseCoords(q);
     if (coords) {
       abortRef.current?.abort();
-      setLoading(false);
+      setجارٍ التحميل(false);
       setResults([{ label: `${coords.lat.toFixed(5)}, ${coords.lng.toFixed(5)}`, context: 'Coordinates', ...coords, kind: 'coordinate', zoom: 15 }]);
       setAnswered(q);
       return;
@@ -211,14 +211,14 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
 
       {/* ── the box ── */}
       <div className={`relative flex items-center gap-3 flex-shrink-0 ${embedded ? 'h-12 px-3.5 rounded-xl border border-[var(--border-primary)] bg-black/40 focus-within:border-[var(--border-active)]' : 'h-14 px-4 border-b border-[var(--border-secondary)]'}`}>
-        <بحث className="w-[18px] h-[18px] flex-shrink-0 text-[var(--gold-primary)]" />
+        <Search className="w-[18px] h-[18px] flex-shrink-0 text-[var(--gold-primary)]" />
         <input
           ref={inputRef}
           value={value}
           onChange={e => search(e.target.value)}
           onKeyDown={onKeyDown}
-          placeholder="بحث places, addresses or coordinates"
-          aria-label="بحث places"
+          placeholder="Search places, addresses or coordinates"
+          aria-label="Search places"
           role="combobox"
           aria-expanded={items.length > 0}
           aria-controls={listId}
@@ -227,9 +227,9 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
           autoComplete="off"
           spellCheck={false}
         />
-        {loading && <Loader2 className="w-4 h-4 flex-shrink-0 animate-spin text-[var(--gold-primary)]" aria-label="بحثing" />}
+        {loading && <Loader2 className="w-4 h-4 flex-shrink-0 animate-spin text-[var(--gold-primary)]" aria-label="Searching" />}
         {value ? (
-          <button onClick={() => { search(''); inputRef.current?.focus(); }} aria-label="مسح the search"
+          <button onClick={() => { search(''); inputRef.current?.focus(); }} aria-label="Clear the search"
             className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-[var(--text-muted)] hover:text-[var(--text-heading)] hover:bg-white/[0.06] transition-colors">
             <X className="w-4 h-4" />
           </button>
@@ -244,7 +244,7 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
       <div className={`min-h-0 overflow-y-auto styled-scrollbar ${embedded ? 'pt-3' : 'p-2'}`}>
         {!typing && (
           <span className={`block px-3 pt-1 pb-1.5 text-[10px] font-mono tracking-[0.14em] uppercase text-[var(--text-muted)] ${embedded ? 'px-1' : ''}`}>
-            {recent.length ? 'Jump to' : 'Start here'}
+            {recent.length ? 'Jump to' : 'ابدأ here'}
           </span>
         )}
         <div id={listId} role="listbox" aria-label={typing ? 'Places found' : 'Suggestions'} className="flex flex-col gap-0.5">
@@ -254,7 +254,7 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
               kindOverride={!typing && h.kind !== 'current' ? 'recent' : undefined}
               trailing={h.kind === 'current'
                 ? (locating ? <Loader2 className="w-4 h-4 mr-2 animate-spin text-[var(--gold-primary)]" /> : undefined)
-                : onDirections && (
+                : onالاتجاهات && (
                   <button onClick={() => directions(h)} aria-label={`Directions to ${h.label}`} title="Directions (Shift+Enter)"
                     className={`w-8 h-8 rounded-full flex items-center justify-center border transition-all ${i === active ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 focus:opacity-100'} border-[rgba(var(--gold-rgb),0.35)] text-[var(--gold-light)] bg-[rgba(var(--gold-rgb),0.06)] hover:bg-[rgba(var(--gold-rgb),0.16)]`}>
                     <Route className="w-4 h-4" />
@@ -266,7 +266,7 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
         {!typing && recent.length > 0 && (
           <button onClick={() => { forgetRecent(); setRecent([]); setSelected(0); }}
             className="mt-1 ml-3 text-[10.5px] text-[var(--text-muted)] hover:text-[var(--text-heading)] transition-colors">
-            مسح recent places
+            Clear recent places
           </button>
         )}
 
@@ -285,7 +285,7 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
         {noResults && (
           <div role="status" className="flex flex-col items-center text-center px-6 py-8">
             <span className="w-11 h-11 rounded-full flex items-center justify-center border border-[var(--border-secondary)] bg-white/[0.02]">
-              <بحثX className="w-5 h-5 text-[var(--text-muted)]" />
+              <SearchX className="w-5 h-5 text-[var(--text-muted)]" />
             </span>
             <p className="mt-3 text-[13px] text-[var(--text-heading)]">No places match “{value.trim()}”</p>
             <p className="mt-1 max-w-[320px] text-[11.5px] leading-relaxed text-[var(--text-muted)]">
@@ -315,7 +315,7 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
           <span className="hidden md:flex items-center gap-2.5">
             <span className="flex items-center gap-1"><Key>↑</Key><Key>↓</Key> move</span>
             <span className="flex items-center gap-1"><Key>↵</Key> go</span>
-            {onDirections && <span className="flex items-center gap-1"><Key>⇧</Key><Key>↵</Key><Navigation className="w-3 h-3" /> route</span>}
+            {onالاتجاهات && <span className="flex items-center gap-1"><Key>⇧</Key><Key>↵</Key><Navigation className="w-3 h-3" /> route</span>}
             <span className="flex items-center gap-1"><Key>Esc</Key> close</span>
           </span>
         )}
