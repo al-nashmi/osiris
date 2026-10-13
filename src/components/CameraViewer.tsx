@@ -60,7 +60,7 @@ export default function CameraViewer({ camera, onإغلاق, onLocate, besideOi 
   // Snapshot cameras are checked too, in the background: the picture shows
   // immediately and is withdrawn only if the source says the camera is gone.
   const resolveKey: string | null =
-    (needsResolution(camera) ? camera.external_url : null) ?? liveFeedAtSource(camera);
+    (needsResolution(camera) ? camera.external_url : null) ?? liveFeedAtالمصدر(camera);
   const [resolution, setResolution] = useState<{ key: string; embed: string | null; offline: boolean; kind?: string } | null>(null);
   const resolvedEmbed = directEmbed ?? (resolution && resolution.key === resolveKey ? resolution.embed : null);
   const resolving = Boolean(resolveKey) && resolution?.key !== resolveKey;
@@ -210,7 +210,7 @@ export default function CameraViewer({ camera, onإغلاق, onLocate, besideOi 
                 </div>
                 <div className="flex items-center gap-3">
                   <span>{currentTime}</span>
-                  <span className="text-[var(--gold-primary)]">اتصال آمن</span>
+                  <span className="text-[var(--gold-primary)]">SECURE UPLINK</span>
                 </div>
               </div>
 
@@ -272,7 +272,7 @@ export default function CameraViewer({ camera, onإغلاق, onLocate, besideOi 
               <div className="absolute inset-0 flex items-center justify-center bg-black/90 z-30 backdrop-blur-sm">
                 <div className="text-center">
                   <div className="w-6 h-6 border-2 border-t-transparent rounded-full animate-spin mx-auto mb-3" style={{ borderColor: 'var(--gold-dim)', borderTopColor: 'transparent' }} />
-                  <span className="text-[10px] font-mono tracking-[0.25em]" style={{ color: 'var(--gold-primary)' }}>جارٍ فك تشفير البث...</span>
+                  <span className="text-[10px] font-mono tracking-[0.25em]" style={{ color: 'var(--gold-primary)' }}>DECRYPTING FEED...</span>
                 </div>
               </div>
             )}
@@ -280,13 +280,13 @@ export default function CameraViewer({ camera, onإغلاق, onLocate, besideOi 
             {view === 'resolving' ? (
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/90 z-30 backdrop-blur-sm p-4 text-center">
                 <div className="w-6 h-6 border-2 border-t-transparent rounded-full animate-spin mb-3" style={{ borderColor: 'var(--gold-dim)', borderTopColor: 'transparent' }} />
-                <p className="text-[11px] font-mono uppercase tracking-widest" style={{ color: 'var(--gold-primary)' }}>جارٍ إنشاء الاتصال</p>
-                <p className="text-[9px] font-mono text-[var(--text-muted)] mt-2 uppercase">جارٍ تحديد مصدر بث مباشر</p>
+                <p className="text-[11px] font-mono uppercase tracking-widest" style={{ color: 'var(--gold-primary)' }}>ACQUIRING UPLINK</p>
+                <p className="text-[9px] font-mono text-[var(--text-muted)] mt-2 uppercase">Locating a direct feed</p>
               </div>
             ) : view === 'offline' ? (
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/90 z-30 backdrop-blur-sm p-4 text-center">
                 <CameraOff className="w-6 h-6 mb-3 opacity-50 text-[var(--text-muted)]" />
-                <p className="text-[11px] font-mono uppercase tracking-widest text-[var(--text-secondary)]">{gone ? 'CAMERA WITHالرسمN' : 'CAMERA غير متصل'}</p>
+                <p className="text-[11px] font-mono uppercase tracking-widest text-[var(--text-secondary)]">{gone ? 'CAMERA WITHDRAWN' : 'CAMERA غير متصل'}</p>
                 <p className="text-[9px] font-mono text-[var(--text-muted)] mt-2 max-w-[80%] uppercase">{gone ? 'No longer published at source' : 'The operator has this feed off air'}</p>
                 {/* No ACCESS TERMINAL button: the page it would open is either
                     showing the same 'offline' banner we just read, or a 404. */}
@@ -294,8 +294,8 @@ export default function CameraViewer({ camera, onإغلاق, onLocate, besideOi 
             ) : view === 'external' ? (
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/90 z-30 backdrop-blur-sm p-4 text-center">
                 <ExternalLink className="w-6 h-6 mb-3 opacity-50" style={{ color: 'var(--gold-primary)' }} />
-                <p className="text-[11px] font-mono uppercase tracking-widest" style={{ color: 'var(--gold-primary)' }}>البث الآمن مشفّر</p>
-                <p className="text-[9px] font-mono text-[var(--text-muted)] mt-2 max-w-[80%] uppercase">يتطلب هذا البث تصريحًا خارجيًا</p>
+                <p className="text-[11px] font-mono uppercase tracking-widest" style={{ color: 'var(--gold-primary)' }}>SECURE FEED ENCRYPTED</p>
+                <p className="text-[9px] font-mono text-[var(--text-muted)] mt-2 max-w-[80%] uppercase">This feed requires external clearance</p>
                 <a 
                   href={externalFeedUrl} 
                   target="_blank" 
@@ -310,8 +310,8 @@ export default function CameraViewer({ camera, onإغلاق, onLocate, besideOi 
               <div className="absolute inset-0 flex items-center justify-center bg-black/90">
                 <div className="text-center">
                   <div className="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center mb-2 mx-auto"><Camera className="w-4 h-4 text-red-400" /></div>
-                  <span className="text-[10px] font-mono text-red-400 tracking-widest block mb-1">البث غير متاح</span>
-                  <span className="text-[9px] font-mono text-[var(--text-muted)]">قد تكون الكاميرا متوقفة أو مقيّدة الوصول</span>
+                  <span className="text-[10px] font-mono text-red-400 tracking-widest block mb-1">FEED UNAVAILABLE</span>
+                  <span className="text-[9px] font-mono text-[var(--text-muted)]">Camera may be offline or restricted</span>
                   <button onClick={() => { setError(false); setRetryCount(c => c + 1); }} className="block mx-auto mt-3 px-3 py-1 text-[9px] font-mono text-[#7E57C2] border border-[#7E57C2]/30 rounded hover:bg-[#7E57C2]/10 transition-colors tracking-wider">
                     RETRY
                   </button>
@@ -403,13 +403,13 @@ export default function CameraViewer({ camera, onإغلاق, onLocate, besideOi 
             <div className="flex items-center justify-between px-3 py-1.5 border-b border-white/5">
               <div className="flex gap-4">
                 <div className="flex flex-col">
-                  <span className="text-[9px] text-[var(--text-muted)] font-mono tracking-widest">نوع البث</span>
+                  <span className="text-[9px] text-[var(--text-muted)] font-mono tracking-widest">FEED TYPE</span>
                   <span className="text-[9px] text-white font-mono tracking-widest uppercase">
-                    {view === 'offline' ? (gone ? 'WITHالرسمN' : 'غير متصل') : watchLiveUrl ? 'SNAPSHOT' : externalOnly ? 'EXTERNAL' : resolvedEmbed ? 'YOUTUBE مباشر' : streamType}
+                    {view === 'offline' ? (gone ? 'WITHDRAWN' : 'غير متصل') : watchLiveUrl ? 'SNAPSHOT' : externalOnly ? 'EXTERNAL' : resolvedEmbed ? 'YOUTUBE مباشر' : streamType}
                   </span>
                 </div>
                 <div className="flex flex-col border-l border-white/10 pl-4">
-                  <span className="text-[9px] text-[var(--text-muted)] font-mono tracking-widest">الحالة</span>
+                  <span className="text-[9px] text-[var(--text-muted)] font-mono tracking-widest">STATUS</span>
                   {/* Nothing is being received locally for an external feed — don't claim otherwise. */}
                   <span className={`text-[9px] font-mono tracking-widest ${externalOnly ? 'text-[var(--gold-primary)]' : 'text-[var(--alert-green)]'}`}>
                     {view === 'offline' ? (gone ? 'REMOVED BY SOURCE' : 'OFF AIR AT SOURCE') : watchLiveUrl ? 'مباشر VIDEO AT SOURCE' : externalOnly ? 'HOSTED OFF-PLATFORM' : 'ACTIVE / RECORDING'}
