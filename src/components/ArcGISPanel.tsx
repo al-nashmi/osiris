@@ -4,16 +4,16 @@ import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Database,
-  تنزيل,
+  Download,
   X,
-  بحث,
+  Search,
   Loader2,
   CheckCircle,
   AlertTriangle,
   Eye,
   EyeOff,
   MapPin,
-  مشاركة2,
+  Share2,
   Hexagon,
   Globe,
   Radio,
@@ -25,7 +25,7 @@ import {
 } from 'lucide-react';
 
 /* ═══════════════════════════════════════════════════════════════
-   ArcGIS بحث & Import Panel — OSIRIS OSINT Dashboard
+   ArcGIS Search & Import Panel — OSIRIS OSINT Dashboard
    Premium dark-ops glassmorphism aesthetic
    ═══════════════════════════════════════════════════════════════ */
 
@@ -35,7 +35,7 @@ interface ArcGISResult {
   url: string;
   snippet: string;
   owner: string;
-  numعرضs: number;
+  numViews: number;
   extent: number[][];
   tags: string[];
 }
@@ -83,7 +83,7 @@ const LAYER_COLORS = [
 function getGeometryIcon(title: string, tags: string[] = []) {
   const t = (title + ' ' + tags.join(' ')).toLowerCase();
   if (t.includes('point') || t.includes('location') || t.includes('shelter')) return <MapPin className="w-3 h-3" />;
-  if (t.includes('line') || t.includes('route') || t.includes('pipe') || t.includes('grid')) return <مشاركة2 className="w-3 h-3" />;
+  if (t.includes('line') || t.includes('route') || t.includes('pipe') || t.includes('grid')) return <Share2 className="w-3 h-3" />;
   if (t.includes('poly') || t.includes('boundary') || t.includes('zone') || t.includes('area')) return <Hexagon className="w-3 h-3" />;
   return <Database className="w-3 h-3" />;
 }
@@ -113,30 +113,30 @@ export default function ArcGISPanel({
     ? `${mapBounds.west},${mapBounds.south},${mapBounds.east},${mapBounds.north}`
     : '';
 
-  const runبحث = useCallback(
+  const runSearch = useCallback(
     async (searchQuery: string) => {
       if (!searchQuery.trim()) return;
-      setبحثing(true);
-      setخطأ('');
+      setSearching(true);
+      setError('');
       setResults([]);
 
       try {
-        const params = new URLبحثParams({ q: searchQuery });
+        const params = new URLSearchParams({ q: searchQuery });
         if (bboxParam) params.set('bbox', bboxParam);
 
         const res = await fetch(`/api/arcgis?${params.toString()}`);
         if (!res.ok) {
           const err = await res.json().catch(() => ({}));
-          throw new خطأ(err.error || `بحث failed (${res.status})`);
+          throw new Error(err.error || `Search failed (${res.status})`);
         }
 
         const data = await res.json();
         setResults(data.results || []);
         setResultsFor(searchQuery);
       } catch (err: any) {
-        setخطأ(err.message || 'بحث failed');
+        setError(err.message || 'Search failed');
       } finally {
-        setبحثing(false);
+        setSearching(false);
       }
     },
     [bboxParam],
@@ -146,16 +146,16 @@ export default function ArcGISPanel({
     async (result: ArcGISResult) => {
       if (!result.url) return;
       setImportingId(result.id);
-      setخطأ('');
+      setError('');
 
       try {
-        const params = new URLبحثParams({ service: result.url });
+        const params = new URLSearchParams({ service: result.url });
         if (bboxParam) params.set('bbox', bboxParam);
 
         const res = await fetch(`/api/arcgis?${params.toString()}`);
         if (!res.ok) {
           const err = await res.json().catch(() => ({}));
-          throw new خطأ(err.error || `Import failed (${res.status})`);
+          throw new Error(err.error || `Import failed (${res.status})`);
         }
 
         const geojson = await res.json();
@@ -169,7 +169,7 @@ export default function ArcGISPanel({
         const availableColor = LAYER_COLORS.find(c => !usedColors.includes(c)) || LAYER_COLORS[importedLayers.length % LAYER_COLORS.length];
         onImportLayer({ id: result.id, title: result.title, url: result.url, geojson, color: availableColor, opacity: 0.8 });
       } catch (err: any) {
-        setخطأ(err.message || 'Import failed');
+        setError(err.message || 'Import failed');
       } finally {
         setImportingId(null);
       }
@@ -182,7 +182,7 @@ export default function ArcGISPanel({
     setActiveCategory(isActive ? null : cat.label);
     if (!isActive) {
       setQuery(cat.query);
-      runبحث(cat.query);
+      runSearch(cat.query);
     }
   };
 
@@ -379,7 +379,7 @@ export default function ArcGISPanel({
 
       {/* ── بحث Bar ────────────────────────────────────────── */}
       <div className="relative shrink-0">
-        <بحث className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--text-muted)]" />
+        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--text-muted)]" />
         <input
           type="text"
           value={query}
@@ -387,12 +387,12 @@ export default function ArcGISPanel({
             setQuery(e.target.value);
             setActiveCategory(null);
           }}
-          onKeyDown={(e) => e.key === 'Enter' && runبحث(query)}
-          placeholder="بحث ArcGIS layers..."
+          onKeyDown={(e) => e.key === 'Enter' && runSearch(query)}
+          placeholder="Search ArcGIS layers..."
           className="w-full bg-black/60 border border-white/10 rounded-lg pl-8 pr-16 py-2.5 text-[10px] font-mono text-white placeholder:text-[var(--text-muted)]/40 focus:outline-none focus:border-[#D4AF37]/50 transition-colors"
         />
         <button
-          onClick={() => runبحث(query)}
+          onClick={() => runSearch(query)}
           disabled={searching || !query.trim()}
           className="absolute right-1 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-md text-[10px] font-mono font-bold tracking-widest uppercase disabled:opacity-30 transition-all bg-[#D4AF37]/10 border border-[#D4AF37]/30 text-[#D4AF37] hover:bg-[#D4AF37]/20"
         >
@@ -428,7 +428,7 @@ export default function ArcGISPanel({
           >
             <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0" />
             <span className="truncate flex-1">{error}</span>
-            <button onClick={() => setخطأ('')} className="p-1 rounded hover:bg-red-500/20 opacity-80 hover:opacity-100">
+            <button onClick={() => setError('')} className="p-1 rounded hover:bg-red-500/20 opacity-80 hover:opacity-100">
               <X className="w-3 h-3" />
             </button>
           </motion.div>
@@ -437,7 +437,7 @@ export default function ArcGISPanel({
 
       {/* ── بحث Results ────────────────────────────────────── */}
       <div className="flex-1 overflow-y-auto styled-scrollbar -mx-1 px-1 space-y-1.5">
-        {/* Loading skeleton */}
+        {/* جارٍ التحميل skeleton */}
         {searching && (
           <div className="space-y-2 py-1">
             {[...Array(4)].map((_, i) => (
@@ -539,7 +539,7 @@ export default function ArcGISPanel({
                           </>
                         ) : (
                           <>
-                            <تنزيل className="w-3 h-3" />
+                            <Download className="w-3 h-3" />
                             IMPORT
                           </>
                         )}
@@ -582,14 +582,14 @@ export default function ArcGISPanel({
           <div className="flex flex-col items-center justify-center py-12 gap-3 opacity-60">
             <div className="relative">
               <Database className="w-8 h-8 text-[var(--text-muted)] opacity-50" />
-              <بحث className="w-4 h-4 text-[#D4AF37] absolute -bottom-1 -right-1" />
+              <Search className="w-4 h-4 text-[#D4AF37] absolute -bottom-1 -right-1" />
             </div>
             <div className="flex flex-col items-center gap-1.5 text-center">
               <span className="text-[10px] font-mono font-bold text-white tracking-wide">
                 No active search
               </span>
               <span className="text-[10px] font-mono text-[var(--text-muted)] max-w-[200px] leading-relaxed">
-                Try searching for Power Plants, Substations, Evacuation Routes, or Pipelines in the designated area.
+                Try searching for Power Plants, Substations, Evacuation المسارs, or Pipelines in the designated area.
               </span>
             </div>
           </div>
@@ -606,7 +606,7 @@ export default function ArcGISPanel({
         </div>
         <div className="flex items-center gap-2.5">
           <span className="text-[9px] font-mono text-[var(--text-muted)] uppercase tracking-wider">
-            Connection Health
+            اتصالion Health
           </span>
           <div className="relative flex items-center justify-center">
             <Wifi className={`w-3 h-3 ${searching ? 'text-[#D4AF37]' : 'text-[var(--alert-green)]'}`} />
