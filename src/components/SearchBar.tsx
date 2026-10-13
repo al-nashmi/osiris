@@ -1,12 +1,12 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback, useId } from 'react';
-import { Loader2, Navigation, Route, Search, SearchX, X } from 'lucide-react';
+import { Loader2, Navigation, Route, بحث, بحثX, X } from 'lucide-react';
 import { forgetRecent, loadRecent, rememberPlace, type RecentPlace } from '@/lib/recent-places';
 import { Key, PlaceRow, type PlaceLike } from './places';
 
 /* ═══════════════════════════════════════════════════════════════
-   OSIRIS — Search
+   OSIRIS — بحث
    A place, an address, a landmark or a pair of coordinates, and the map
    flies there. Before anything is typed it offers where you are and where
    you went last; each result can be handed to Directions as the destination.
@@ -19,12 +19,12 @@ interface Hit extends PlaceLike {
   zoom: number;
 }
 
-interface SearchBarProps {
+interface بحثBarProps {
   onLocate: (lat: number, lng: number, zoom?: number) => void;
   /** Where the map is looking. Results near it rank first, and each shows how far it is. */
   center?: { lat: number; lng: number } | null;
-  /** Close the panel: Esc on an empty box, a click elsewhere, or a pick. */
-  onClose?: () => void;
+  /** إغلاق the panel: Esc on an empty box, a click elsewhere, or a pick. */
+  onإغلاق?: () => void;
   /** Hand a place to Directions as the destination. */
   onDirections?: (place: PlaceLike) => void;
   /** Inside another container (the phone drawer): no frame of its own. */
@@ -52,7 +52,7 @@ const parseCoords = (s: string): { lat: number; lng: number } | null => {
   return lat >= -90 && lat <= 90 && lng >= -180 && lng <= 180 ? { lat, lng } : null;
 };
 
-export default function SearchBar({ onLocate, center = null, onClose, onDirections, embedded = false }: SearchBarProps) {
+export default function بحثBar({ onLocate, center = null, onإغلاق, onDirections, embedded = false }: بحثBarProps) {
   const [value, setValue] = useState('');
   const [results, setResults] = useState<Hit[]>([]);
   const [loading, setLoading] = useState(false);
@@ -86,15 +86,15 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
 
   // A click anywhere else closes it, except on the button that toggles it (which closes it itself).
   useEffect(() => {
-    if (!onClose || embedded) return;
+    if (!onإغلاق || embedded) return;
     const handler = (e: MouseEvent) => {
       const t = e.target as Element | null;
       if (boxRef.current?.contains(t as Node) || t?.closest('[data-search-toggle]')) return;
-      onClose();
+      onإغلاق();
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
-  }, [onClose, embedded]);
+  }, [onإغلاق, embedded]);
 
   const typing = value.trim().length > 0;
   const you: Hit = { label: 'Your location', context: locateNote || 'Fly to where you are', lat: 0, lng: 0, kind: 'current', zoom: 14 };
@@ -156,7 +156,7 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
     if (fix) {
       onLocate(fix.coords.latitude, fix.coords.longitude, 15);
       setLocating(false);
-      onClose?.();
+      onإغلاق?.();
       return;
     }
     try {
@@ -164,13 +164,13 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
       if (d?.lat && d?.lon) {
         onLocate(d.lat, d.lon, 11);
         setLocating(false);
-        onClose?.();
+        onإغلاق?.();
         return;
       }
     } catch { /* fall through to the note */ }
     setLocateNote('Location unavailable: allow it in the browser, or search instead');
     setLocating(false);
-  }, [onLocate, onClose]);
+  }, [onLocate, onإغلاق]);
 
   const go = (h: Hit) => {
     if (h.kind === 'current') { void locate(); return; }
@@ -178,7 +178,7 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
     setRecent(rememberPlace({ label: h.label, context: h.context, lat: h.lat, lng: h.lng, kind: h.kind }));
     setValue('');
     setResults([]);
-    onClose?.();
+    onإغلاق?.();
   };
 
   const directions = (h: Hit) => {
@@ -190,7 +190,7 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
   const onKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
       e.preventDefault();
-      if (value) { search(''); } else onClose?.();
+      if (value) { search(''); } else onإغلاق?.();
       return;
     }
     if (e.key === 'ArrowDown') { e.preventDefault(); setSelected(i => Math.min(i + 1, items.length - 1)); }
@@ -211,14 +211,14 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
 
       {/* ── the box ── */}
       <div className={`relative flex items-center gap-3 flex-shrink-0 ${embedded ? 'h-12 px-3.5 rounded-xl border border-[var(--border-primary)] bg-black/40 focus-within:border-[var(--border-active)]' : 'h-14 px-4 border-b border-[var(--border-secondary)]'}`}>
-        <Search className="w-[18px] h-[18px] flex-shrink-0 text-[var(--gold-primary)]" />
+        <بحث className="w-[18px] h-[18px] flex-shrink-0 text-[var(--gold-primary)]" />
         <input
           ref={inputRef}
           value={value}
           onChange={e => search(e.target.value)}
           onKeyDown={onKeyDown}
-          placeholder="Search places, addresses or coordinates"
-          aria-label="Search places"
+          placeholder="بحث places, addresses or coordinates"
+          aria-label="بحث places"
           role="combobox"
           aria-expanded={items.length > 0}
           aria-controls={listId}
@@ -227,9 +227,9 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
           autoComplete="off"
           spellCheck={false}
         />
-        {loading && <Loader2 className="w-4 h-4 flex-shrink-0 animate-spin text-[var(--gold-primary)]" aria-label="Searching" />}
+        {loading && <Loader2 className="w-4 h-4 flex-shrink-0 animate-spin text-[var(--gold-primary)]" aria-label="بحثing" />}
         {value ? (
-          <button onClick={() => { search(''); inputRef.current?.focus(); }} aria-label="Clear the search"
+          <button onClick={() => { search(''); inputRef.current?.focus(); }} aria-label="مسح the search"
             className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-[var(--text-muted)] hover:text-[var(--text-heading)] hover:bg-white/[0.06] transition-colors">
             <X className="w-4 h-4" />
           </button>
@@ -266,7 +266,7 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
         {!typing && recent.length > 0 && (
           <button onClick={() => { forgetRecent(); setRecent([]); setSelected(0); }}
             className="mt-1 ml-3 text-[10.5px] text-[var(--text-muted)] hover:text-[var(--text-heading)] transition-colors">
-            Clear recent places
+            مسح recent places
           </button>
         )}
 
@@ -285,7 +285,7 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
         {noResults && (
           <div role="status" className="flex flex-col items-center text-center px-6 py-8">
             <span className="w-11 h-11 rounded-full flex items-center justify-center border border-[var(--border-secondary)] bg-white/[0.02]">
-              <SearchX className="w-5 h-5 text-[var(--text-muted)]" />
+              <بحثX className="w-5 h-5 text-[var(--text-muted)]" />
             </span>
             <p className="mt-3 text-[13px] text-[var(--text-heading)]">No places match “{value.trim()}”</p>
             <p className="mt-1 max-w-[320px] text-[11.5px] leading-relaxed text-[var(--text-muted)]">
