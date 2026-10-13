@@ -219,7 +219,7 @@ function StyleStudio({ onClose, isMobile }: { onClose: () => void; isMobile?: bo
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [onإغلاق]);
+  }, [onClose]);
 
   /* While clean, re-seed from the live theme so edits made after a theme
      switch start from what is actually on screen. */
@@ -406,8 +406,8 @@ function StyleStudio({ onClose, isMobile }: { onClose: () => void; isMobile?: bo
         </Section>
 
         <p className="text-[9px] font-mono leading-relaxed text-white/20 pt-1 pb-1">
-          حفظd to this browser. AUTO leaves the app&apos;s own styling alone, and presets do not touch the map
-          layers &mdash; those carry meaning, not just a look. إعادة ضبط restores the active theme.
+          Saved to this browser. AUTO leaves the app&apos;s own styling alone, and presets do not touch the map
+          layers &mdash; those carry meaning, not just a look. Reset restores the active theme.
         </p>
       </div>
     </motion.div>,
