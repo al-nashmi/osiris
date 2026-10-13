@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { endpointId, type ApiEndpoint } from './apiCatalog';
+import { endpointId, type Apiنقطة نهاية } from './apiCatalog';
 import { CodeBlock, CopyButton, type CodeTab } from './docsPrimitives';
 
 const METHOD_STYLES: Record<string, string> = {
@@ -53,7 +53,7 @@ function buildWithHeaders(method: string, url: string, body: string, headers: [s
    Request snippet generation
    ───────────────────────────────────────────────────────────── */
 
-function buildTabs(ep: ApiEndpoint, url: string): CodeTab[] {
+function buildTabs(ep: Apiنقطة نهاية, url: string): CodeTab[] {
   const method = Array.isArray(ep.method) ? ep.method[0] : ep.method;
   const isPost = method === 'POST';
   const body = ep.bodyExample || '{}';
@@ -96,10 +96,10 @@ data = r.json()`;
 }
 
 /* ─────────────────────────────────────────────────────────────
-   Endpoint card
+   نقطة نهاية card
    ───────────────────────────────────────────────────────────── */
 
-export default function EndpointCard({ ep, origin }: { ep: ApiEndpoint; origin: string }) {
+export default function نقطة نهايةCard({ ep, origin }: { ep: Apiنقطة نهاية; origin: string }) {
   const methods = Array.isArray(ep.method) ? ep.method : [ep.method];
   const primary = methods[0];
   const id = endpointId(ep);
@@ -272,11 +272,11 @@ export default function EndpointCard({ ep, origin }: { ep: ApiEndpoint; origin: 
                       <path d="M8 5v14l11-7z" />
                     </svg>
                   )}
-                  {running ? 'Running' : 'Send request'}
+                  {running ? 'Running' : 'إرسال الطلب'}
                 </button>
                 {missingRequired.length > 0 && (
                   <span className="text-[11px] font-mono text-[var(--text-muted)]">
-                    Fill {missingRequired.map(p => p.name).join(', ')} first
+                    أكمل {missingRequired.map(p => p.name).join(', ')} أولاً
                   </span>
                 )}
                 <CopyButton value={`${origin}${liveUrl}`} />
