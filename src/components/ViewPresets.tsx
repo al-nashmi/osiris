@@ -22,7 +22,7 @@ const PRESETS = [
   { label: 'SUDAN', lat: 15, lng: 30, zoom: 5.5, icon: '⚠️', hot: true },
 ];
 
-export default function ViewPresets({ onNavigate }: ViewPresetsProps) {
+export default function عرضPresets({ onNavigate }: عرضPresetsProps) {
   return (
     <motion.div
       initial={{ opacity: 0, x: -20 }}
