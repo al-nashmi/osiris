@@ -40,10 +40,10 @@ function Head({ title, icon: Icon, color, right }: { title: string; icon: any; c
 
 function ChainBriefInner() {
   const [brief, setBrief] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [loading, setجارٍ التحميل] = useState(false);
+  const [error, setخطأ] = useState('');
   const [days, setDays] = useState(30);
-  const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
+  const [lastتحديث, setLastتحديث] = useState<Date | null>(null);
   const [ai, setAi] = useState('');
   const [aiLoading, setAiLoading] = useState(false);
 
@@ -79,7 +79,7 @@ function ChainBriefInner() {
 
   const runAi = useCallback(async () => {
     if (!briefRef.current) return;
-    setAiLoading(true);
+    setAiجارٍ التحميل(true);
     setAi('');
     try {
       const res = await fetch('/api/ai/overview', {
@@ -92,7 +92,7 @@ function ChainBriefInner() {
     } catch {
       setAi('AI overview unavailable.');
     } finally {
-      setAiLoading(false);
+      setAiجارٍ التحميل(false);
     }
   }, []);
 
@@ -102,7 +102,7 @@ function ChainBriefInner() {
     <div>
       {/* window selector */}
       <div className="flex items-center gap-1 mb-2">
-        <span className="text-[10px] font-mono text-[var(--text-muted)] mr-1">WINDOW</span>
+        <span className="text-[10px] font-mono text-[var(--text-muted)] mr-1">الفترة</span>
         {[7, 30, 90].map(d => (
           <button
             key={d}
@@ -120,16 +120,16 @@ function ChainBriefInner() {
         <button
           onClick={() => load(days, true)}
           className="ml-auto text-[9px] font-mono text-[var(--text-muted)] hover:text-white/70 transition-colors"
-          title="Refresh now"
+          title="تحديث الآن"
         >
-          {lastRefresh ? lastRefresh.toLocaleTimeString() : 'refresh'}
+          {lastتحديث ? lastتحديث.toLocaleTimeString() : 'refresh'}
         </button>
       </div>
 
       {loading && !brief && (
         <div className="flex items-center gap-2 py-6 justify-center">
           <Loader2 className="w-4 h-4 animate-spin" style={{ color: ACCENT }} />
-          <span className="text-[11px] font-mono text-[var(--text-muted)]">Building brief…</span>
+          <span className="text-[11px] font-mono text-[var(--text-muted)]">جارٍ إعداد الموجز…</span>
         </div>
       )}
       {error && <div className="text-[11px] font-mono text-red-400 py-2">{error}</div>}
@@ -138,9 +138,9 @@ function ChainBriefInner() {
         <>
           <div className="grid grid-cols-3 gap-1.5 mb-2">
             {[
-              { label: 'LOSSES', value: usd(t?.exploit_losses_usd), color: '#FF3D3D' },
-              { label: 'EXPLOITS', value: t?.exploit_count ?? 0, color: '#FF9500' },
-              { label: 'CVES', value: t?.cve_count ?? 0, color: '#E040FB' },
+              { label: 'الخسائر', value: usd(t?.exploit_losses_usd), color: '#FF3D3D' },
+              { label: 'عمليات الاستغلال', value: t?.exploit_count ?? 0, color: '#FF9500' },
+              { label: 'ثغرات CVE', value: t?.cve_count ?? 0, color: '#E040FB' },
             ].map(c => (
               <div key={c.label} className="rounded border px-2 py-1.5" style={{ borderColor: `${c.color}33`, background: `${c.color}0d` }}>
                 <div className="text-[9px] font-mono text-[var(--text-muted)]">{c.label}</div>
@@ -155,7 +155,7 @@ function ChainBriefInner() {
             className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded text-[10px] font-mono font-bold tracking-wider transition-colors disabled:opacity-50"
             style={{ color: ACCENT, background: `${ACCENT}14`, border: `1px solid ${ACCENT}44` }}
           >
-            {aiLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
+            {aiجارٍ التحميل ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
             AI OVERVIEW
           </button>
           {ai && (
@@ -165,9 +165,9 @@ function ChainBriefInner() {
             </div>
           )}
 
-          <Head title="ON-CHAIN EXPLOITS" icon={Flame} color="#FF3D3D" right={`${brief.exploits.length} shown`} />
+          <Head title="عمليات الاستغلال على البلوك تشين" icon={Flame} color="#FF3D3D" right={`${brief.exploits.length} shown`} />
           {brief.exploits.length === 0 && (
-            <div className="text-[10px] font-mono text-[var(--text-muted)] py-1">None in window.</div>
+            <div className="text-[10px] font-mono text-[var(--text-muted)] py-1">لا توجد بيانات خلال هذه الفترة.</div>
           )}
           {brief.exploits.slice(0, 12).map((e: any, i: number) => (
             <div key={i} className="py-1.5 border-b border-[var(--border-secondary)]/20 last:border-0">
@@ -178,15 +178,15 @@ function ChainBriefInner() {
               <div className="flex items-center gap-2 text-[10px] font-mono text-[var(--text-muted)] mt-0.5">
                 <span>{String(e.date).slice(0, 10)}</span>
                 <span className="text-[var(--text-secondary)]">{e.chain}</span>
-                {e.bridge_hack && <span className="text-[#E040FB]">BRIDGE</span>}
+                {e.bridge_hack && <span className="text-[#E040FB]">جسر بلوك تشين</span>}
               </div>
               <div className="text-[10px] font-mono text-[var(--text-secondary)] leading-snug">{e.technique}</div>
             </div>
           ))}
 
-          <Head title="CRYPTO CVES" icon={Bug} color="#E040FB" right={`${brief.cves.length} shown`} />
+          <Head title="ثغرات العملات الرقمية" icon={Bug} color="#E040FB" right={`${brief.cves.length} shown`} />
           {brief.cves.length === 0 && (
-            <div className="text-[10px] font-mono text-[var(--text-muted)] py-1">None published in window.</div>
+            <div className="text-[10px] font-mono text-[var(--text-muted)] py-1">لم تُنشر بيانات خلال هذه الفترة.</div>
           )}
           {brief.cves.slice(0, 10).map((c: any, i: number) => {
             const col = SEV_COLOR[String(c.severity || '').toLowerCase()] || '#9B978E';
@@ -207,7 +207,7 @@ function ChainBriefInner() {
             );
           })}
 
-          <Head title="OFAC DESIGNATED WALLETS" icon={ShieldAlert} color="#FFD700" right={`${t?.sanctioned_wallet_count ?? 0} total`} />
+          <Head title="محافظ مدرجة على قائمة OFAC" icon={ShieldAlert} color="#FFD700" right={`${t?.sanctioned_wallet_count ?? 0} total`} />
           {brief.sanctioned_wallets.slice(0, 10).map((w: any, i: number) => (
             <div key={i} className="flex items-center gap-2 py-1 text-[10px] font-mono">
               <span className="w-[34px] font-bold text-[#FFD700]">{w.asset}</span>
@@ -218,7 +218,7 @@ function ChainBriefInner() {
 
           {brief.degraded?.length > 0 && (
             <div className="mt-3 px-2 py-1.5 rounded border border-white/10 bg-white/[0.03]">
-              <span className="text-[10px] font-mono text-[var(--text-muted)] block mb-0.5">DEGRADED SOURCES</span>
+              <span className="text-[10px] font-mono text-[var(--text-muted)] block mb-0.5">مصادر متدهورة</span>
               {brief.degraded.map((d: string, i: number) => (
                 <div key={i} className="text-[10px] font-mono text-[var(--text-secondary)] leading-snug">↳ {d}</div>
               ))}
@@ -226,7 +226,7 @@ function ChainBriefInner() {
           )}
 
           <div className="mt-2 text-[9px] font-mono text-[var(--text-muted)]">
-            Sources: {(brief.sources || []).join(' · ')} · auto-refresh 15m
+            المصدرs: {(brief.sources || []).join(' · ')} · auto-refresh 15m
           </div>
         </>
       )}
