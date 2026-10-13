@@ -37,7 +37,7 @@ import {
 // once a security is loaded.
 const MarketChart = dynamic(() => import('./MarketChart'), { ssr: false });
 
-interface MarketsPanelProps { data: any; spaceالطقس?: any; }
+interface MarketsPanelProps { data: any; spaceWeather?: any; }
 
 /** The theme's own colours, so Ghost and every other theme recolour this too. */
 const T = {
@@ -51,7 +51,7 @@ const T = {
   alert: 'var(--alert-orange)',
 } as const;
 
-/** One icon per function key, as الاستطلاع gives one to each tool. */
+/** One icon per function key, as RECON gives one to each tool. */
 const ICONS: Record<FunctionCode, ComponentType<{ className?: string; style?: CSSProperties }>> = {
   WEI: LineChart, DEF: Shield, NRG: Droplets, CMDTY: Gem, FX: DollarSign, CRYPTO: Bitcoin, WATCH: Star, DON: DigitalDonMark,
 };
@@ -211,13 +211,13 @@ function SecurityTable({ groups, selected, watchlist, sort, onSort, onOpen, onSt
   );
 }
 
-export default function MarketsPanel({ data, spaceالطقس }: MarketsPanelProps) {
+export default function MarketsPanel({ data, spaceWeather }: MarketsPanelProps) {
   const [expanded, setExpanded] = useState(true);
   const [maximized, setMaximized] = useState(false);
   /** Starred symbols, kept in this browser only. */
   const [watchlist, setWatchlist] = useState<string[]>(() => {
     if (typeof window === 'undefined') return [];
-    try { return parseWatchlist(window.localStorage.getItem(قائمة المتابعة_KEY)); } catch { return []; }
+    try { return parseWatchlist(window.localStorage.getItem(WATCHLIST_KEY)); } catch { return []; }
   });
   const [fn, setFn] = useState<FunctionCode | 'HELP'>(() => (watchlist.length ? 'WATCH' : 'WEI'));
   /** The security loaded into the chart, if any. */
@@ -354,7 +354,7 @@ export default function MarketsPanel({ data, spaceالطقس }: MarketsPanelProp
         <span key={c.code} className="flex items-center gap-1">
           <span style={{ color: T.faint }}>{c.code}</span>
           <span style={{ color: T.dim }}>{c.time}</span>
-          <span className="w-1.5 h-1.5 rounded-full" style={{ background: c.open ? T.up : T.faint, opacity: c.open ? 1 : 0.5 }} title={c.open ? 'فتح' : 'Closed'} />
+          <span className="w-1.5 h-1.5 rounded-full" style={{ background: c.open ? T.up : T.faint, opacity: c.open ? 1 : 0.5 }} title={c.open ? 'Open' : 'Closed'} />
         </span>
       ))}
     </div>
@@ -577,7 +577,7 @@ export default function MarketsPanel({ data, spaceالطقس }: MarketsPanelProp
 
   const movers = breadth && (
     <div className="p-2.5 rounded-lg border border-[var(--border-secondary)] bg-white/[0.02]">
-      <div className="text-[9px] font-mono tracking-widest pb-1.5" style={{ color: T.faint }}>MOVERS · ALL الأسواق</div>
+      <div className="text-[9px] font-mono tracking-widest pb-1.5" style={{ color: T.faint }}>MOVERS · ALL MARKETS</div>
       <div className="grid grid-cols-2 gap-3 text-[10px] font-mono tabular-nums">
         {[breadth.best, breadth.worst].map((list, col) => (
           <div key={col}>
@@ -595,13 +595,13 @@ export default function MarketsPanel({ data, spaceالطقس }: MarketsPanelProp
 
   const footer = (
     <div className="flex items-center justify-between gap-2 text-[9px] font-mono tracking-wider" style={{ color: T.faint }}>
-      {spaceالطقس ? (
+      {spaceWeather ? (
         <span className="truncate">
-          الفضاء WX{' '}
+          SPACE WX{' '}
           <span style={{ color: spaceWeather.storm_color || T.text }}>
-            {spaceالطقس.kp_index == null ? 'no reading' : `Kp ${spaceالطقس.kp_index} — ${spaceالطقس.storm_level}`}
+            {spaceWeather.kp_index == null ? 'no reading' : `Kp ${spaceWeather.kp_index} — ${spaceWeather.storm_level}`}
           </span>
-          {spaceWeather.solar_flares?.length > 0 && <> · flare {spaceالطقس.solar_flares[0].class}</>}
+          {spaceWeather.solar_flares?.length > 0 && <> · flare {spaceWeather.solar_flares[0].class}</>}
         </span>
       ) : <span />}
       <span className="shrink-0">YAHOO · NOAA</span>
@@ -614,7 +614,7 @@ export default function MarketsPanel({ data, spaceالطقس }: MarketsPanelProp
   const toggleMax = () => { setMaximized(m => !m); setExpanded(true); };
 
   if (maximized && mounted && typeof document !== 'undefined') {
-    /* Full screen, built like الاستطلاع's: a window over a dimmed map, the
+    /* Full screen, built like RECON's: a window over a dimmed map, the
        monitor and the day's heatmap on the left, the chart and what moved
        beside it. Each column scrolls on its own. */
     return createPortal(
@@ -624,7 +624,7 @@ export default function MarketsPanel({ data, spaceالطقس }: MarketsPanelProp
           <div className="flex items-center justify-between gap-4 px-6 py-3.5 border-b border-[var(--border-secondary)] bg-[#111] shrink-0">
             <div className="flex items-center gap-3 min-w-0">
               <BarChart3 className="w-5 h-5 shrink-0" style={{ color: T.accent }} />
-              <span className="hud-text text-[16px] text-[var(--text-primary)] whitespace-nowrap">OSIRIS الأسواق</span>
+              <span className="hud-text text-[16px] text-[var(--text-primary)] whitespace-nowrap">OSIRIS MARKETS</span>
               <span className="gotham-tag gotham-tag--classified" style={{ fontSize: '9px' }}>{allQuotes.length} INSTRUMENTS</span>
               <span className="text-[var(--text-muted)]/40">/</span>
               <span className="text-[11px] font-mono font-bold tracking-wider truncate" style={{ color: T.accent }}>
@@ -675,7 +675,7 @@ export default function MarketsPanel({ data, spaceالطقس }: MarketsPanelProp
       role="region"
       aria-label="Markets terminal"
     >
-      {/* The same header الاستطلاع wears: icon, title, a tag for what is on screen. */}
+      {/* The same header RECON wears: icon, title, a tag for what is on screen. */}
       <div className="flex items-center justify-between gap-2 px-3.5 py-2.5 border-b border-[rgba(255,255,255,0.05)] bg-[rgba(0,0,0,0.3)] hover:bg-[var(--hover-accent)] transition-colors shrink-0">
         <button onClick={() => setExpanded(e => !e)} className="flex items-center gap-2 min-w-0">
           <BarChart3 className="w-3.5 h-3.5 shrink-0" style={{ color: T.accent }} />
