@@ -153,7 +153,7 @@ function Tile({ feed, onOpen, onFail }: {
   onFail: (id: string) => void;
 }) {
   const fail = useCallback(() => onFail(feed.id), [onFail, feed.id]);
-  const { ref, handshake } = useYouTubeخطأ(feed.id, fail);
+  const { ref, handshake } = useYouTubeError(feed.id, fail);
 
   return (
     <div className="news-tile block w-full text-left" style={{ width: GEOM.width }}>
