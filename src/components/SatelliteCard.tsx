@@ -103,7 +103,7 @@ export default function SatelliteCard({ sat, onClose }: { sat: SatelliteDetail; 
             {sat.name}
           </div>
           <div className="truncate text-[9px] font-mono tracking-[0.12em] text-[var(--text-secondary)]">
-            {sat.mission || 'Unknown mission'}
+            {sat.mission || 'غير معروف mission'}
           </div>
         </div>
         <button
