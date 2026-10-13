@@ -34,7 +34,7 @@ const TITLE: Record<DrawMode, string> = {
 };
 
 /** What to do next, given how far along the shape is. */
-function step(mode: رسمMode, vertices: number): string {
+function step(mode: DrawMode, vertices: number): string {
   if (vertices === 0) {
     return {
       polygon: 'Click the first corner of your area',
@@ -82,11 +82,11 @@ export default function DrawHud({ mode, progress, onUndo, onFinish, onCancel }: 
           {progress && (progress.areaKm2 > 0 || progress.lengthKm > 0) && (
             <span className="ml-1 flex items-center gap-2 border-l border-[var(--border-secondary)] pl-3 text-[12px] font-mono tabular-nums text-white">
               {progress.radiusKm != null && progress.radiusKm > 0 && (
-                <span>r {formatالمسافة(progress.radiusKm)}</span>
+                <span>r {formatDistance(progress.radiusKm)}</span>
               )}
               {progress.areaKm2 > 0 && <span>{formatArea(progress.areaKm2)}</span>}
               {progress.areaKm2 === 0 && progress.lengthKm > 0 && (
-                <span>{formatالمسافة(progress.lengthKm)}</span>
+                <span>{formatDistance(progress.lengthKm)}</span>
               )}
             </span>
           )}
@@ -98,7 +98,7 @@ export default function DrawHud({ mode, progress, onUndo, onFinish, onCancel }: 
             disabled={vertices === 0}
             className="flex items-center gap-1.5 rounded-md border border-[var(--border-secondary)] px-2.5 py-1.5 text-[11px] font-mono text-[var(--text-secondary)] transition-colors hover:bg-white/10 hover:text-white disabled:opacity-30"
           >
-            <Undo2 className="h-3 w-3" /> تراجع point
+            <Undo2 className="h-3 w-3" /> Undo point
           </button>
 
           {!selfCompleting && (
@@ -112,7 +112,7 @@ export default function DrawHud({ mode, progress, onUndo, onFinish, onCancel }: 
               }`}
             >
               <Check className="h-3 w-3" />
-              إنهاء {mode === 'line' ? 'path' : 'area'}
+              Finish {mode === 'line' ? 'path' : 'area'}
             </button>
           )}
 
@@ -120,7 +120,7 @@ export default function DrawHud({ mode, progress, onUndo, onFinish, onCancel }: 
             onClick={onCancel}
             className="flex items-center gap-1.5 rounded-md border border-[var(--border-secondary)] px-2.5 py-1.5 text-[11px] font-mono text-[var(--text-secondary)] transition-colors hover:border-[var(--alert-red)]/40 hover:text-[var(--alert-red)]"
           >
-            <X className="h-3 w-3" /> إلغاء
+            <X className="h-3 w-3" /> Cancel
           </button>
 
           <span className="ml-auto pl-2 text-[10px] font-mono text-[var(--text-muted)]">
