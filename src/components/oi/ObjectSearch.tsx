@@ -15,7 +15,7 @@ import { Kbd, TypeIcon, accentFor } from './atoms';
 
 export interface ObjectSearchHandle { focus: () => void }
 
-export const العنصربحث = forwardRef<ObjectSearchHandle, { s: RunState; onPick: (key: string) => void }>(function العنصربحث({ s, onPick }, ref) {
+export const ObjectSearch = forwardRef<ObjectSearchHandle, { s: RunState; onPick: (key: string) => void }>(function ObjectSearch({ s, onPick }, ref) {
   const input = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
