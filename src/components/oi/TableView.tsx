@@ -25,10 +25,10 @@ interface Column<R> {
   width: string;
   align?: 'right';
   sort: (r: R) => number | string;
-  cell: (r: R) => Reactلاde;
+  cell: (r: R) => ReactNode;
 }
 
-interface الجدولSpec<R> {
+interface TableSpec<R> {
   rows: R[];
   /** What a row opens. */
   key: (r: R) => string;
@@ -40,7 +40,7 @@ interface الجدولSpec<R> {
 
 const num = (v: ReactNode) => <span className="font-mono tabular-nums">{v}</span>;
 
-function الاسمCell({ k, subtype, title, sub }: { k: string; subtype?: string; title: string; sub?: string }) {
+function NameCell({ k, subtype, title, sub }: { k: string; subtype?: string; title: string; sub?: string }) {
   return (
     <span className="flex items-center gap-2 min-w-0">
       <TypeIcon k={k} subtype={subtype} className="w-3.5 h-3.5 flex-shrink-0" style={{ color: accentFor(k) }} />
@@ -58,7 +58,7 @@ function specs(s: RunState) {
   const hard = (id: string) => movesOf(id).filter(m => m.stance === 'pressure' || m.stance === 'oppose').length;
   const quotes = (id: string) => movesOf(id).reduce((n, m) => n + (m.cites?.length ?? 0), 0);
   const name = (id: string) => s.actors.find(a => a.id === id)?.name ?? id;
-  const actors: الجدولSpec<RunState['actors'][number]> = {
+  const actors: TableSpec<RunState['actors'][number]> = {
     // The cast first, in the order they were cast; the rest of the world model after.
     rows: [...s.actors.filter(a => a.persona), ...s.actors.filter(a => !a.persona)], key: a => `a:${a.id}`, text: a => `${a.name} ${a.kind} ${a.role} ${a.place} ${a.persona?.goal ?? ''}`,
     columns: [
@@ -75,7 +75,7 @@ function specs(s: RunState) {
       { id: 'links', label: 'Links', width: '56px', align: 'right', sort: a => touching(`a:${a.id}`).length, cell: a => num(touching(`a:${a.id}`).length) },
     ],
   };
-  const moves: الجدولSpec<RunState['moves'][number]> = {
+  const moves: TableSpec<RunState['moves'][number]> = {
     rows: s.moves, key: m => `a:${m.actor}`, id: m => m.id, text: m => `${name(m.actor)} ${m.action} ${m.statement} ${m.targets.map(name).join(' ')} world ${m.world}`,
     columns: [
       { id: 'period', label: 'P', width: '40px', align: 'right', sort: m => m.period * 100 + m.world.charCodeAt(0), cell: m => num(m.period) },
@@ -87,7 +87,7 @@ function specs(s: RunState) {
       { id: 'quotes', label: 'Quotes', width: '60px', align: 'right', sort: m => m.cites?.length ?? 0, cell: m => num(m.cites?.length || '—') },
     ],
   };
-  const events: الجدولSpec<RunState['events'][number]> = {
+  const events: TableSpec<RunState['events'][number]> = {
     rows: s.events, key: e => `e:${e.id}`, text: e => `${e.title} ${e.detail} ${e.place} world ${e.world}`,
     columns: [
       { id: 'date', label: 'التاريخ', width: '92px', sort: e => e.date, cell: e => <span className="font-mono tabular-nums text-[var(--text-secondary)]">{e.date}</span> },
@@ -98,7 +98,7 @@ function specs(s: RunState) {
       { id: 'place', label: 'Where', width: 'minmax(80px,1fr)', sort: e => e.place, cell: e => <span className="truncate text-[var(--text-secondary)]">{e.place || '—'}</span> },
     ],
   };
-  const sources: الجدولSpec<RunState['context'][number]> = {
+  const sources: TableSpec<RunState['context'][number]> = {
     rows: s.context, key: c => `c:${c.id}`, text: c => `${c.title} ${c.source} ${c.place}`,
     columns: [
       { id: 'title', label: 'المصدر', width: 'minmax(220px,3fr)', sort: c => c.title, cell: c => <NameCell k={`c:${c.id}`} subtype={c.kind} title={c.title} sub={c.source} /> },
@@ -109,10 +109,10 @@ function specs(s: RunState) {
       { id: 'cited', label: 'Cited', width: '54px', align: 'right', sort: c => touching(`c:${c.id}`).length, cell: c => num(touching(`c:${c.id}`).length || '—') },
     ],
   };
-  const links: الجدولSpec<RunState['links'][number]> = {
+  const links: TableSpec<RunState['links'][number]> = {
     rows: s.links, key: l => `link:${l.id}`, text: l => `${nodeName(s, l.from)} ${nodeName(s, l.to)} ${l.kind} ${l.label}`,
     columns: [
-      { id: 'from', label: 'From', width: 'minmax(120px,1.4fr)', sort: l => nodeName(s, l.from), cell: l => <span className="truncate text-[var(--text-primary)]">{nodeالاسم(s, l.from)}</span> },
+      { id: 'from', label: 'From', width: 'minmax(120px,1.4fr)', sort: l => nodeName(s, l.from), cell: l => <span className="truncate text-[var(--text-primary)]">{nodeName(s, l.from)}</span> },
       {
         id: 'kind', label: 'Link', width: '108px', sort: l => `${l.kind}${l.tone}`,
         cell: l => (
@@ -122,7 +122,7 @@ function specs(s: RunState) {
           </span>
         ),
       },
-      { id: 'to', label: 'To', width: 'minmax(120px,1.4fr)', sort: l => nodeName(s, l.to), cell: l => <span className="truncate text-[var(--text-primary)]">{nodeالاسم(s, l.to)}</span> },
+      { id: 'to', label: 'To', width: 'minmax(120px,1.4fr)', sort: l => nodeName(s, l.to), cell: l => <span className="truncate text-[var(--text-primary)]">{nodeName(s, l.to)}</span> },
       { id: 'strength', label: 'Str.', width: '52px', align: 'right', sort: l => l.strength, cell: l => num(Math.round(l.strength * 100)) },
       { id: 'round', label: 'When', width: '62px', align: 'right', sort: l => l.round, cell: l => num(l.from === 'r:report' ? 'Report' : l.round ? `${l.id.split(':')[1]} · P${l.round}` : 'النموذج') },
       { id: 'label', label: 'Says', width: 'minmax(140px,2fr)', sort: l => l.label, cell: l => <span className="truncate text-[var(--text-muted)]" title={l.label}>{l.label || '—'}</span> },
@@ -131,8 +131,8 @@ function specs(s: RunState) {
   return { actors, moves, events, sources, links };
 }
 
-function الجدول<R>({ spec, selected, onتحديد, query }: { spec: الجدولSpec<R>; selected: string | null; onSelect: (k: string | null) => void; query: string }) {
-  const [sort, setترتيب] = useState<{ id: string; dir: 1 | -1 } | null>(null);
+function Table<R>({ spec, selected, onSelect, query }: { spec: TableSpec<R>; selected: string | null; onSelect: (k: string | null) => void; query: string }) {
+  const [sort, setSort] = useState<{ id: string; dir: 1 | -1 } | null>(null);
   const template = spec.columns.map(c => c.width).join(' ');
   const rows = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -173,7 +173,7 @@ function الجدول<R>({ spec, selected, onتحديد, query }: { spec: الج
           </button>
         );
       })}
-      {!rows.length && <Empty>{query ? 'لاthing matches the filter.' : 'لاthing here yet.'}</Empty>}
+      {!rows.length && <Empty>{query ? 'Nothing matches the filter.' : 'Nothing here yet.'}</Empty>}
     </div>
   );
 }
@@ -197,7 +197,7 @@ export function TableView({ s, selected, onSelect }: { s: RunState; selected: st
     <div className="h-full flex flex-col">
       <div ref={head} className="flex items-center gap-3 px-4 pt-3 pb-3 border-b border-[var(--border-secondary)]">
         <div className={narrow ? 'hidden' : ''}>
-          <div className="hud-text text-[10px] text-[var(--gold-primary)]">العنصرs</div>
+          <div className="hud-text text-[10px] text-[var(--gold-primary)]">العناصر</div>
           <div className="mt-0.5 text-[10px] font-mono tracking-[0.1em] text-[var(--text-muted)]">{counts[kind]} {kind.toUpperCase()}</div>
         </div>
         <div className="flex-1 min-w-0 max-w-[560px]">
