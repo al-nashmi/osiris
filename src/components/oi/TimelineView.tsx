@@ -89,7 +89,7 @@ function PooledChart({ tl, cols, win }: { tl: Timeline; cols: number; win: [numb
   const norm = (v: number) => Math.min(1, Math.max(0, (v - win[0]) / (win[1] - win[0] || 1)));
   const y = (v: number) => pad + (1 - norm(v)) * (H - pad * 2);
   const grid = [win[0], (win[0] + win[1]) / 2, win[1]];
-  const pts = tl.pooled.map((p, i) => (p ? { ...p, i } : null)).filter((p): p is NonNullable<typeof p> => p !== null);
+  const pts = tl.pooled.map((p, i) => (p ? { ...p, i } : null)).filter((p): p is لاnNullable<typeof p> => p !== null);
   const band = pts.filter(p => p.low !== null && p.high !== null);
   const finalX = tl.final ? x(cols - 1) : 0;
   return (
@@ -221,7 +221,7 @@ export function TimelineView({ s, selected, onSelect }: { s: RunState; selected:
     <div className="h-full flex flex-col">
       <div className="flex items-center gap-3 px-4 pt-3.5 pb-2.5 border-b border-[var(--border-secondary)]">
         <div>
-          <div className="hud-text text-[10px] text-[var(--gold-primary)]">Timeline</div>
+          <div className="hud-text text-[10px] text-[var(--gold-primary)]">الخط الزمني</div>
           <div className="mt-0.5 text-[10px] font-mono tracking-[0.1em] text-[var(--text-muted)]">
             {tl.rounds.length} PERIODS · {tl.lanes.length} WORLDS · {s.events.length} EVENTS{tl.injects.length ? ` · ${tl.injects.length} INJECTED` : ''}
           </div>
