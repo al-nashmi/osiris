@@ -17,7 +17,7 @@ interface LayerPanelProps {
   isMobile?: boolean;
   theme?: 'core' | 'ghost';
   setTheme?: (theme: 'core' | 'ghost') => void;
-  /** Server-side capabilities, e.g. { cloudflare: true }. Layers declaring a
+  /** Server-side capabilities, e.g. { cloudflare: true }. الطبقات declaring a
    *  `requires` key stay hidden until the matching capability is present. */
   capabilities?: Record<string, boolean>;
   terrainStatus?: TerrainStatus;
@@ -83,7 +83,7 @@ const LAYER_GROUPS: LayerGroupDef[] = [
     fullLabel: 'الفضاء TRACKING',
     icon: Satellite,
     layers: [
-      { key: 'satellites', label: 'All Satellites', dataKey: 'satellites' },
+      { key: 'satellites', label: 'All الأقمار الصناعية', dataKey: 'satellites' },
       { key: 'sat_comms', label: 'Starlink / Comms', dataKey: 'satellites', catKey: 'comms' },
       { key: 'sat_military', label: 'Military / Intel', dataKey: 'satellites', catKey: 'military' },
       { key: 'sat_navigation', label: 'GPS / Navigation', dataKey: 'satellites', catKey: 'navigation' },
@@ -96,7 +96,7 @@ const LAYER_GROUPS: LayerGroupDef[] = [
     fullLabel: 'SURVEILLANCE',
     icon: Camera,
     layers: [
-      { key: 'cctv', label: 'CCTV Cameras', dataKey: 'cameras' },
+      { key: 'cctv', label: 'CCTV الكاميرات', dataKey: 'cameras' },
       { key: 'cctv_previews', label: 'Live Previews', dataKey: '', parent: 'cctv' },
       { key: 'live_news', label: 'Live News Feeds', dataKey: 'live_feeds' },
     ],
@@ -106,9 +106,9 @@ const LAYER_GROUPS: LayerGroupDef[] = [
     fullLabel: 'NATURAL HAZARDS',
     icon: CloudLightning,
     layers: [
-      { key: 'earthquakes', label: 'Earthquakes', dataKey: 'earthquakes' },
-      { key: 'fires', label: 'Active Fires', dataKey: 'fires' },
-      { key: 'weather', label: 'Severe Weather', dataKey: 'weather_events' },
+      { key: 'earthquakes', label: 'الزلازل', dataKey: 'earthquakes' },
+      { key: 'fires', label: 'Active الحرائق', dataKey: 'fires' },
+      { key: 'weather', label: 'Severe الطقس', dataKey: 'weather_events' },
     ],
   },
   {
@@ -116,7 +116,7 @@ const LAYER_GROUPS: LayerGroupDef[] = [
     fullLabel: 'THREATS & INTEL',
     icon: AlertTriangle,
     layers: [
-      { key: 'infrastructure', label: 'Nuclear Facilities', dataKey: 'infrastructure' },
+      { key: 'infrastructure', label: 'المنشآت النووية', dataKey: 'infrastructure' },
       { key: 'global_incidents', label: 'Global Incidents', dataKey: 'gdelt' },
       { key: 'alert_pins', label: 'Live Alert Pins', dataKey: 'alert_pins' },
       { key: 'gdelt_events', label: 'GDELT Events', dataKey: 'gdelt_events' },
@@ -201,7 +201,7 @@ function SubLayerStem() {
   );
 }
 
-function LayerPanel({ data, activeLayers, setActiveLayers, isMobile, theme = 'core', setTheme, capabilities = {}, terrainStatus = 'idle', onTerrainإعادة المحاولة, onTerrainFocus, on3DModeSelected, revealed = true }: LayerPanelProps) {
+function LayerPanel({ data, activeالطبقات, setActiveالطبقات, isMobile, theme = 'core', setTheme, capabilities = {}, terrainStatus = 'idle', onTerrainإعادة المحاولة, onTerrainFocus, on3DModeSelected, revealed = true }: LayerPanelProps) {
   const [hoveredGroup, setHoveredGroup] = useState<string | null>(null);
   /**
    * A pinned group stays open when the pointer leaves. Hover-only flyouts are
@@ -222,13 +222,13 @@ function LayerPanel({ data, activeLayers, setActiveLayers, isMobile, theme = 'co
     if ((key === 'terrain_elevation' || key === 'terrain_3d') && !activeLayers[key]) on3DModeSelected?.();
     setActiveLayers((prev: any) => ({ ...prev, [key]: !prev[key] }));
   };
-  const terrainDetails = activeLayers.terrain_elevation ? (
+  const terrainDetails = activeالطبقات.terrain_elevation ? (
     <div className="mt-2 rounded-lg border border-white/10 bg-white/[0.03] p-2.5 text-[10px] text-white/60">
       <p role="status">{terrainStatus === 'idle' ? `Terrain at zoom ${TERRAIN_MIN_ZOOM}+ · zoom in` : terrainStatus === 'waiting' ? 'Terrain starts when you stop moving' : terrainStatus === 'loading' ? 'Loading nearby terrain…' : terrainStatus === 'error' ? 'Terrain unavailable; the map is still usable.' : 'Terrain on'}</p>
-      {terrainStatus === 'idle' && <button type="button" onClick={onTerrainFocus} className="mt-2 min-h-8 rounded border border-white/15 px-2 text-[var(--gold-primary)] hover:bg-white/10">تكبير إلى مستوى التضاريس</button>}
-      {terrainStatus === 'error' && <button type="button" onClick={onTerrainRetry} className="mt-2 min-h-8 rounded border border-white/15 px-2 text-[var(--gold-primary)] hover:bg-white/10">إعادة محاولة تحميل التضاريس</button>}
-      <p className="mt-2 text-white/35">تفاصيل قريبة فقط · مربعات مخزنة</p>
-      <a className="mt-1 inline-block underline underline-offset-2" href="https://github.com/tilezen/joerd/blob/master/docs/attribution.md" target="_blank" rel="noopener noreferrer">مصادر بيانات التضاريس</a>
+      {terrainStatus === 'idle' && <button type="button" onClick={onTerrainFocus} className="mt-2 min-h-8 rounded border border-white/15 px-2 text-[var(--gold-primary)] hover:bg-white/10">Zoom to terrain</button>}
+      {terrainStatus === 'error' && <button type="button" onClick={onTerrainRetry} className="mt-2 min-h-8 rounded border border-white/15 px-2 text-[var(--gold-primary)] hover:bg-white/10">إعادة المحاولة terrain</button>}
+      <p className="mt-2 text-white/35">Nearby detail only · cached tiles</p>
+      <a className="mt-1 inline-block underline underline-offset-2" href="https://github.com/tilezen/joerd/blob/master/docs/attribution.md" target="_blank" rel="noopener noreferrer">Terrain credits</a>
     </div>
   ) : null;
 
@@ -277,9 +277,9 @@ function LayerPanel({ data, activeLayers, setActiveLayers, isMobile, theme = 'co
             </div>
             <div className="flex flex-col gap-1">
               {group.layers.map((layer) => {
-                const isLayerActive = activeLayers[layer.key];
+                const isLayerActive = activeالطبقات[layer.key];
                 const count = getCount(layer.dataKey, layer.catKey);
-                const dormant = !!layer.parent && !activeLayers[layer.parent];
+                const dormant = !!layer.parent && !activeالطبقات[layer.parent];
                 return (
                   <button
                     key={layer.key}
@@ -309,7 +309,7 @@ function LayerPanel({ data, activeLayers, setActiveLayers, isMobile, theme = 'co
 
         {/* MOBILE STYLE STUDIO */}
         <div className="flex items-center justify-between mt-2 pt-3 border-t border-white/[0.06] px-1">
-          <span className="text-[10px] font-mono tracking-[0.2em] text-white/25 uppercase">استوديو المظهر</span>
+          <span className="text-[10px] font-mono tracking-[0.2em] text-white/25 uppercase">Style Studio</span>
           <button
             onClick={() => setStudioOpen(o => !o)}
             aria-pressed={studioOpen}
@@ -323,13 +323,13 @@ function LayerPanel({ data, activeLayers, setActiveLayers, isMobile, theme = 'co
           </button>
         </div>
         <AnimatePresence>
-          {studioOpen && <StyleStudio isMobile onClose={() => setStudioOpen(false)} />}
+          {studioفتح && <StyleStudio isMobile onClose={() => setStudioOpen(false)} />}
         </AnimatePresence>
 
         {/* MOBILE GHOST TOGGLE */}
         {setTheme && (
           <div className="flex items-center justify-between pt-3 border-t border-white/[0.06] px-1">
-            <span className="text-[10px] font-mono tracking-[0.2em] text-white/25 uppercase">وضع الشبح</span>
+            <span className="text-[10px] font-mono tracking-[0.2em] text-white/25 uppercase">Ghost Protocol</span>
             <button
               onClick={() => setTheme(theme === 'core' ? 'ghost' : 'core')}
               className="w-8 h-8 rounded-full flex items-center justify-center transition-all"
@@ -368,9 +368,9 @@ function LayerPanel({ data, activeLayers, setActiveLayers, isMobile, theme = 'co
           const isHovered = hoveredGroup === group.label;
           const Icon = group.icon;
 
-          const activeCount = counted.filter(l => activeLayers[l.key]).length;
+          const activeCount = counted.filter(l => activeالطبقات[l.key]).length;
           const isPinned = pinnedGroup === group.label;
-          const isOpen = isHovered || isPinned;
+          const isفتح = isHovered || isPinned;
 
           return (
             <div
@@ -426,7 +426,7 @@ function LayerPanel({ data, activeLayers, setActiveLayers, isMobile, theme = 'co
 
               {/* Flyout (LEFT side) */}
               <AnimatePresence>
-                {isOpen && (
+                {isفتح && (
                   <motion.div
                     initial={{ opacity: 0, x: -8, filter: 'blur(4px)' }}
                     animate={{ opacity: 1, x: 0, filter: 'blur(0px)' }}
@@ -465,9 +465,9 @@ function LayerPanel({ data, activeLayers, setActiveLayers, isMobile, theme = 'co
                     </div>
                     <div className="flex flex-col gap-0.5">
                       {group.layers.map((layer) => {
-                        const isLayerActive = activeLayers[layer.key];
+                        const isLayerActive = activeالطبقات[layer.key];
                         const count = getCount(layer.dataKey, layer.catKey);
-                        const dormant = !!layer.parent && !activeLayers[layer.parent];
+                        const dormant = !!layer.parent && !activeالطبقات[layer.parent];
 
                         return (
                           <button
@@ -511,7 +511,7 @@ function LayerPanel({ data, activeLayers, setActiveLayers, isMobile, theme = 'co
         aria-pressed={studioOpen}
         className="w-10 h-10 flex items-center justify-center rounded-lg transition-all duration-500 cursor-pointer"
         style={{ background: studioOpen ? 'var(--hover-accent)' : 'transparent' }}
-        title="استوديو المظهر"
+        title="Style Studio"
       >
         <SlidersHorizontal
           className="transition-all duration-500"
@@ -524,7 +524,7 @@ function LayerPanel({ data, activeLayers, setActiveLayers, isMobile, theme = 'co
         />
       </button>
       <AnimatePresence>
-        {studioOpen && <StyleStudio onClose={() => setStudioOpen(false)} />}
+        {studioفتح && <StyleStudio onClose={() => setStudioOpen(false)} />}
       </AnimatePresence>
 
       {/* Ghost Protocol Toggle */}
@@ -535,7 +535,7 @@ function LayerPanel({ data, activeLayers, setActiveLayers, isMobile, theme = 'co
           style={{
             background: theme === 'ghost' ? 'rgba(179, 136, 255, 0.1)' : 'transparent',
           }}
-          title="وضع الشبح"
+          title="Ghost Protocol"
         >
           <Ghost
             className="transition-all duration-500"
