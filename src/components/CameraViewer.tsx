@@ -239,7 +239,7 @@ export default function CameraViewer({ camera, onإغلاق, onLocate, besideOi 
                           setImageUrl(url);
                         }
                       }} 
-                      className="p-1.5 rounded-sm bg-white/5 border border-white/10 hover:bg-[var(--gold-primary)]/20 hover:border-[var(--gold-primary)] transition-all" title="تحديث feed"
+                      className="p-1.5 rounded-sm bg-white/5 border border-white/10 hover:bg-[var(--gold-primary)]/20 hover:border-[var(--gold-primary)] transition-all" title="Refresh feed"
                     >
                       <RefreshCw className="w-3 h-3 text-[var(--text-secondary)] hover:text-[var(--gold-primary)]" />
                     </button>
