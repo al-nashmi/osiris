@@ -153,7 +153,7 @@ function Row({ flight, telem, onRemove, onLocate, onDetail }: {
   onDetail: (icao24: string, d: AircraftDetail | null) => void;
 }) {
   const [detail, setDetail] = useState<AircraftDetail | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setجارٍ التحميل] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
@@ -176,7 +176,7 @@ function Row({ flight, telem, onRemove, onLocate, onDetail }: {
         ? { ...base, ...resolveEndpoints(base, route as ScheduledRoute | null) }
         : null;
       setDetail(merged);
-      setLoading(false);
+      setجارٍ التحميل(false);
       onDetail(flight.icao24, merged);
     });
 
