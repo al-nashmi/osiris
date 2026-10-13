@@ -84,7 +84,7 @@ const UptimeClock = () => {
     }, 1000);
     return () => clearInterval(iv);
   }, []);
-  return <span className="hidden lg:inline">UPالوقت: <span className="text-[var(--gold-primary)]">{uptime}</span></span>;
+  return <span className="hidden lg:inline">UPTIME: <span className="text-[var(--gold-primary)]">{uptime}</span></span>;
 };
 
 const ZuluClock = () => {
@@ -176,7 +176,7 @@ export default function Dashboard() {
   const [dataVersion, setDataVersion] = useState(0);
   const data = dataRef.current;
 
-  const [backendStatus, setرجوعendStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
+  const [backendStatus, setBackendStatus] = useState<'connecting' | 'connected' | 'error'>('connecting');
   const [mapView, setMapView] = useState({ zoom: 2.5, latitude: 20 });
   const [flyToLocation, setFlyToLocation] = useState<{ lat: number; lng: number; zoom?: number; alertId?: string; duration?: number; ts: number } | null>(null);
   /* The Live Alerts the feed's filters leave showing; the map pins those. */
@@ -197,11 +197,11 @@ export default function Dashboard() {
   /* Where the viewer is, by IP. Asked for at once; the camera flies there
      once the splash has gone. */
   const [homeLocation, setHomeLocation] = useState<{ lat: number; lng: number } | null>(null);
-  const autoLocateإلغاءled = useRef(false);
+  const autoLocateCancelled = useRef(false);
 
   const [activeCamera, setActiveCamera] = useState<any>(null);
-  const [spaceالطقس, setSpaceالطقس] = useState<any>(null);
-  const [showالطبقات, setShowالطبقات] = useState(true);
+  const [spaceWeather, setSpaceWeather] = useState<any>(null);
+  const [showLayers, setShowLayers] = useState(true);
   const [showMarkets, setShowMarkets] = useState(false);
   /* The Markets panel is pinned just below the header rather than centred on
      its rail button. Centred, a tall panel (a chart open, a long list) rose
@@ -234,9 +234,9 @@ export default function Dashboard() {
   const [watchEvents, setWatchEvents] = useState<WatchEvent[]>([]);
   const watchBaselines = useRef<Record<string, WatchBaseline>>({});
   const [selectedPolygon, setSelectedPolygon] = useState<string | null>(null);
-  const [showDesktopبحث, setShowDesktopبحث] = useState(false);
+  const [showDesktopSearch, setShowDesktopSearch] = useState(false);
   const [showDirections, setShowDirections] = useState(false);
-  // A destination بحث hands to Directions ("Directions to here"); its stamp remounts the planner with it.
+  // A destination Search hands to Directions ("Directions to here"); its stamp remounts the planner with it.
   const [routeTarget, setRouteTarget] = useState<{ label: string; context?: string; lat: number; lng: number; kind?: string; ts: number } | null>(null);
   const [activeRoute, setActiveRoute] = useState<
     (RouteResult & {
@@ -252,7 +252,7 @@ export default function Dashboard() {
     { route: RouteResult; label: string; key: number } | null
   >(null);
   const [navProgress, setNavProgress] = useState<NavProgress | null>(null);
-  const [watchedالرحلات الجوية, setWatchedالرحلات الجوية] = useState<WatchedFlight[]>([]);
+  const [watchedFlights, setWatchedFlights] = useState<WatchedFlight[]>([]);
   const [aircraftAirports, setAircraftAirports] = useState<Record<string, Airport[]>>({});
 
   // The popup lives in raw map HTML, so it hands aircraft over through a global.
@@ -322,7 +322,7 @@ export default function Dashboard() {
   }, [navSession]);
   const [showRemote, setShowRemote] = useState(false);
   const [showArcGIS, setShowArcGIS] = useState(false);
-  const [arcgisالطبقات, setArcgisالطبقات] = useState<Array<{ id: string; title: string; url: string; geojson: any; color: string; visible: boolean; opacity: number }>>([]);
+  const [arcgisLayers, setArcgisLayers] = useState<Array<{ id: string; title: string; url: string; geojson: any; color: string; visible: boolean; opacity: number }>>([]);
   const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number; bounds?: { west: number; south: number; east: number; north: number } } | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [mobilePanel, setMobilePanel] = useState<'layers'|'markets'|'intel'|'search'|'recon'|'remote'|'oi'|null>(null);
@@ -427,11 +427,11 @@ export default function Dashboard() {
   }, []);
   // Once a run is under way the camera is the director's (lib/oi/camera): a late answer about the
   // visitor's city must not fly it away.
-  useEffect(() => { if (oi.runId) autoLocateإلغاءled.current = true; }, [oi.runId]);
+  useEffect(() => { if (oi.runId) autoLocateCancelled.current = true; }, [oi.runId]);
   const [mapProjection, setMapProjection] = useState<'globe'|'mercator'>('globe');
   const [terrainFocus, setTerrainFocus] = useState(0);
   const [terrainStatus, setTerrainStatus] = useState<TerrainStatus>('idle');
-  const [terrainإعادة المحاولة, setTerrainإعادة المحاولة] = useState(0);
+  const [terrainRetry, setTerrainRetry] = useState(0);
   const [mapStyle, setMapStyle] = useState<'dark'|'satellite'>('dark');
   const [sweepData, setSweepData] = useState<any>(null);
   const [scanTargets, setScanTargets] = useState<any[]>([]);
@@ -446,7 +446,7 @@ export default function Dashboard() {
   /* Style Studio overrides are inline on <body>, so they survive the theme
      swap above and only need reapplying once per load. */
   useEffect(() => {
-    const saved = loadحفظdSettings();
+    const saved = loadSavedSettings();
     if (saved) applySettings(saved);
   }, []);
 
@@ -457,7 +457,7 @@ export default function Dashboard() {
   const lastGeocodedPos = useRef<{ lat: number; lng: number } | null>(null);
 
   // ── DEFAULT: Most layers OFF — fast initial load ──
-  const [activeالطبقات, setActiveالطبقات] = useState({
+  const [activeLayers, setActiveLayers] = useState({
     flights: false,
     private: false,
     jets: false,
@@ -514,7 +514,7 @@ export default function Dashboard() {
     if (!on && typeof window !== 'undefined') window.speechSynthesis?.cancel();
   }, []);
   const assistView = useRef<ReturnType<Site['view']>>({ lat: 20, lng: 0, zoom: 2.5, projection: 'globe', style: 'dark' });
-  const assistالطبقات = useRef<Record<string, boolean>>(activeLayers);
+  const assistLayers = useRef<Record<string, boolean>>(activeLayers);
   const assistVoice = useRef(oiVoice);
   const assistOi = useRef(oi);
   useEffect(() => { assistLayers.current = activeLayers; }, [activeLayers]);
@@ -530,7 +530,7 @@ export default function Dashboard() {
     if (panel === 'markets') { if (phone) setMobilePanel('markets'); else right(() => setShowMarkets(true)); }
     else if (panel === 'alerts') right(() => setShowAlerts(true));
     else if (panel === 'intel') { if (phone) setMobilePanel('recon'); else right(() => setShowIntel(true)); }
-    else if (panel === 'layers') { if (phone) setMobilePanel('layers'); else setShowالطبقات(true); }
+    else if (panel === 'layers') { if (phone) setMobilePanel('layers'); else setShowLayers(true); }
     else if (panel === 'directions') setShowDirections(true);
     else if (panel === 'forecast' || panel === 'workspace') {
       setOiMode('forecast');
@@ -737,16 +737,16 @@ export default function Dashboard() {
     urlTimer.current = setTimeout(() => {
       const active = Object.entries(activeLayers).filter(([,v]) => v).map(([k]) => k).join(',');
       // A forecast being watched keeps its place in the address, so the address bar stays shareable.
-      const oiRun = new URLبحثParams(window.location.search).get('oi');
+      const oiRun = new URLSearchParams(window.location.search).get('oi');
       const url = `${window.location.pathname}?layers=${active}${oiRun ? `&oi=${encodeURIComponent(oiRun)}` : ''}`;
       window.history.replaceState(null, '', url);
     }, 1500);
-  }, [activeالطبقات]);
+  }, [activeLayers]);
 
   // OI focus: clear the globe of the other layers while a forecast draws,
   // and put back exactly what was on when focus ends.
   const [oiFocus, setOiFocus] = useState(false);
-  const focusحفظd = useRef<typeof activeLayers | null>(null);
+  const focusSaved = useRef<typeof activeLayers | null>(null);
   const toggleOiFocus = useCallback(() => {
     const saved = focusSaved.current;
     if (saved) {
@@ -1155,7 +1155,7 @@ export default function Dashboard() {
     if (activeLayers.radiation) {
       intervals.push(setInterval(() => fetchEndpoint('/api/radiation', d => ({ radiation: d.stations })), 300000)); // 5m
     }
-    if (activeالطبقات.maritime) {
+    if (activeLayers.maritime) {
       /* Ten seconds is the cadence a moving vessel needs. The other two thirds
          of this payload — 52 ports and 10 chokepoints — are constants in the
          route, and their congestion is derived from those vessels, so with no
@@ -1192,7 +1192,7 @@ export default function Dashboard() {
      progressive geolocation fill, which is why a cold server paints the map in
      batches instead of staying empty and then snapping to full. */
   useEffect(() => {
-    if (!activeالطبقات.malware) return;
+    if (!activeLayers.malware) return;
 
     const source = new EventSource('/api/malware/stream');
     // Keyed by address: a host re-reported with a new payload updates its node
@@ -1260,7 +1260,7 @@ export default function Dashboard() {
   // Does NOT duplicate existing layer visuals — SDK layer is LINES ONLY.
   // Cameras are excluded — they have their own dedicated layer.
   useEffect(() => {
-    const anyActive = activeالطبقات.sdk_sea || activeالطبقات.sdk_air || activeالطبقات.sdk_naval;
+    const anyActive = activeLayers.sdk_sea || activeLayers.sdk_air || activeLayers.sdk_naval;
     if (!anyActive) {
       dataRef.current = { ...dataRef.current, sdk_entities: [] };
       return;
@@ -1269,14 +1269,14 @@ export default function Dashboard() {
     const sdkEntities: any[] = [];
 
     // Air domain (nodes only — no visual duplication)
-    const allالرحلات الجوية = [
+    const allFlights = [
       ...(data.commercial_flights || []),
       ...(data.private_flights || []),
       ...(data.private_jets || []),
       ...(data.military_flights || []),
     ];
     // Sample flights to keep it clean (every Nth)
-    const flightStep = Math.max(1, Math.floor(allالرحلات الجوية.length / 60));
+    const flightStep = Math.max(1, Math.floor(allFlights.length / 60));
     for (let i = 0; i < allFlights.length; i += flightStep) {
       const f = allFlights[i];
       if (!f.lat || !f.lng) continue;
@@ -1463,7 +1463,7 @@ export default function Dashboard() {
                 className="overflow-hidden whitespace-nowrap"
               >
                 <p className="text-[11px] md:text-[10px] font-mono tracking-[0.5em] text-[var(--gold-primary)]" style={{ opacity: 0.8 }}>
-                  منصة الاستخبارات العالمية
+                  GLOBAL INTELLIGENCE PLATFORM
                 </p>
               </motion.div>
             </div>
@@ -1591,7 +1591,7 @@ export default function Dashboard() {
         >
           <div className="text-[11.5px] font-medium leading-snug text-[var(--text-heading)]">{oiHover.title}</div>
           {oiHover.detail && <div className="mt-0.5 text-[10.5px] leading-snug text-[var(--text-secondary)]">{oiHover.detail}</div>}
-          <div className="mt-1 text-[8.5px] font-mono tracking-[0.18em] text-[var(--gold-primary)]">CLICK TO فتح</div>
+          <div className="mt-1 text-[8.5px] font-mono tracking-[0.18em] text-[var(--gold-primary)]">CLICK TO OPEN</div>
         </div>
       )}
 
@@ -1658,9 +1658,9 @@ export default function Dashboard() {
         )}
       </div>
 
-      {/* ── بحث — a spotlight at the top of the map: places, addresses, coordinates ── */}
+      {/* ── SEARCH — a spotlight at the top of the map: places, addresses, coordinates ── */}
       <AnimatePresence>
-        {showDesktopبحث && !isMobile && (
+        {showDesktopSearch && !isMobile && (
           <div data-hud className="absolute top-[92px] left-1/2 -translate-x-1/2 z-[450] w-[min(560px,calc(100vw-180px))] pointer-events-auto">
             <motion.div initial={{ opacity: 0, y: -8, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -8, scale: 0.98 }} transition={{ duration: 0.16 }}>
               <SearchBar center={mapCenter} onClose={() => setShowDesktopSearch(false)} onDirections={openDirectionsTo}
@@ -1724,12 +1724,12 @@ export default function Dashboard() {
           </svg>
           <div className="flex flex-col items-start gap-0.5">
             <h1 className="text-lg md:text-xl font-bold tracking-[0.4em] text-[#D4AF37] font-mono">OSIRIS</h1>
-            <span className="text-[9px] md:text-[10px] font-mono tracking-[0.2em] opacity-80 uppercase text-[#D4AF37]">فتح SOURCE INTELLIGENCE</span>
+            <span className="text-[9px] md:text-[10px] font-mono tracking-[0.2em] opacity-80 uppercase text-[#D4AF37]">OPEN SOURCE INTELLIGENCE</span>
           </div>
         </div>
         <div className="flex items-center gap-3 mt-1.5 pl-[44px] min-w-0 pr-4">
           <span className="text-[9px] md:text-[9px] text-[var(--text-muted)] font-mono tracking-[0.2em] md:tracking-[0.3em] uppercase opacity-40 truncate">
-            REAL-الوقت GLOBAL MONITORING <span className="hidden md:inline">· الرحلات الجوية · MARIالوقت · الأقمار الصناعية · CCTV · الطقس · التهديدات السيبرانية</span>
+            REAL-TIME GLOBAL MONITORING <span className="hidden md:inline">· FLIGHTS · MARITIME · SATELLITES · CCTV · WEATHER · CYBER THREATS</span>
           </span>
         </div>
       </motion.div>
@@ -1745,7 +1745,7 @@ export default function Dashboard() {
         <span className="flex items-center gap-1" title="Backend connection status">STATUS: <span className={backendStatus === 'connected' ? 'text-[var(--alert-green)]' : 'text-[var(--alert-red)]'}>{backendStatus === 'connected' ? 'مباشر' : backendStatus.toUpperCase()}</span></span>
 
         <span className="hidden lg:inline-flex items-center gap-1" title="Number of active data layers">
-          <span className="text-[var(--cyan-primary)] font-bold">{Object.values(activeالطبقات).filter(Boolean).length}</span>
+          <span className="text-[var(--cyan-primary)] font-bold">{Object.values(activeLayers).filter(Boolean).length}</span>
           <span className="opacity-60">الطبقات</span>
         </span>
 
@@ -1754,7 +1754,7 @@ export default function Dashboard() {
           <span className="opacity-60">الكيانات</span>
         </span>
 
-        {spaceالطقس && <span className="hidden lg:inline" title={spaceWeather.kp_index == null ? 'Geomagnetic Storm Index — no reading from NOAA' : `Geomagnetic Storm Index — Kp${spaceWeather.kp_index}`}>SOLAR: <span style={{ color: spaceWeather.storm_color, fontWeight: 700 }}>{spaceالطقس.kp_index == null ? 'N/A' : `Kp${spaceالطقس.kp_index}`}</span></span>}
+        {spaceWeather && <span className="hidden lg:inline" title={spaceWeather.kp_index == null ? 'Geomagnetic Storm Index — no reading from NOAA' : `Geomagnetic Storm Index — Kp${spaceWeather.kp_index}`}>SOLAR: <span style={{ color: spaceWeather.storm_color, fontWeight: 700 }}>{spaceWeather.kp_index == null ? 'N/A' : `Kp${spaceWeather.kp_index}`}</span></span>}
 
         <span className="text-[11px] font-bold tracking-[0.2em] text-[var(--text-muted)] opacity-50">{APP_VERSION}</span>
         
@@ -1778,7 +1778,7 @@ export default function Dashboard() {
 
 
       {/* ── NEW SIDEBAR (Root Level) ── */}
-      {showالطبقات && !isMobile && <div data-hud><LayerPanel {...terrainPanelProps} revealed={revealed} data={data} activeLayers={activeLayers} setActiveLayers={setActiveLayers} theme={osirisTheme} setTheme={setOsirisTheme} capabilities={capabilities} /></div>}
+      {showLayers && !isMobile && <div data-hud><LayerPanel {...terrainPanelProps} revealed={revealed} data={data} activeLayers={activeLayers} setActiveLayers={setActiveLayers} theme={osirisTheme} setTheme={setOsirisTheme} capabilities={capabilities} /></div>}
 
 
 
@@ -1929,7 +1929,7 @@ export default function Dashboard() {
         <div className="relative group">
           <button data-search-toggle onClick={() => { setShowDesktopSearch(!showDesktopSearch); setShowIntel(false); setShowMarkets(false); setShowAlerts(false); setShowSpaceCam(false); setShowDrawing(false); }} className={`relative w-8 h-8 rounded-full flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-white/50 ${showDesktopSearch ? 'bg-[var(--gold-primary)]/20' : 'hover:bg-white/10'}`} title="Search — find locations, cities, coordinates" aria-label="بحث" aria-expanded={showDesktopSearch}>
             <Search className={`w-4 h-4 ${showDesktopSearch ? 'text-[var(--gold-primary)]' : 'text-white/60'}`} />
-            {showDesktopبحث && (
+            {showDesktopSearch && (
               <span
                 aria-hidden="true"
                 className="absolute -right-1 top-1/2 -translate-y-1/2 h-4 w-[2px] rounded-full bg-current text-[var(--gold-primary)]"
@@ -1942,7 +1942,7 @@ export default function Dashboard() {
         {/* Separator */}
         <div className="w-4 h-px bg-white/10 mx-auto" />
 
-        {/* ── خرائط ArcGIS INTEL ── */}
+        {/* ── ARCGIS INTEL ── */}
         <div className="relative group">
           <button onClick={() => { setShowArcGIS(!showArcGIS); setShowRemote(false); }} className={`relative w-8 h-8 rounded-full flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-white/50 ${showArcGIS ? 'bg-[var(--gold-primary)]/20' : 'hover:bg-white/10'}`} title="ArcGIS — search & import geospatial intel layers" aria-label="ArcGIS" aria-expanded={showArcGIS}>
             <Database className={`w-4 h-4 ${showArcGIS ? 'text-[var(--gold-primary)]' : 'text-white/60'}`} />
@@ -1952,7 +1952,7 @@ export default function Dashboard() {
                 className="absolute -right-1 top-1/2 -translate-y-1/2 h-4 w-[2px] rounded-full bg-current text-[var(--gold-primary)]"
               />
             )}
-            {arcgisLayers.length > 0 && <span className="absolute -top-0.5 -right-0.5 min-w-[14px] h-[14px] flex items-center justify-center rounded-full bg-[var(--gold-primary)] text-black text-[9px] font-mono font-bold leading-none px-0.5">{arcgisالطبقات.length}</span>}
+            {arcgisLayers.length > 0 && <span className="absolute -top-0.5 -right-0.5 min-w-[14px] h-[14px] flex items-center justify-center rounded-full bg-[var(--gold-primary)] text-black text-[9px] font-mono font-bold leading-none px-0.5">{arcgisLayers.length}</span>}
           </button>
           <span className="absolute right-11 top-1/2 -translate-y-1/2 px-2 py-1 text-[9px] font-mono tracking-wider text-white/80 bg-black/80 backdrop-blur-sm rounded whitespace-nowrap opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity pointer-events-none">خرائط ArcGIS</span>
           <AnimatePresence>
@@ -2008,7 +2008,7 @@ export default function Dashboard() {
 
       </motion.div>}
 
-      {/* ── مباشر FEED VIEWER OVERLAY ── */}
+      {/* ── LIVE FEED VIEWER OVERLAY ── */}
       <AnimatePresence>
         {liveFeedUrl && (
           <motion.div
@@ -2041,7 +2041,7 @@ export default function Dashboard() {
                     rel="noopener noreferrer"
                     className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-[var(--border-primary)] hover:bg-[var(--gold-primary)] hover:text-black text-white transition-colors text-[10px] font-mono"
                   >
-                    <span>فتح in YouTube</span>
+                    <span>Open in YouTube</span>
                     <ExternalLink className="w-3 h-3" />
                   </a>
                   <button onClick={() => setLiveFeedUrl(null)} className="text-white/70 hover:text-white transition-colors p-1">
@@ -2077,7 +2077,7 @@ export default function Dashboard() {
                       className="inline-flex items-center gap-2 px-6 py-2.5 rounded border border-[#39FF14]/40 text-[#39FF14] font-mono text-[11px] hover:bg-[#39FF14]/10 transition-colors tracking-wider"
                     >
                       <ExternalLink className="w-4 h-4" />
-                      فتح بث مباشر
+                      OPEN LIVE STREAM
                     </a>
                   </div>
                 </div>
@@ -2088,7 +2088,7 @@ export default function Dashboard() {
                 <div className="bg-[#111]/90 px-4 py-2.5 border-t border-[var(--border-primary)] flex items-center gap-2.5">
                   <AlertTriangle className="w-4 h-4 text-[var(--gold-primary)] shrink-0" />
                   <span className="text-[10px] font-mono text-white/70 leading-relaxed">
-                    If you see &ldquo;Video unavailable&rdquo;, use <strong className="text-[var(--gold-primary)]">فتح in YouTube</strong> above.
+                    If you see &ldquo;Video unavailable&rdquo;, use <strong className="text-[var(--gold-primary)]">Open in YouTube</strong> above.
                   </span>
                 </div>
               )}
@@ -2165,7 +2165,7 @@ export default function Dashboard() {
                 <div className="px-3 pb-3">
                   <div className="flex items-center justify-between mb-2">
                     <span className="hud-text text-[10px] text-[var(--text-primary)]">
-                      {mobilePanel === 'layers' ? 'الطبقات & STATS' : mobilePanel === 'markets' ? 'الأسواق & INTEL' : mobilePanel === 'intel' ? 'INTEL FEED' : mobilePanel === 'recon' ? 'OSIRIS الاستطلاع' : mobilePanel === 'remote' ? 'WORLD REMOTE' : mobilePanel === 'oi' ? 'OSIRIS OI' : 'بحث'}
+                      {mobilePanel === 'layers' ? 'LAYERS & STATS' : mobilePanel === 'markets' ? 'MARKETS & INTEL' : mobilePanel === 'intel' ? 'INTEL FEED' : mobilePanel === 'recon' ? 'OSIRIS RECON' : mobilePanel === 'remote' ? 'WORLD REMOTE' : mobilePanel === 'oi' ? 'OSIRIS OI' : 'بحث'}
                     </span>
                     <button onClick={() => setMobilePanel(null)} className="text-[var(--text-muted)] p-1"><X className="w-4 h-4" /></button>
                   </div>
@@ -2173,7 +2173,7 @@ export default function Dashboard() {
                     <>
                       <div className="glass-panel-sm p-2 mb-2">
                         <div className="grid grid-cols-5 gap-1 text-center">
-                          <div><div className="hud-label" style={{fontSize:'9px'}}>AIR</div><div className="hud-value text-[10px]">{totalالرحلات الجوية.toLocaleString()}</div></div>
+                          <div><div className="hud-label" style={{fontSize:'9px'}}>AIR</div><div className="hud-value text-[10px]">{totalFlights.toLocaleString()}</div></div>
                           <div><div className="hud-label" style={{fontSize:'9px'}}>SAT</div><div className="hud-value text-[10px]">{(data.satellites?.length||0)}</div></div>
                           <div><div className="hud-label" style={{fontSize:'9px'}}>CAM</div><div className="hud-value text-[10px]">{(data.cameras?.length||0)}</div></div>
                           <div><div className="hud-label" style={{fontSize:'9px'}}>WX</div><div className="hud-value text-[10px]" style={{color:'var(--accent-weather)'}}>{(data.weather_events?.length||0)}</div></div>
