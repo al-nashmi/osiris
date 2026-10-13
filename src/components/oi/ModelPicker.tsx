@@ -31,14 +31,14 @@ export function ModelPicker({ provider, models, value, onChange, suggested, defa
   value: string;
   onChange: (id: string) => void;
   suggested: string[];
-  defaultModel: string;
+  defaultالنموذج: string;
   /** The list came from the key itself, not the known names. */
   listed: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [snapshots, setSnapshots] = useState(false);
-  const [active, setActive] = useState(0);
+  const [active, setنشط] = useState(0);
   const root = useRef<HTMLDivElement>(null);
   const list = useRef<HTMLDivElement>(null);
 
@@ -75,8 +75,8 @@ export function ModelPicker({ provider, models, value, onChange, suggested, defa
   }, [open]);
 
   const onKey = (e: React.KeyboardEvent) => {
-    if (e.key === 'ArrowDown') { e.preventDefault(); setActive(Math.min(at + 1, count - 1)); }
-    else if (e.key === 'ArrowUp') { e.preventDefault(); setActive(Math.max(at - 1, 0)); }
+    if (e.key === 'ArrowDown') { e.preventDefault(); setنشط(Math.min(at + 1, count - 1)); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); setنشط(Math.max(at - 1, 0)); }
     else if (e.key === 'Enter') {
       e.preventDefault();
       const id = at < flat.length ? flat[at]?.id : custom;
@@ -97,7 +97,7 @@ export function ModelPicker({ provider, models, value, onChange, suggested, defa
     index++;
     const i = index;
     const on = m.id === value;
-    const isActive = i === at;
+    const isنشط = i === at;
     return (
       <button key={m.id} type="button" role="option" aria-selected={on} data-active={isActive}
         onClick={() => pick(m.id)} onPointerMove={() => { if (!isActive) setActive(i); }}
@@ -145,7 +145,7 @@ export function ModelPicker({ provider, models, value, onChange, suggested, defa
                   aria-controls="oi-model-list"
                   className="w-full h-8 pl-7 pr-2 bg-transparent text-[11px] font-mono text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none" />
               </div>
-              <div ref={list} id="oi-model-list" role="listbox" aria-label="Models" className="max-h-[272px] overflow-y-auto styled-scrollbar p-1">
+              <div ref={list} id="oi-model-list" role="listbox" aria-label="النماذج" className="max-h-[272px] overflow-y-auto styled-scrollbar p-1">
                 {groups.map(g => (
                   <div key={g.key} role="group" aria-label={g.label}>
                     <div className="sticky top-0 z-10 flex items-center gap-2 px-2.5 pt-2 pb-1" style={{ background: 'var(--oi-solid)' }}>
