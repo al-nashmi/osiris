@@ -21,8 +21,8 @@ import {
    ═══════════════════════════════════════════════════════════════ */
 
 /* ── UUID DATABASE ── */
-const SVC_NAMES:Record<number,string>={0x1800:'Generic Access',0x1801:'Generic Attribute',0x1802:'Immediate Alert',0x1803:'Link Loss',0x1804:'TX Power',0x1805:'Current Time',0x1806:'Reference Time Update',0x1807:'التالي DST Change',0x1808:'Glucose',0x1809:'Health Thermometer',0x180A:'Device Information',0x180B:'الشبكة Availability',0x180D:'Heart Rate',0x180E:'Phone Alert الحالة',0x180F:'Battery Service',0x1810:'Blood Pressure',0x1811:'Alert Notification',0x1812:'Human Interface Device',0x1813:'Scan Parameters',0x1814:'تشغيلning Speed',0x1815:'Automation IO',0x1816:'Cycling Speed',0x1818:'Cycling Power',0x1819:'Location & Navigation',0x181A:'Environmental Sensing',0x181B:'Body Composition',0x181C:'User Data',0x181D:'Weight Scale',0x181E:'Bond Management',0x181F:'Continuous Glucose',0x1820:'IP الدعم',0x1821:'Indoor Positioning',0x1822:'Pulse Oximeter',0x1823:'HTTP Proxy',0x1824:'Transport Discovery',0x1825:'Object Transfer',0x1826:'Fitness Machine',0x1827:'Mesh Provisioning',0x1828:'Mesh Proxy',0x1843:'Audio Input Control',0x1844:'Volume Control',0x1848:'Media Control',0x184D:'Microphone Control',0x184E:'Audio Stream Control',0x1854:'Hearing Access',0xFE95:'Xiaomi',0xFEB3:'Tile',0xFE9F:'Google',0xFD6F:'Exposure Notification',0xFEAA:'Eddystone'};
-const CHAR_NAMES:Record<number,string>={0x2A00:'Device Name',0x2A01:'Appearance',0x2A04:'Preferred Conn Params',0x2A05:'Service Changed',0x2A06:'Alert Level',0x2A07:'TX Power Level',0x2A19:'Battery Level',0x2A23:'النظام ID',0x2A24:'Model Number',0x2A25:'Serial Number',0x2A26:'Firmware Rev',0x2A27:'Hardware Rev',0x2A28:'Software Rev',0x2A29:'Manufacturer Name',0x2A2A:'IEEE 11073-20601',0x2A37:'Heart Rate Measurement',0x2A38:'Body Sensor Location',0x2A4D:'Report',0x2A50:'PnP ID',0x2A6E:'Temperature',0x2A6F:'Humidity',0x2A6D:'Pressure'};
+const SVC_NAMES:Record<number,string>={0x1800:'Generic Access',0x1801:'Generic Attribute',0x1802:'Immediate Alert',0x1803:'Link Loss',0x1804:'TX Power',0x1805:'Current Time',0x1806:'Reference Time Update',0x1807:'Next DST Change',0x1808:'Glucose',0x1809:'Health Thermometer',0x180A:'Device Information',0x180B:'Network Availability',0x180D:'Heart Rate',0x180E:'Phone Alert Status',0x180F:'Battery Service',0x1810:'Blood Pressure',0x1811:'Alert Notification',0x1812:'Human Interface Device',0x1813:'Scan Parameters',0x1814:'Running Speed',0x1815:'Automation IO',0x1816:'Cycling Speed',0x1818:'Cycling Power',0x1819:'Location & Navigation',0x181A:'Environmental Sensing',0x181B:'Body Composition',0x181C:'User Data',0x181D:'Weight Scale',0x181E:'Bond Management',0x181F:'Continuous Glucose',0x1820:'IP Support',0x1821:'Indoor Positioning',0x1822:'Pulse Oximeter',0x1823:'HTTP Proxy',0x1824:'Transport Discovery',0x1825:'Object Transfer',0x1826:'Fitness Machine',0x1827:'Mesh Provisioning',0x1828:'Mesh Proxy',0x1843:'Audio Input Control',0x1844:'Volume Control',0x1848:'Media Control',0x184D:'Microphone Control',0x184E:'Audio Stream Control',0x1854:'Hearing Access',0xFE95:'Xiaomi',0xFEB3:'Tile',0xFE9F:'Google',0xFD6F:'Exposure Notification',0xFEAA:'Eddystone'};
+const CHAR_NAMES:Record<number,string>={0x2A00:'Device Name',0x2A01:'Appearance',0x2A04:'Preferred Conn Params',0x2A05:'Service Changed',0x2A06:'Alert Level',0x2A07:'TX Power Level',0x2A19:'Battery Level',0x2A23:'System ID',0x2A24:'Model Number',0x2A25:'Serial Number',0x2A26:'Firmware Rev',0x2A27:'Hardware Rev',0x2A28:'Software Rev',0x2A29:'Manufacturer Name',0x2A2A:'IEEE 11073-20601',0x2A37:'Heart Rate Measurement',0x2A38:'Body Sensor Location',0x2A4D:'Report',0x2A50:'PnP ID',0x2A6E:'Temperature',0x2A6F:'Humidity',0x2A6D:'Pressure'};
 const ALL_N={...SVC_NAMES,...CHAR_NAMES};
 const PROBE_SVCS=[0x1800,0x180A,0x180F,0x180D,0x1810,0x1809,0x1812,0x1814,0x1816,0x1818,0x181A,0x181B,0x181C,0x181D,0x180E,0x1848,0x1815,0x1802,0x1803,0x1804,0x1805,0x1808,0x1811,0x1819,0x1820,0x1822,0x1826,0x1843,0x1844,0x184D,0x184E,0x1854];
 const ALL_OPT=[...new Set([...Object.keys(SVC_NAMES).map(Number),...PROBE_SVCS])];
@@ -47,16 +47,16 @@ function validHex(s:string){const h=s.replace(/[\s,:-]/g,'');return h.length>0&&
 function parseHex(s:string){const h=s.replace(/[\s,:-]/g,'');return new Uint8Array((h.match(/.{1,2}/g)||[]).map(b=>parseInt(b,16)));}
 async function writeSafe(ch:BluetoothRemoteGATTCharacteristic,d:BufferSource,resp:boolean){if(resp&&typeof ch.writeValueWithResponse==='function')await ch.writeValueWithResponse(d);else if(!resp&&typeof ch.writeValueWithoutResponse==='function')await ch.writeValueWithoutResponse(d);else await(ch as any).writeValue(d);}
 function fts(t:number){const d=new Date(t);return d.toLocaleTimeString('en-US',{hour12:false})+'.'+d.getMilliseconds().toString().padStart(3,'0');}
-function toHex(s:string){return Array.from(new TextEncoder().encode(s)).map(x=>x.toString(16).padبدء(2,'0')).join(' ');}
+function toHex(s:string){return Array.from(new TextEncoder().encode(s)).map(x=>x.toString(16).padStart(2,'0')).join(' ');}
 
 /* ═══════════════════════════════════════════════════════════════
    IndexedDB VAULT — persists captures across reloads
    ═══════════════════════════════════════════════════════════════ */
 const DB_NAME='marauder_v8'; const DB_VER=1; const STORE='captures';
 function openDB():Promise<IDBDatabase>{return new Promise((res,rej)=>{const r=indexedDB.open(DB_NAME,DB_VER);r.onupgradeneeded=()=>{const db=r.result;if(!db.objectStoreNames.contains(STORE))db.createObjectStore(STORE,{keyPath:'id'});};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);});}
-async function vaultحفظ(dev:any){const db=await openDB();return new Promise<void>((res,rej)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).put(dev);tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error);});}
-async function vaultLoadالكل():Promise<any[]>{const db=await openDB();return new Promise((res,rej)=>{const tx=db.transaction(STORE,'readonly');const req=tx.objectStore(STORE).getAll();req.onsuccess=()=>res(req.result);req.onerror=()=>rej(req.error);});}
-async function vaultمسح(){const db=await openDB();return new Promise<void>((res,rej)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).clear();tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error);});}
+async function vaultSave(dev:any){const db=await openDB();return new Promise<void>((res,rej)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).put(dev);tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error);});}
+async function vaultLoadAll():Promise<any[]>{const db=await openDB();return new Promise((res,rej)=>{const tx=db.transaction(STORE,'readonly');const req=tx.objectStore(STORE).getAll();req.onsuccess=()=>res(req.result);req.onerror=()=>rej(req.error);});}
+async function vaultClear(){const db=await openDB();return new Promise<void>((res,rej)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).clear();tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error);});}
 async function vaultDelete(id:string){const db=await openDB();return new Promise<void>((res,rej)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).delete(id);tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error);});}
 
 /* ═══════════════════════════════════════════════════════════════
@@ -69,7 +69,7 @@ function getGPS():Promise<GeoFix|null>{return new Promise(res=>{if(!navigator.ge
    NETWORK RECON — WebRTC + connection + port probe
    ═══════════════════════════════════════════════════════════════ */
 interface NetIntel { localIPs:string[]; type?:string; downlink?:number; rtt?:number; saveData?:boolean; openPorts:{port:number;service:string;ms:number}[]; ts:number; }
-async function probeالشبكة():Promise<NetIntel>{
+async function probeNetwork():Promise<NetIntel>{
   const intel:NetIntel={localIPs:[],openPorts:[],ts:Date.now()};
   // Connection API
   const conn=(navigator as any).connection;
@@ -113,24 +113,24 @@ export default function WorldRemote({onClose,onPlaceOnMap}:{onClose?:()=>void,on
   const [devices,setDevices]=useState<BLEDev[]>([]);
   const [scanning,setScanning]=useState(false);
   const [btOk,setBtOk]=useState(true);
-  const [error,setخطأ]=useState<string|null>(null);
-  const [connecting,setجارٍ الاتصال]=useState<string|null>(null);
+  const [error,setError]=useState<string|null>(null);
+  const [connecting,setConnecting]=useState<string|null>(null);
   const [gattTarget,setGattTarget]=useState<string|null>(null);
   const [gattSvcs,setGattSvcs]=useState<Svc[]>([]);
-  const [gattجارٍ التحميل,setGattجارٍ التحميل]=useState(false);
+  const [gattLoading,setGattLoading]=useState(false);
   const [exSvc,setExSvc]=useState<string|null>(null);
   const [wIn,setWIn]=useState<Record<string,string>>({});
-  const [copied,setتم النسخ]=useState<string|null>(null);
+  const [copied,setCopied]=useState<string|null>(null);
   const [pkts,setPkts]=useState<Pkt[]>([]);
   const [bytes,setBytes]=useState(0);
-  const [view,setعرض]=useState<'scan'|'intel'|'log'>('scan');
+  const [view,setView]=useState<'scan'|'intel'|'log'>('scan');
   const [autoScr,setAutoScr]=useState(true);
   const [exDev,setExDev]=useState<string|null>(null);
   const [full,setFull]=useState(false);
-  const [paused,setإيقاف مؤقتd]=useState(false);
+  const [paused,setPaused]=useState(false);
   const [expanded,setExpanded]=useState(true);
   const [netIntel,setNetIntel]=useState<NetIntel|null>(null);
-  const [netجارٍ التحميل,setNetجارٍ التحميل]=useState(false);
+  const [netLoading,setNetLoading]=useState(false);
   const [vaultCount,setVaultCount]=useState(0);
   const [vaultLoaded,setVaultLoaded]=useState(false);
 
@@ -369,7 +369,7 @@ export default function WorldRemote({onClose,onPlaceOnMap}:{onClose?:()=>void,on
             ))}
           </div>
 
-          {/* خطأ */}
+          {/* Error */}
           <AnimatePresence>{error&&<motion.div initial={{height:0}} animate={{height:'auto'}} exit={{height:0}} className="overflow-hidden shrink-0"><div className="mx-2 mt-1.5 px-2.5 py-1.5 rounded-lg flex items-center gap-2" style={{background:'rgba(255,61,61,0.04)',border:'1px solid rgba(255,61,61,0.1)'}}><AlertTriangle className="w-3 h-3 text-[#FF3D3D] shrink-0"/><span className="text-[9px] font-mono text-[#FF3D3D] flex-1 truncate">{error}</span><button onClick={()=>setError(null)}><X className="w-2.5 h-2.5 text-[#FF3D3D]/50"/></button></div></motion.div>}</AnimatePresence>
 
           {/* Content */}
@@ -457,7 +457,7 @@ export default function WorldRemote({onClose,onPlaceOnMap}:{onClose?:()=>void,on
                         {/* GATT Explorer */}
                         <AnimatePresence>{isG&&(<motion.div initial={{height:0,opacity:0}} animate={{height:'auto',opacity:1}} exit={{height:0,opacity:0}} className="overflow-hidden"><div className="mt-2.5 pt-2.5" style={{borderTop:`1px solid ${dev.color}08`}}>
                           <div className="flex items-center justify-between mb-2"><span className="text-[9px] font-mono font-bold tracking-[0.12em]" style={{color:dev.color}}>GATT TREE</span><button onClick={()=>{setGattTarget(null);setGattSvcs([]);}}><X className="w-2.5 h-2.5 text-[var(--text-muted)]"/></button></div>
-                          {gattجارٍ التحميل?<div className="flex items-center justify-center py-3 gap-1.5"><div className="w-3.5 h-3.5 border-2 rounded-full animate-spin" style={{borderColor:dev.color,borderTopColor:'transparent'}}/><span className="text-[9px] font-mono animate-pulse" style={{color:dev.color}}>Enumerating...</span></div>
+                          {gattLoading?<div className="flex items-center justify-center py-3 gap-1.5"><div className="w-3.5 h-3.5 border-2 rounded-full animate-spin" style={{borderColor:dev.color,borderTopColor:'transparent'}}/><span className="text-[9px] font-mono animate-pulse" style={{color:dev.color}}>Enumerating...</span></div>
                           :gattSvcs.map(svc=>(<div key={svc.uuid} className="mb-0.5">
                             <button onClick={()=>setExSvc(exSvc===svc.uuid?null:svc.uuid)} className="w-full px-2 py-1.5 rounded-lg flex items-center gap-1.5 text-left hover:bg-white/[0.02]">
                               <Bluetooth className="w-2.5 h-2.5 shrink-0" style={{color:dev.color}}/><span className="text-[9px] font-mono font-bold text-[var(--text-primary)] truncate flex-1">{svc.name}</span><span className="text-[9px] font-mono" style={{color:`${dev.color}80`}}>{svc.chars.length}</span><ChevronRight className={`w-2.5 h-2.5 text-[var(--text-muted)] transition-transform ${exSvc===svc.uuid?'rotate-90':''}`}/>
@@ -484,20 +484,20 @@ export default function WorldRemote({onClose,onPlaceOnMap}:{onClose?:()=>void,on
             {/* ═══ INTEL TAB ═══ */}
             {view==='intel'&&(
               <div className="flex-1 overflow-y-auto styled-scrollbar p-2.5 space-y-2.5">
-                {/* الشبكة Recon */}
+                {/* Network Recon */}
                 <div className="rounded-xl overflow-hidden" style={{background:'rgba(255,255,255,0.015)',border:'1px solid rgba(255,255,255,0.04)'}}>
                   <div className="px-3 py-2 flex items-center justify-between" style={{borderBottom:'1px solid rgba(255,255,255,0.03)'}}>
                     <div className="flex items-center gap-1.5"><Globe className="w-3 h-3 text-[#80DEEA]"/><span className="text-[9px] font-mono font-bold tracking-[0.12em] text-[var(--text-primary)]">NETWORK RECON</span></div>
-                    <motion.button whileTap={{scale:0.95}} onClick={runNetRecon} disabled={netLoading} className="px-2 py-0.5 rounded text-[9px] font-mono font-bold tracking-wider disabled:opacity-30" style={{background:'rgba(128,222,234,0.06)',color:'#80DEEA',border:'1px solid rgba(128,222,234,0.08)'}}>{netجارٍ التحميل?'...':'PROBE'}</motion.button>
+                    <motion.button whileTap={{scale:0.95}} onClick={runNetRecon} disabled={netLoading} className="px-2 py-0.5 rounded text-[9px] font-mono font-bold tracking-wider disabled:opacity-30" style={{background:'rgba(128,222,234,0.06)',color:'#80DEEA',border:'1px solid rgba(128,222,234,0.08)'}}>{netLoading?'...':'PROBE'}</motion.button>
                   </div>
                   {!netIntel&&<div className="px-3 py-4 text-center"><span className="text-[9px] font-mono text-[var(--text-muted)] opacity-30">Tap PROBE to scan local network</span></div>}
                   {netIntel&&<div className="p-2.5 space-y-2">
                     {netIntel.localIPs.length>0&&<div><div className="text-[9px] font-mono text-[var(--text-muted)] tracking-wider mb-1 font-bold">LOCAL IPs</div>{netIntel.localIPs.map((ip,i)=><div key={i} className="text-[10px] font-mono text-[#80DEEA] pl-2">{ip}</div>)}</div>}
                     {netIntel.type&&<div className="flex gap-3">{[{l:'TYPE',v:netIntel.type},{l:'DOWN',v:netIntel.downlink!=null?`${netIntel.downlink}Mbps`:undefined},{l:'RTT',v:netIntel.rtt!=null?`${netIntel.rtt}ms`:undefined}].filter(x=>x.v).map(x=><div key={x.l}><div className="text-[9px] font-mono text-[var(--text-muted)] tracking-wider">{x.l}</div><div className="text-[10px] font-mono text-[var(--text-primary)] font-bold">{x.v}</div></div>)}</div>}
-                    {netIntel.openPorts.length>0&&<div><div className="text-[9px] font-mono text-[var(--text-muted)] tracking-wider mb-1 font-bold">فتح PORTS</div>{netIntel.openPorts.map((p,i)=><div key={i} className="flex items-center gap-2 pl-2 py-0.5"><span className="text-[9px] font-mono font-bold text-[var(--alert-green)]">:{p.port}</span><span className="text-[9px] font-mono text-[var(--text-muted)]">{p.service}</span></div>)}</div>}
+                    {netIntel.openPorts.length>0&&<div><div className="text-[9px] font-mono text-[var(--text-muted)] tracking-wider mb-1 font-bold">OPEN PORTS</div>{netIntel.openPorts.map((p,i)=><div key={i} className="flex items-center gap-2 pl-2 py-0.5"><span className="text-[9px] font-mono font-bold text-[var(--alert-green)]">:{p.port}</span><span className="text-[9px] font-mono text-[var(--text-muted)]">{p.service}</span></div>)}</div>}
                   </div>}
                 </div>
-                {/* تصدير */}
+                {/* Export */}
                 <div className="rounded-xl overflow-hidden" style={{background:'rgba(255,255,255,0.015)',border:'1px solid rgba(255,255,255,0.04)'}}>
                   <div className="px-3 py-2 flex items-center gap-1.5" style={{borderBottom:'1px solid rgba(255,255,255,0.03)'}}><Database className="w-3 h-3 text-[#FFB800]"/><span className="text-[9px] font-mono font-bold tracking-[0.12em] text-[var(--text-primary)]">VAULT & EXPORT</span></div>
                   <div className="p-2.5 space-y-1.5">
@@ -532,7 +532,7 @@ export default function WorldRemote({onClose,onPlaceOnMap}:{onClose?:()=>void,on
 
           {/* Footer */}
           <div className="flex items-center justify-between px-3 py-1.5 shrink-0" style={{borderTop:'1px solid rgba(255,255,255,0.03)',background:'rgba(0,0,0,0.2)'}}>
-            <div className="flex items-center gap-1.5"><div className={`w-1.5 h-1.5 rounded-full ${btOk?'bg-[var(--alert-green)]':'bg-[#FF3D3D]'} ${scanning?'animate-pulse':''}`}/><span className="text-[9px] font-mono text-[var(--text-muted)] tracking-wider">{scanning?'SCANNING':liveCount>0?`${liveCount} مباشر`:'STANDBY'} · {upStr}</span></div>
+            <div className="flex items-center gap-1.5"><div className={`w-1.5 h-1.5 rounded-full ${btOk?'bg-[var(--alert-green)]':'bg-[#FF3D3D]'} ${scanning?'animate-pulse':''}`}/><span className="text-[9px] font-mono text-[var(--text-muted)] tracking-wider">{scanning?'SCANNING':liveCount>0?`${liveCount} LIVE`:'STANDBY'} · {upStr}</span></div>
             <span className="text-[9px] font-mono text-[var(--text-muted)]/15 tracking-[0.2em]">MARAUDER V8</span>
           </div>
         </motion.div>
