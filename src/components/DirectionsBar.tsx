@@ -493,7 +493,7 @@ export default function DirectionsBar({ onRoute, onLocate, onClose, center = nul
         setRoute(null);
         setRoutes([]);
         onRoute(null);
-        setError(data.error || 'No route found');
+        setError(data.error || 'لم يتم العثور على مسار');
       } else {
         const all: RouteResult[] = data.routes?.length ? data.routes : [data];
         setRoutes(all);
@@ -690,7 +690,7 @@ export default function DirectionsBar({ onRoute, onLocate, onClose, center = nul
         <span className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(var(--gold-rgb),0.12)' }}>
           <Route className="w-4 h-4 text-[var(--gold-primary)]" />
         </span>
-        <h2 className="flex-1 text-[14px] font-semibold text-[var(--text-heading)]">Directions</h2>
+        <h2 className="flex-1 text-[14px] font-semibold text-[var(--text-heading)]">الاتجاهات</h2>
         {tracking && (
           <span className="flex items-center gap-1.5 h-6 px-2 rounded-full text-[9.5px] font-mono tracking-[0.12em] uppercase text-[var(--gold-light)]"
             style={{ background: 'rgba(var(--gold-rgb),0.1)', boxShadow: 'inset 0 0 0 1px rgba(var(--gold-rgb),0.3)' }}>
