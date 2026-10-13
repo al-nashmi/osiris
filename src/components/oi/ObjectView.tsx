@@ -219,7 +219,7 @@ export function ObjectView({ s, sel, onSelect, onLocate, onAsk, onGraph, variant
       const verb = l.kind === 'cite' ? (fromReport ? 'rests on' : 'quotes')
         : l.kind === 'relation' ? '⇄' : l.kind === 'evidence' ? '→' : mv ? STANCE_VERB[mv.stance] : 'moves on';
       const quotedSource = l.kind === 'cite' ? s.context.find(c => `c:${c.id}` === l.to) : undefined;
-      title = <>{nodeName(s, l.from)} <span className="font-normal text-[var(--text-muted)]">{verb}</span> {l.kind === 'cite' ? sourceLabel(quotedSource, l.to.slice(2)) : nodeName(s, l.to)}</>;
+      title = <>{nodeName(s, l.from)} <span className="font-normal text-[var(--text-muted)]">{verb}</span> {l.kind === 'cite' ? sourceLabel(quotedالمصدر, l.to.slice(2)) : nodeName(s, l.to)}</>;
       const evidenceEffect = s.frame?.kind === 'number' ? (l.tone === 'support' ? 'Points higher' : l.tone === 'oppose' ? 'Points lower' : 'Bears on')
         : l.tone === 'support' ? 'Points toward YES' : l.tone === 'oppose' ? 'Points toward NO' : 'Bears on';
       const period = l.round ? s.periods.find(p => p.index === l.round) : undefined;
@@ -239,11 +239,11 @@ export function ObjectView({ s, sel, onSelect, onLocate, onAsk, onGraph, variant
               <span className="pl-3"><Verbatim exact={exactOf(s, l)} /></span>
             </div>
           )}
-          {l.kind === 'cite' && quotedSource && (
+          {l.kind === 'cite' && quotedالمصدر && (
             <Group label={fromReport ? 'The source' : 'Where it comes from'}>
               <div className="rounded-md border border-[var(--border-secondary)] bg-black/25 px-3 py-2">
-                <p className="text-[11.5px] leading-snug text-[var(--text-primary)]">{quotedSource.kind === 'data' && quotedSource.id !== 'data' ? `“${quotedSource.title}”` : quotedSource.title}</p>
-                <p className="mt-1 text-[9.5px] font-mono tracking-[0.08em] text-[var(--text-muted)]">{[`[${quotedSource.id}]`, sourceLabel(quotedSource, quotedSource.id), quotedSource.place, ago(quotedSource.published)].filter(Boolean).join(' · ')}</p>
+                <p className="text-[11.5px] leading-snug text-[var(--text-primary)]">{quotedالمصدر.kind === 'data' && quotedالمصدر.id !== 'data' ? `“${quotedالمصدر.title}”` : quotedالمصدر.title}</p>
+                <p className="mt-1 text-[9.5px] font-mono tracking-[0.08em] text-[var(--text-muted)]">{[`[${quotedالمصدر.id}]`, sourceLabel(quotedالمصدر, quotedالمصدر.id), quotedالمصدر.place, ago(quotedالمصدر.published)].filter(Boolean).join(' · ')}</p>
               </div>
             </Group>
           )}
@@ -331,7 +331,7 @@ export function ObjectView({ s, sel, onSelect, onLocate, onAsk, onGraph, variant
             </Group>
           )}
           {rel.length > 0 && <Group label="Relations" count={rel.length}><LinkRows s={s} links={rel} from={sel.key} onSelect={onSelect} /></Group>}
-          {ev.length > 0 && <Group label="Evidence" count={ev.length}><LinkRows s={s} links={ev} from={sel.key} onSelect={onSelect} /></Group>}
+          {ev.length > 0 && <Group label="الأدلة" count={ev.length}><LinkRows s={s} links={ev} from={sel.key} onSelect={onSelect} /></Group>}
           {a.persona && (
             <button onClick={() => onAsk(a.id)} className="oi-btn self-start">
               <MessageSquare className="w-3 h-3" /> Ask {a.name.split(' ').slice(0, 2).join(' ')}
@@ -422,11 +422,11 @@ export function ObjectView({ s, sel, onSelect, onLocate, onAsk, onGraph, variant
         ['Id', <span key="i" className="font-mono">[{c.id}]</span>],
         ['Price of YES', c.odds ? <span key="o" className="font-mono" style={{ color: ANCHOR.market }}>{pct(c.odds.probability)}{s.frame?.market === c.id ? <span className="text-[var(--text-muted)]"> · the market on this question</span> : null}</span> : null],
         ['Traded', c.odds ? (c.odds.platform === 'Polymarket' ? `$${Math.round(c.odds.volume).toLocaleString('en-US')}` : `${Math.round(c.odds.volume).toLocaleString('en-US')} mana`) : null],
-        ['Closes', c.odds?.closes ? new Date(c.odds.closes).toLocaleDateString() : null],
+        ['إغلاقs', c.odds?.closes ? new Date(c.odds.closes).toLocaleDateString() : null],
         ['Swings', q ? `${Math.round(q.vol * 100)}% a year` : null],
         ['Baseline', q ? (q.probability !== undefined ? <span key="b" className="font-mono" style={{ color: ANCHOR.baseline }}>{pct(q.probability)} by the horizon</span> : `${priceText(q.p10, q.currency)}–${priceText(q.p90, q.currency)} at the horizon (80%)`) : null],
         ['Priced sim.', q?.simulated ? (q.simulated.probability !== undefined ? <span key="sp" className="font-mono" style={{ color: ANCHOR.simulation }}>{pct(q.simulated.probability)}</span> : `${priceText(q.simulated.p10, q.currency)}–${priceText(q.simulated.p90, q.currency)} (80%)`) : null],
-        [c.kind === 'data' ? 'From' : 'Source', <span key="s" className="inline-flex items-center gap-1.5">{sourceLabel(c, c.id)}<SourceLink url={c.url} /></span>],
+        [c.kind === 'data' ? 'From' : 'المصدر', <span key="s" className="inline-flex items-center gap-1.5">{sourceLabel(c, c.id)}<SourceLink url={c.url} /></span>],
         ['Location', c.place],
         ['Published', c.published ? `${new Date(c.published).toLocaleString()} · ${ago(c.published)}` : ''],
         ['Quoted', quotedBy.length ? <span key="q" className="font-mono tabular-nums">{quotedBy.length}× by {quoters} actor{quoters === 1 ? '' : 's'}</span> : null],
@@ -464,7 +464,7 @@ export function ObjectView({ s, sel, onSelect, onLocate, onAsk, onGraph, variant
           )}
           {quotedBy.length > 0 && <Group label="Quoted by" count={quotedBy.length}><QuoteRows s={s} links={quotedBy} onSelect={onSelect} /></Group>}
           {bears.length > 0 && <Group label="Cited against" count={bears.length}><LinkRows s={s} links={bears} from={sel.key} onSelect={onSelect} /></Group>}
-          {!inGraph && <p className="text-[11px] text-[var(--text-muted)]">Read by the actors; nobody quoted it.</p>}
+          {!inالرسم البياني && <p className="text-[11px] text-[var(--text-muted)]">Read by the actors; nobody quoted it.</p>}
         </>
       );
       break;
@@ -487,7 +487,7 @@ export function ObjectView({ s, sel, onSelect, onLocate, onAsk, onGraph, variant
       const used = [...new Set(r.drivers.flatMap(d => d.sources ?? []))];
       props = [
         ['Answer', <span key="a" className="font-mono text-[var(--gold-light)]">{r.answer}</span>],
-        ['Sources', used.length ? <span key="s" className="font-mono tabular-nums">{used.length}</span> : null],
+        ['المصدرs', used.length ? <span key="s" className="font-mono tabular-nums">{used.length}</span> : null],
       ];
       body = (
         <>
@@ -527,8 +527,8 @@ export function ObjectView({ s, sel, onSelect, onLocate, onAsk, onGraph, variant
   const actions = (
     <>
       {locate && <IconButton title="Show on the globe" onClick={() => onLocate(locate!.lat, locate!.lng, locate!.zoom)}><LocateFixed className="w-3.5 h-3.5" /></IconButton>}
-      {onGraph && inGraph && <IconButton title="Show in the graph" onClick={onGraph}><Network className="w-3.5 h-3.5" /></IconButton>}
-      <IconButton title="Close" onClick={() => onSelect(null)}><X className="w-3.5 h-3.5" /></IconButton>
+      {onالرسم البياني && inالرسم البياني && <IconButton title="Show in the graph" onClick={onGraph}><Network className="w-3.5 h-3.5" /></IconButton>}
+      <IconButton title="إغلاق" onClick={() => onSelect(null)}><X className="w-3.5 h-3.5" /></IconButton>
     </>
   );
   const header = (
@@ -559,8 +559,8 @@ export function ObjectView({ s, sel, onSelect, onLocate, onAsk, onGraph, variant
     return (
       <div className="flex flex-col h-full min-h-0" aria-label={`${type}: ${typeof title === 'string' ? title : ''}`}>
         <div className="flex items-center gap-1 h-11 px-2 border-b border-[var(--border-secondary)] flex-shrink-0 relative">
-          {onBack && <button onClick={onBack} className={`inline-flex items-center gap-1.5 h-7 px-2 rounded-md ${LABEL} text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--hover-accent)]`}><ArrowLeft className="w-3 h-3" /> Lists</button>}
-          <span className={`ml-1 ${LABEL} text-[var(--text-secondary)]`}>Object</span>
+          {onرجوع && <button onClick={onBack} className={`inline-flex items-center gap-1.5 h-7 px-2 rounded-md ${LABEL} text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--hover-accent)]`}><ArrowLeft className="w-3 h-3" /> Lists</button>}
+          <span className={`ml-1 ${LABEL} text-[var(--text-secondary)]`}>العنصر</span>
           <span className="ml-auto flex items-center">{actions}</span>
         </div>
         <div className="flex-1 min-h-0 overflow-y-auto styled-scrollbar p-4 flex flex-col gap-5">{content}</div>
@@ -572,7 +572,7 @@ export function ObjectView({ s, sel, onSelect, onLocate, onAsk, onGraph, variant
   const bringIntoView = (el: HTMLElement | null) => {
     if (!el || el.dataset.key === sel.key) return;
     el.dataset.key = sel.key;
-    el.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    el.scrollIntoعرض({ block: 'nearest', behavior: 'smooth' });
   };
   return (
     <section ref={bringIntoView} className="relative overflow-hidden flex flex-col gap-4 rounded-lg border border-[var(--border-primary)] p-4" style={{ background: gold(0.03) }}>
