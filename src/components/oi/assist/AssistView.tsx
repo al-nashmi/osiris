@@ -67,12 +67,12 @@ function describe(a: ActionView): string {
     case 'highlight': return `Mark ${Array.isArray(a.args.points) ? a.args.points.length : 0} places`;
     case 'show': return `Show ${g('title') || 'a list'}`;
     case 'markets': return `Read ${Array.isArray(a.args.symbols) ? (a.args.symbols as string[]).join(', ') : 'the markets'}`;
-    case 'open': return `Open ${g('panel')}`;
+    case 'open': return `فتح ${g('panel')}`;
     case 'map_view': return `Switch to ${[g('projection'), g('style')].filter(Boolean).join(', ')}`;
     case 'forecast': return `Forecast: ${g('question')}`;
-    case 'workspace': return a.args.open === false ? 'Close the workspace' : `Open the workspace${g('view') ? ` on the ${g('view')}` : ''}`;
-    case 'select': return `Open ${g('name')}`;
-    case 'clear': return 'Clear the highlights';
+    case 'workspace': return a.args.open === false ? 'إغلاق the workspace' : `فتح the workspace${g('view') ? ` on the ${g('view')}` : ''}`;
+    case 'select': return `فتح ${g('name')}`;
+    case 'clear': return 'مسح the highlights';
   }
 }
 
@@ -118,7 +118,7 @@ function Thinking() {
   );
 }
 
-function ActionRow({ a }: { a: ActionView }) {
+function ActionRow({ a }: { a: Actionعرض }) {
   const color = a.status === 'ok' || a.status === 'running' ? T.blue : a.status === 'error' ? T.red : T.mute;
   return (
     <div className="flex items-start gap-2.5 py-1">
@@ -151,9 +151,9 @@ function CardView({ card, oi, onLocate, onOpenForecast, onWorkspace }: {
         {answer && <p className="text-[20px] font-mono font-light tabular-nums text-[var(--text-heading)]" style={{ textShadow: `0 0 16px ${gold(0.3)}` }}>{answer}</p>}
         <div className="flex items-center gap-1.5">
           <button onClick={() => { if (card.runId && oi.runId !== card.runId) void oi.watch(card.runId); onOpenForecast(); }} className="oi-btn !h-7">
-            <Orbit className="w-3 h-3" /> Open forecast
+            <Orbit className="w-3 h-3" /> فتح forecast
           </button>
-          {onWorkspace && live && <button onClick={onWorkspace} className="oi-btn !h-7"><ExternalLink className="w-3 h-3" /> Workspace</button>}
+          {onمساحة العمل && live && <button onClick={onWorkspace} className="oi-btn !h-7"><ExternalLink className="w-3 h-3" /> مساحة العمل</button>}
         </div>
       </div>
     );
@@ -162,11 +162,11 @@ function CardView({ card, oi, onLocate, onOpenForecast, onWorkspace }: {
   return (
     <div className="rounded-xl border overflow-hidden" style={{ borderColor: blue(0.18), background: 'rgba(0,0,0,0.25)' }}>
       <div className="flex items-center gap-2 px-3 py-2 border-b" style={{ borderColor: blue(0.12), background: blue(0.04) }}>
-        {createElement(card.kind === 'markets' ? TrendingUp : card.kind === 'place' ? MapPin : card.kind === 'camera' ? Cctv : List, { className: 'w-3.5 h-3.5 flex-shrink-0', style: { color: T.blue } })}
+        {createElement(card.kind === 'markets' ? TrendingUp : card.kind === 'place' ? MapPin : card.kind === 'camera' ? Cctv : List, { classالاسم: 'w-3.5 h-3.5 flex-shrink-0', style: { color: T.blue } })}
         <span className="text-[11.5px] font-medium text-[var(--text-heading)] truncate flex-1">{card.title}</span>
         {card.subtitle && <span className="text-[10px] font-mono text-[var(--text-muted)]">{card.subtitle}</span>}
       </div>
-      {card.items.length === 0 && <p className="px-3 py-2.5 text-[11.5px] text-[var(--text-muted)]">Nothing matched.</p>}
+      {card.items.length === 0 && <p className="px-3 py-2.5 text-[11.5px] text-[var(--text-muted)]">لاthing matched.</p>}
       <div className="flex flex-col divide-y divide-[var(--border-secondary)]">
         {shown.map((it, i) => {
           const placed = it.lat !== undefined && it.lng !== undefined;
@@ -228,7 +228,7 @@ function Turn({ e, oi, onLocate, onOpenForecast, onWorkspace, onRetry }: {
         {e.error && (
           <div className="flex items-center gap-2 text-[11.5px]">
             <span className="text-[var(--alert-red)]">{e.error}</span>
-            {e.retry && <button onClick={() => onRetry(e.retry!.text, e.retry!.mode)} className="inline-flex items-center gap-1 text-[11px] text-[var(--cyan-primary)] hover:underline"><RotateCcw className="w-3 h-3" /> Try again</button>}
+            {e.retry && <button onClick={() => onRetry(e.retry!.text, e.retry!.mode)} className="inline-flex items-center gap-1 text-[11px] text-[var(--cyan-primary)] hover:underline"><RotateCcw className="w-3 h-3" /> حاول مرة أخرى</button>}
           </div>
         )}
       </div>
@@ -252,7 +252,7 @@ export interface AssistViewProps {
   autoFocus?: boolean;
 }
 
-export function AssistView(p: AssistViewProps) {
+export function Assistعرض(p: AssistعرضProps) {
   const { assist } = p;
   const [text, setText] = useState('');
   const [mode, setMode] = useState<Mode>('auto');
@@ -280,7 +280,7 @@ export function AssistView(p: AssistViewProps) {
 
   // Without a key a tile fills the box instead of sending, and the box asks for one.
   const tryIt = (t: string, m: Mode) => { if (p.ready) send(t, m); else { setText(t); setMode(m); } };
-  const canSend = Boolean(text.trim()) && !dictation.listening;
+  const canإرسال = Boolean(text.trim()) && !dictation.listening;
 
   return (
     <div className="flex-1 flex flex-col">
@@ -304,7 +304,7 @@ export function AssistView(p: AssistViewProps) {
                     className="group flex flex-col gap-1.5 rounded-xl border border-[var(--border-secondary)] bg-white/[0.02] p-2.5 text-left transition-all hover:border-[rgba(var(--cyan-rgb),0.4)] hover:bg-[rgba(var(--cyan-rgb),0.05)] hover:-translate-y-px disabled:opacity-40 disabled:pointer-events-none">
                     <span className="flex items-center gap-2">
                       <span className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: blue(0.12) }}>
-                        {createElement(c.icon, { className: 'w-3.5 h-3.5', style: { color: T.blue } })}
+                        {createElement(c.icon, { classالاسم: 'w-3.5 h-3.5', style: { color: T.blue } })}
                       </span>
                       <span className="text-[11.5px] font-medium text-[var(--text-heading)] truncate">{c.title}</span>
                     </span>
@@ -350,9 +350,9 @@ export function AssistView(p: AssistViewProps) {
               </button>
             )}
             {assist.busy ? (
-              <button onClick={assist.stop} title="Stop" aria-label="Stop" className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-[var(--alert-red)] bg-[rgba(255,61,61,0.08)] hover:bg-[rgba(255,61,61,0.16)]"><Square className="w-3 h-3" /></button>
+              <button onClick={assist.stop} title="إيقاف" aria-label="إيقاف" className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-[var(--alert-red)] bg-[rgba(255,61,61,0.08)] hover:bg-[rgba(255,61,61,0.16)]"><Square className="w-3 h-3" /></button>
             ) : (
-              <button onClick={() => send(text)} disabled={!canSend} title="Send (Enter)" aria-label="Send"
+              <button onClick={() => send(text)} disabled={!canSend} title="Send (Enter)" aria-label="إرسال"
                 className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-all disabled:opacity-35 disabled:pointer-events-none"
                 style={canSend ? { background: T.blue, color: '#04121a', boxShadow: `0 4px 14px ${blue(0.3)}` } : { color: T.blue, boxShadow: `inset 0 0 0 1px ${blue(0.4)}` }}>
                 <ArrowUp className="w-4 h-4" strokeWidth={2.5} />
@@ -364,7 +364,7 @@ export function AssistView(p: AssistViewProps) {
             <p className="text-[11.5px] leading-snug text-[var(--text-secondary)]">I run on your own AI key. It stays in this browser and is only used for your requests.</p>
             <button onClick={p.onKey} className="self-start inline-flex items-center gap-1.5 h-8 px-3.5 rounded-full text-[11.5px] font-medium transition-colors"
               style={{ background: T.blue, color: '#04121a' }}>
-              <KeyRound className="w-3.5 h-3.5" /> Add your {shortName(p.providerName)} key
+              <KeyRound className="w-3.5 h-3.5" /> إضافة your {shortالاسم(p.providerالاسم)} key
             </button>
           </div>
         )}
