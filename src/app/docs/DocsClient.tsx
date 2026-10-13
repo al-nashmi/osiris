@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { API_GROUPS, ENDPOINT_COUNT, endpointId } from './apiCatalog';
 import { Callout, Code, CodeBlock, Pre, Section } from './docsPrimitives';
-import نقطة نهايةCard from './نقطة نهايةCard';
+import EndpointCard from './EndpointCard';
 import CommandPalette, { buildPaletteItems } from './CommandPalette';
 
 const GUIDE_SECTIONS = [
@@ -12,7 +12,7 @@ const GUIDE_SECTIONS = [
   { id: 'quickstart', title: 'البدء السريع' },
   { id: 'self-hosting', title: 'الاستضافة الذاتية' },
   { id: 'configuration', title: 'Configuration' },
-  { id: 'interface', title: 'Interface دليل' },
+  { id: 'interface', title: 'Interface Guide' },
   { id: 'oi', title: 'OI & MCP' },
   { id: 'shortcuts', title: 'Keyboard Shortcuts' },
 ];
@@ -299,7 +299,7 @@ export default function مستندsClient() {
 
             <div className="grid grid-cols-3 gap-3 mt-10">
               {[
-                { n: String(ENDPOINT_COUNT), l: 'نقطة نهايةs' },
+                { n: String(ENDPOINT_COUNT), l: 'Endpoints' },
                 { n: '20+', l: 'Live feeds' },
                 { n: '0', l: 'Keys required' },
               ].map(s => (
@@ -333,7 +333,7 @@ export default function مستندsClient() {
 
           <Section id="quickstart" eyebrow="دليل" title="البدء السريع">
             <p>
-              Every read endpoint is a plain <Code>GET</Code> returning JSON. Nothing below needs authentication —
+              كل نقطة نهاية للقراءة هي طلب بسيط <Code>GET</Code> returning JSON. Nothing below needs authentication —
               paste any of it into a terminal.
             </p>
             <CodeBlock
@@ -379,7 +379,7 @@ print(len(data["commercial_flights"]), "commercial")`,
 cd osiris
 npm install
 npm run dev        # http://localhost:3000`}</Pre>
-            <p>For a production build, or to run the checks:</p>
+            <p>لإنشاء نسخة إنتاج أو تشغيل الفحوصات:</p>
             <Pre label="البناء والاختبار" lang="bash">{`npm run build && npm start
 npm run lint
 npm test           # vitest
@@ -433,7 +433,7 @@ docker compose up -d`}</Pre>
               Optional — higher rate limits only
             </h3>
             <p>
-              <Code>FIRMS_API_KEY</Code>, <Code>فتحSKY_CLIENT_ID</Code>, <Code>فتحSKY_CLIENT_SECRET</Code>,{' '}
+              <Code>FIRMS_API_KEY</Code>, <Code>OPENSKY_CLIENT_ID</Code>, <Code>OPENSKY_CLIENT_SECRET</Code>,{' '}
               <Code>N2YO_API_KEY</Code>, <Code>AIS_API_KEY</Code>. The public keyless feeds are used unless you extend
               the code to prefer these.
             </p>
@@ -443,7 +443,7 @@ docker compose up -d`}</Pre>
             </Callout>
           </Section>
 
-          <Section id="interface" eyebrow="دليل" title="Interface دليل">
+          <Section id="interface" eyebrow="دليل" title="Interface Guide">
             <p>
               The map fills the viewport and every control floats above it. Panels are toggles rather than
               destinations, so you can build up exactly the picture you need and drop the rest.
@@ -523,7 +523,7 @@ docker compose up -d`}</Pre>
                 { k: 'What it rests on', v: 'Every prediction is shown beside what can be checked, on one scale: the statistical baseline, the prediction market on the same question (real money, many traders), the simulation priced, how the worlds ended, and the prediction itself, each a click from its source. The report agent is told to move off a liquid market or the baseline only for reasons it can name.' },
                 { k: 'Every level', v: 'When a prediction market prices the question as a ladder (reach $160, $180, $200…, dip to $90, $60… by the same date), OI reads the whole ladder and sets it beside its own curve, the chance of trading at every level, rung by rung: where the model sees more upside or downside than the crowd, and where they part most.' },
                 { k: 'Its record', v: 'The statistical baseline is scored on the instrument’s own past: on days through five years of prices it forecasts, from the year before each day only, whether the price would trade at levels above and below within the question’s span, against what then happened. A calibration chart shows what it said against how often it happened, with its calibration gap and its Brier score beside hindsight.' },
-                { k: 'Sources', v: 'The actors back their moves with quotes from numbered sources: the research’s articles and background, items of the live feed, or passages the world model lifts word for word from your own data. Each quote says which way it pushed the actor and why, and links to where it was published; the report shows the evidence that moved the actors, source by source. Each quote is checked against its source and marked verbatim or paraphrase; an actor’s أولاً move that quotes nothing is sent back once. In the research graph every quote is a dotted thread from the actor to its source, and the report joins at the end with a thread to each source its drivers rest on, so any conclusion can be followed back to the words it came from.' },
+                { k: 'Sources', v: 'The actors back their moves with quotes from numbered sources: the research’s articles and background, items of the live feed, or passages the world model lifts word for word from your own data. Each quote says which way it pushed the actor and why, and links to where it was published; the report shows the evidence that moved the actors, source by source. Each quote is checked against its source and marked verbatim or paraphrase; an actor’s first move that quotes nothing is sent back once. In the research graph every quote is a dotted thread from the actor to its source, and the report joins at the end with a thread to each source its drivers rest on, so any conclusion can be followed back to the words it came from.' },
                 { k: 'Answers', v: 'Every run says what kind it is (binary, choice or number) and gives its answer in words, e.g. "62% YES", "Hold (55%)" or "86.4 USD per barrel (80–92)", alongside the figures.' },
               ].map(row => (
                 <div key={row.k} className="rounded-xl border border-white/[0.07] bg-white/[0.015] p-3.5">
@@ -691,7 +691,7 @@ mcp_servers:
               <p>{group.blurb}</p>
               <div className="space-y-2.5 pt-1">
                 {group.endpoints.map(ep => (
-                  <نقطة نهايةCard key={endpointId(ep)} ep={ep} origin={origin} />
+                  <EndpointCard key={endpointId(ep)} ep={ep} origin={origin} />
                 ))}
               </div>
             </Section>
