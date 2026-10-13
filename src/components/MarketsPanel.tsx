@@ -15,8 +15,8 @@ import {
   FUNCTIONS, PULSE, WEI_REGIONS,
   exchangeClocks, formatMove, formatNet, formatPrice, formatVolume, heat, longName, monthChange,
   netChange, parseCommand, parseWatchlist, rangePosition, sortQuotes, suggest, toggleWatch, tradeTime,
-  WATCHLIST_KEY,
-  type FunctionCode, type MarketQuote as Quote, type SortKey, type Suggestion,
+  قائمة المتابعة_KEY,
+  type FunctionCode, type MarketQuote as Quote, type ترتيبKey, type Suggestion,
 } from '@/lib/markets';
 
 /**
@@ -37,7 +37,7 @@ import {
 // once a security is loaded.
 const MarketChart = dynamic(() => import('./MarketChart'), { ssr: false });
 
-interface MarketsPanelProps { data: any; spaceWeather?: any; }
+interface MarketsPanelProps { data: any; spaceالطقس?: any; }
 
 /** The theme's own colours, so Ghost and every other theme recolour this too. */
 const T = {
@@ -99,13 +99,13 @@ function RangeBar({ pos, title }: { pos: number | null; title: string }) {
   );
 }
 
-function SortHeader({ label, k, sort, onSort, className = '' }: {
-  label: string; k: SortKey; sort: { key: SortKey; asc: boolean }; onSort: (k: SortKey) => void; className?: string;
+function ترتيبHeader({ label, k, sort, onترتيب, className = '' }: {
+  label: string; k: ترتيبKey; sort: { key: ترتيبKey; asc: boolean }; onترتيب: (k: ترتيبKey) => void; className?: string;
 }) {
   const active = sort.key === k;
   return (
     <th scope="col" className={`font-normal ${className}`} aria-sort={active ? (sort.asc ? 'ascending' : 'descending') : 'none'}>
-      <button onClick={() => onSort(k)} className="hover:text-[var(--text-primary)] transition-colors" style={{ color: active ? T.accent : undefined }}>
+      <button onClick={() => onترتيب(k)} className="hover:text-[var(--text-primary)] transition-colors" style={{ color: active ? T.accent : undefined }}>
         {label}{active ? (sort.asc ? ' ▲' : ' ▼') : ''}
       </button>
     </th>
@@ -117,13 +117,13 @@ function SortHeader({ label, k, sort, onSort, className = '' }: {
  * allows (container queries), so the same table is a compact board docked and
  * a full monitor in full screen.
  */
-function SecurityTable({ groups, selected, watchlist, sort, onSort, onOpen, onStar, now }: {
+function SecurityTable({ groups, selected, watchlist, sort, onترتيب, onفتح, onStar, now }: {
   groups: { label?: string; rows: Quote[] }[];
   selected: string | null;
   watchlist: string[];
-  sort: { key: SortKey; asc: boolean };
-  onSort: (k: SortKey) => void;
-  onOpen: (q: Quote) => void;
+  sort: { key: ترتيبKey; asc: boolean };
+  onترتيب: (k: ترتيبKey) => void;
+  onفتح: (q: Quote) => void;
   onStar: (symbol: string) => void;
   now: number;
 }) {
@@ -133,11 +133,11 @@ function SecurityTable({ groups, selected, watchlist, sort, onSort, onOpen, onSt
         <thead className="sticky top-0 z-10 bg-[var(--bg-panel-solid)]">
           <tr className="text-[9px] tracking-wider text-left border-b border-[var(--border-secondary)] text-[var(--text-muted)]">
             <th scope="col" className="w-5 font-normal"><span className="sr-only">متابعة</span></th>
-            <SortHeader label="SECURITY" k="name" sort={sort} onSort={onSort} className="py-1.5" />
+            <ترتيبHeader label="SECURITY" k="name" sort={sort} onترتيب={onترتيب} className="py-1.5" />
             <th scope="col" className="font-normal text-right pr-2">آخر سعر</th>
             <th scope="col" className="font-normal text-right pr-2 hidden @2xl:table-cell">الصافي</th>
-            <SortHeader label="%CHG" k="move" sort={sort} onSort={onSort} className="text-right pr-2" />
-            <SortHeader label="1M" k="month" sort={sort} onSort={onSort} className="text-right pr-1 hidden @min-[20rem]:table-cell" />
+            <ترتيبHeader label="%CHG" k="move" sort={sort} onترتيب={onترتيب} className="text-right pr-2" />
+            <ترتيبHeader label="1M" k="month" sort={sort} onترتيب={onترتيب} className="text-right pr-1 hidden @min-[20rem]:table-cell" />
             <th scope="col" className="font-normal text-center px-2 hidden @2xl:table-cell">نطاق اليوم</th>
             <th scope="col" className="font-normal text-center px-2 hidden @3xl:table-cell">52W</th>
             <th scope="col" className="font-normal text-right pl-3 pr-2 hidden @4xl:table-cell">حجم التداول</th>
@@ -159,7 +159,7 @@ function SecurityTable({ groups, selected, watchlist, sort, onSort, onOpen, onSt
               return (
                 <tr
                   key={q.symbol}
-                  onClick={() => onOpen(q)}
+                  onClick={() => onفتح(q)}
                   className="cursor-pointer odd:bg-white/[0.015] hover:bg-[var(--hover-accent)] transition-colors"
                   style={active ? { background: 'var(--hover-accent)', boxShadow: `inset 2px 0 0 ${T.accent}` } : undefined}
                 >
@@ -175,7 +175,7 @@ function SecurityTable({ groups, selected, watchlist, sort, onSort, onOpen, onSt
                   </td>
                   <td className="py-[4px] pr-2 max-w-0 w-full">
                     <button
-                      onClick={e => { e.stopPropagation(); onOpen(q); }}
+                      onClick={e => { e.stopPropagation(); onفتح(q); }}
                       className="flex items-baseline gap-1.5 min-w-0 w-full text-left"
                       title={`${q.description || q.name} — ${q.symbol}${q.exchange ? ` · ${q.exchange}` : ''}`}
                     >
@@ -211,18 +211,18 @@ function SecurityTable({ groups, selected, watchlist, sort, onSort, onOpen, onSt
   );
 }
 
-export default function MarketsPanel({ data, spaceWeather }: MarketsPanelProps) {
+export default function MarketsPanel({ data, spaceالطقس }: MarketsPanelProps) {
   const [expanded, setExpanded] = useState(true);
   const [maximized, setMaximized] = useState(false);
   /** Starred symbols, kept in this browser only. */
   const [watchlist, setWatchlist] = useState<string[]>(() => {
     if (typeof window === 'undefined') return [];
-    try { return parseWatchlist(window.localStorage.getItem(WATCHLIST_KEY)); } catch { return []; }
+    try { return parseWatchlist(window.localStorage.getItem(قائمة المتابعة_KEY)); } catch { return []; }
   });
   const [fn, setFn] = useState<FunctionCode | 'HELP'>(() => (watchlist.length ? 'WATCH' : 'WEI'));
   /** The security loaded into the chart, if any. */
   const [selected, setSelected] = useState<string | null>(null);
-  const [sort, setSort] = useState<{ key: SortKey; asc: boolean }>({ key: 'feed', asc: false });
+  const [sort, setترتيب] = useState<{ key: ترتيبKey; asc: boolean }>({ key: 'feed', asc: false });
   const [command, setCommand] = useState('');
   const [pick, setPick] = useState(-1);
   const [miss, setMiss] = useState<string | null>(null);
@@ -271,7 +271,7 @@ export default function MarketsPanel({ data, spaceWeather }: MarketsPanelProps) 
   const star = useCallback((symbol: string) => {
     setWatchlist(prev => {
       const next = toggleWatch(prev, symbol);
-      try { window.localStorage.setItem(WATCHLIST_KEY, JSON.stringify(next)); } catch { /* storage blocked */ }
+      try { window.localStorage.setItem(قائمة المتابعة_KEY, JSON.stringify(next)); } catch { /* storage blocked */ }
       return next;
     });
   }, []);
@@ -307,8 +307,8 @@ export default function MarketsPanel({ data, spaceWeather }: MarketsPanelProps) 
   const suggestions = useMemo(() => suggest(command, allQuotes), [command, allQuotes]);
 
   /** Names start A→Z and numbers biggest first; a second click reverses, a third goes back to feed order. */
-  const onSort = useCallback((k: SortKey) => {
-    setSort(prev => {
+  const onترتيب = useCallback((k: ترتيبKey) => {
+    setترتيب(prev => {
       const first = k === 'name';
       if (prev.key !== k) return { key: k, asc: first };
       if (prev.asc === first) return { key: k, asc: !first };
@@ -342,7 +342,7 @@ export default function MarketsPanel({ data, spaceWeather }: MarketsPanelProps) 
 
   /* ── The pieces, shared by both layouts ───────────────────── */
 
-  const feedStatus = (
+  const feedالحالة = (
     <span className="text-[9px] font-mono tracking-wider tabular-nums whitespace-nowrap" style={{ color: T.faint }} title="When the feed was last built, UTC">
       UPD {updated}Z
     </span>
@@ -354,7 +354,7 @@ export default function MarketsPanel({ data, spaceWeather }: MarketsPanelProps) 
         <span key={c.code} className="flex items-center gap-1">
           <span style={{ color: T.faint }}>{c.code}</span>
           <span style={{ color: T.dim }}>{c.time}</span>
-          <span className="w-1.5 h-1.5 rounded-full" style={{ background: c.open ? T.up : T.faint, opacity: c.open ? 1 : 0.5 }} title={c.open ? 'Open' : 'Closed'} />
+          <span className="w-1.5 h-1.5 rounded-full" style={{ background: c.open ? T.up : T.faint, opacity: c.open ? 1 : 0.5 }} title={c.open ? 'فتح' : 'إغلاقd'} />
         </span>
       ))}
     </div>
@@ -494,7 +494,7 @@ export default function MarketsPanel({ data, spaceWeather }: MarketsPanelProps) 
   );
 
   const chart = chartSymbol && chartQuote && (
-    <MarketChart key={chartSymbol} symbol={chartSymbol} name={longName(chartQuote)} large={maximized} onClose={() => setSelected(null)} />
+    <MarketChart key={chartSymbol} symbol={chartSymbol} name={longName(chartQuote)} large={maximized} onإغلاق={() => setSelected(null)} />
   );
 
   const help = (
@@ -530,7 +530,7 @@ export default function MarketsPanel({ data, spaceWeather }: MarketsPanelProps) 
         </div>
         {rowCount > 0 ? (
           <div className="px-1 pb-1">
-            <SecurityTable groups={groups} selected={chartSymbol} watchlist={watchlist} sort={sort} onSort={onSort} onOpen={open} onStar={star} now={now} />
+            <SecurityTable groups={groups} selected={chartSymbol} watchlist={watchlist} sort={sort} onترتيب={onترتيب} onفتح={open} onStar={star} now={now} />
           </div>
         ) : (
           <div className="py-4 text-center text-[10px] font-mono tracking-wider" style={{ color: T.faint }}>
@@ -595,13 +595,13 @@ export default function MarketsPanel({ data, spaceWeather }: MarketsPanelProps) 
 
   const footer = (
     <div className="flex items-center justify-between gap-2 text-[9px] font-mono tracking-wider" style={{ color: T.faint }}>
-      {spaceWeather ? (
+      {spaceالطقس ? (
         <span className="truncate">
           SPACE WX{' '}
-          <span style={{ color: spaceWeather.storm_color || T.text }}>
-            {spaceWeather.kp_index == null ? 'no reading' : `Kp ${spaceWeather.kp_index} — ${spaceWeather.storm_level}`}
+          <span style={{ color: spaceالطقس.storm_color || T.text }}>
+            {spaceالطقس.kp_index == null ? 'no reading' : `Kp ${spaceالطقس.kp_index} — ${spaceالطقس.storm_level}`}
           </span>
-          {spaceWeather.solar_flares?.length > 0 && <> · flare {spaceWeather.solar_flares[0].class}</>}
+          {spaceالطقس.solar_flares?.length > 0 && <> · flare {spaceالطقس.solar_flares[0].class}</>}
         </span>
       ) : <span />}
       <span className="shrink-0">ياهو · NOAA</span>
@@ -609,7 +609,7 @@ export default function MarketsPanel({ data, spaceWeather }: MarketsPanelProps) 
   );
 
   // AiOverview builds tints by appending alpha to the colour, so it needs a hex.
-  const ai = <AiOverview mode="markets" payload={{ markets, spaceWeather }} accent="#D4AF37" />;
+  const ai = <AiOverview mode="markets" payload={{ markets, spaceالطقس }} accent="#D4AF37" />;
 
   const toggleMax = () => { setMaximized(m => !m); setExpanded(true); };
 
@@ -633,7 +633,7 @@ export default function MarketsPanel({ data, spaceWeather }: MarketsPanelProps) 
             </div>
             <div className="flex items-center gap-4 shrink-0">
               {clocks}
-              {feedStatus}
+              {feedالحالة}
               <button onClick={toggleMax} className="p-2 hover:bg-white/5 rounded transition-colors text-[var(--text-muted)] hover:text-white" title="Exit full screen (Esc)" aria-label="Restore">
                 <Minimize2 className="w-5 h-5" />
               </button>
@@ -683,7 +683,7 @@ export default function MarketsPanel({ data, spaceWeather }: MarketsPanelProps) 
           <span className="gotham-tag gotham-tag--classified truncate" style={{ fontSize: '9px', padding: '1px 5px' }}>{current ? current.code : 'HELP'}</span>
         </button>
         <div className="flex items-center gap-2.5 shrink-0">
-          {feedStatus}
+          {feedالحالة}
           <button onClick={toggleMax} className="p-1.5 -m-0.5 rounded text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-white/10 transition-colors" title="Full screen" aria-label="Full screen">
             <Maximize2 className="w-3.5 h-3.5" />
           </button>
