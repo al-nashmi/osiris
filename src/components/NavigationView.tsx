@@ -50,7 +50,7 @@ function ManeuverIcon({ type, className }: { type: string; className?: string })
 }
 
 /** Guidance distances read better rounded than exact. */
-export function navالمسافة(m: number): string {
+export function navDistance(m: number): string {
   if (m < 20) return 'Now';
   if (m < 1000) return `${Math.round(m / 10) * 10} m`;
   return `${(m / 1000).toFixed(1)} km`;
@@ -76,7 +76,7 @@ export default function NavigationView({
   }, []);
 
   const spoken = useRef<Record<number, number>>({});
-  const offالمسارSince = useRef<number | null>(null);
+  const offRouteSince = useRef<number | null>(null);
   const wakeLock = useRef<WakeLockSentinel | null>(null);
 
   // Derived once per route rather than on every position update. The parent
@@ -182,18 +182,18 @@ export default function NavigationView({
           <div className="flex-1 min-w-0">
             {!arrived && progress && (
               <div className="text-[30px] leading-none font-mono font-light text-[var(--gold-light)] tabular-nums mb-1.5">
-                {navالمسافة(progress.distanceToStep)}
+                {navDistance(progress.distanceToStep)}
               </div>
             )}
             <div className={`text-[14px] leading-snug ${arrived ? 'text-[var(--gold-light)]' : 'text-[var(--text-heading)]'}`}>
-              {arrived ? `You have arrived at ${destinationLabel}` : step?.instruction ?? 'ابدأing…'}
+              {arrived ? `You have arrived at ${destinationLabel}` : step?.instruction ?? 'Starting…'}
             </div>
           </div>
 
           <div className="flex flex-col gap-1 flex-shrink-0">
             {/* Only offered once the operator has taken the camera off the
                 driver — while following, it would be a no-op. */}
-            {onالأخيرةer && !following && (
+            {onRecenter && !following && (
               <button
                 onClick={onRecenter}
                 title="Recenter on me and resume follow"
@@ -236,7 +236,7 @@ export default function NavigationView({
             <span className="flex items-center gap-2 text-[11px] text-[var(--alert-orange)]">
               <Loader2 className="w-3 h-3 animate-spin" /> Recalculating route…
             </span>
-          ) : progress?.offالمسار ? (
+          ) : progress?.offRoute ? (
             <span className="flex items-center gap-2 text-[11px] text-[var(--alert-orange)]">
               <AlertTriangle className="w-3 h-3" /> Off route
             </span>
@@ -248,8 +248,8 @@ export default function NavigationView({
 
           {progress && !arrived && (
             <span className="flex items-baseline gap-2.5 flex-shrink-0 tabular-nums">
-              <span className="text-[14px] font-mono text-[var(--text-heading)]">{navالمدة(progress.durationRemaining)}</span>
-              <span className="text-[12px] font-mono text-[var(--text-secondary)]">{navالمسافة(progress.distanceRemaining)}</span>
+              <span className="text-[14px] font-mono text-[var(--text-heading)]">{navDuration(progress.durationRemaining)}</span>
+              <span className="text-[12px] font-mono text-[var(--text-secondary)]">{navDistance(progress.distanceRemaining)}</span>
               <span className="text-[12px] font-mono text-[var(--text-muted)]">
                 {new Date(now + progress.durationRemaining * 1000)
                   .toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
