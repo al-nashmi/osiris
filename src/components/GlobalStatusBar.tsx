@@ -72,7 +72,7 @@ const formatChange = (change: number | undefined) => {
 };
 
 /** `revealed` is false while the splash is up; the bar rises when it turns true. */
-export default function GlobalStatusBar({ revealed = true }: { revealed?: boolean }) {
+export default function GlobalالحالةBar({ revealed = true }: { revealed?: boolean }) {
   const [crypto, setCrypto] = useState<CryptoPrice[]>([]);
   const [quakes, setQuakes] = useState<Earthquake[]>([]);
   const [hoveredQuake, setHoveredQuake] = useState<Earthquake | null>(null);
@@ -124,7 +124,7 @@ export default function GlobalStatusBar({ revealed = true }: { revealed?: boolea
             .slice(0, 5);
           setQuakes(majorQuakes);
         }
-      } catch (e) { console.warn('[OSIRIS] Suppressed error:', e instanceof خطأ ? e.message : e); }
+      } catch (e) { console.warn('[OSIRIS] Suppressed error:', e instanceof Error ? e.message : e); }
     };
     fetchData();
     const iv = setInterval(fetchData, 60000);
@@ -194,7 +194,7 @@ export default function GlobalStatusBar({ revealed = true }: { revealed?: boolea
                 ))}
                 {/* Separator */}
                 <span className="text-white/10 mx-2">│</span>
-                {/* الزلازل */}
+                {/* Earthquakes */}
                 {quakes.map(quake => (
                   <span 
                     key={`${quake.id}-${repeatIdx}`}
@@ -216,7 +216,7 @@ export default function GlobalStatusBar({ revealed = true }: { revealed?: boolea
         {/* ── RIGHT: Live SOL Price + Links ── */}
         <div className="flex-shrink-0 h-full flex items-center pointer-events-auto border-l border-white/[0.04]">
 
-          {/* Status indicator */}
+          {/* الحالة indicator */}
           <div className="h-full px-3 flex items-center gap-1.5">
             <div className="w-1.5 h-1.5 rounded-full bg-[#00E676] animate-pulse" />
             <span className="text-[#00E676]/70 text-[9px] tracking-[0.2em]">متصل</span>
