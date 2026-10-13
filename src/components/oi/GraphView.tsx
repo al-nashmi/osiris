@@ -30,9 +30,9 @@ import { LABEL, T, toneColor } from './theme';
 import { Segmented, TypeIcon } from './atoms';
 
 const BASE_OPACITY: Record<GraphEdge['kind'], number> = { relation: 0.85, move: 0.7, evidence: 0.5, cite: 0.6 };
-const NODE_LABEL: Record<GraphNodeKind, string> = { actor: 'Actors', evidence: 'المصدرs', report: 'Report' };
+const NODE_LABEL: Record<GraphNodeKind, string> = { actor: 'Actors', evidence: 'Sources', report: 'Report' };
 const COLUMN_LABEL: Record<GraphNodeKind, string> = { evidence: 'SOURCES', actor: 'ACTORS', report: 'PREDICTION' };
-const NODE_COLOR: Record<GraphNodeKind, string> = { actor: T.gold, evidence: T.body, report: T.goldفاتح };
+const NODE_COLOR: Record<GraphNodeKind, string> = { actor: T.gold, evidence: T.body, report: T.goldLight };
 /** A quote's thread: dotted, so it reads apart from the arcs. */
 const CITE_DASH = '1.5 3.5';
 const LINK_FILTER_LABEL: Record<LinkKind, string> = { relation: 'Relations', evidence: 'الأدلة', move: 'Moves', cite: 'Quotes' };
@@ -52,7 +52,7 @@ export function GraphView({ s, selected, onSelect }: { s: RunState; selected: st
   const selectedLit = useMemo(() => litSet(full, selected), [full, selected]);
   const isolating = isolate && Boolean(selectedLit);
   const graph = useMemo(
-    () => buildالرسم البياني(s, { hideNodes, hideEdges, only: isolating ? selectedLit!.nodes : null }),
+    () => buildGraph(s, { hideNodes, hideEdges, only: isolating ? selectedLit!.nodes : null }),
     [s, hideNodes, hideEdges, isolating, selectedLit],
   );
 
@@ -426,7 +426,7 @@ export function GraphView({ s, selected, onSelect }: { s: RunState; selected: st
   );
 }
 
-function تصفيةGroup({ label, children }: { label: string; children: ReactNode }) {
+function FilterGroup({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="flex flex-col gap-1">
       <span className={`${LABEL} text-[var(--oi-label)] px-1`}>{label}</span>
