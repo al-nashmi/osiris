@@ -244,7 +244,7 @@ function toQuake(raw: unknown): QuakeAlert | null {
     id: str(eq.id) ?? `${lat},${lng},${time}`,
     ts: time,
     magnitude,
-    place: str(eq.place) ?? 'غير معروف location',
+    place: str(eq.place) ?? 'Unknown location',
     depth: numOrNull(eq.depth),
     url: webUrl(eq.url),
     tsunami: Boolean(eq.tsunami),
@@ -682,7 +682,7 @@ function WarningCard({ item, now, onLocate }: { item: WarningAlert; now: number;
   );
 }
 
-export default function LiveAlerts({ data, onLocate, onWatchFeed, onتحديث, pinsOn = false, onTogglePins, onPinnedChange }: LiveAlertsProps) {
+export default function LiveAlerts({ data, onLocate, onWatchFeed, onRefresh, pinsOn = false, onTogglePins, onPinnedChange }: LiveAlertsProps) {
   const [expanded, setExpanded] = useState(true);
   const [maximized, setMaximized] = useState(false);
   const [tab, setTab] = useState<Tab>('all');
@@ -691,9 +691,9 @@ export default function LiveAlerts({ data, onLocate, onWatchFeed, onتحديث, 
   const [threadId, setThreadId] = useState<string | null>(null);
   /** Set from the "right now" strip: show only rocket reports, or only breaking ones. */
   const [newsKind, setNewsKind] = useState<'rocket' | 'breaking' | null>(null);
-  const [openId, setفتحId] = useState<string | null>(null);
-  const [refreshing, setتحديثing] = useState(false);
-  const [overviewفتح, setOverviewفتح] = useState(false);
+  const [openId, setOpenId] = useState<string | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
+  const [overviewOpen, setOverviewOpen] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
   const [now, setNow] = useState(() => Date.now());
 
@@ -946,10 +946,10 @@ export default function LiveAlerts({ data, onLocate, onWatchFeed, onتحديث, 
         ))}
       </div>
 
-      {/* بحث and perspective */}
+      {/* Search and perspective */}
       <div className="flex gap-1.5">
         <label className="relative flex-1 min-w-0">
-          <span className="sr-only">بحث alerts</span>
+          <span className="sr-only">Search alerts</span>
           <Search className="pointer-events-none absolute left-2 top-1/2 h-3 w-3 -translate-y-1/2 text-[#5C5A54]" />
           <input
             value={query}
@@ -993,7 +993,7 @@ export default function LiveAlerts({ data, onLocate, onWatchFeed, onتحديث, 
       )}
 
       {/* Threads: the same clustering the overview uses, available without a click */}
-      {tab !== 'quakes' && tab !== 'warnings' && tab !== 'feeds' && threads.length > 0 && !overviewفتح && (
+      {tab !== 'quakes' && tab !== 'warnings' && tab !== 'feeds' && threads.length > 0 && !overviewOpen && (
         <div className={maximized ? 'flex flex-wrap gap-1' : '-mx-3 flex gap-1 overflow-x-auto px-3 pb-0.5 styled-scrollbar'}>
           {threads.map(t => {
             const active = t.id === threadId;
@@ -1146,7 +1146,7 @@ export default function LiveAlerts({ data, onLocate, onWatchFeed, onتحديث, 
                 <span className="text-[9px] font-mono tabular-nums">{pinned.length}</span>
               </button>
             )}
-            {onتحديث && (
+            {onRefresh && (
               <button onClick={refresh} disabled={refreshing} className="p-1 rounded hover:bg-white/10 transition-colors" title="Refresh (channels are re-read every 3 minutes)" aria-label="Refresh alerts">
                 <RefreshCw className={`w-3 h-3 text-[var(--text-muted)] ${refreshing ? 'animate-spin' : ''}`} />
               </button>
@@ -1172,7 +1172,7 @@ export default function LiveAlerts({ data, onLocate, onWatchFeed, onتحديث, 
               style={{ color: liveSources === sources.length ? '#00E676' : '#FF9500' }}
             >
               <span className="h-1.5 w-1.5 rounded-full animate-osiris-pulse" style={{ background: 'currentColor' }} />
-              {liveالمصدرs}/{sources.length} SOURCES مباشر
+              {liveSources}/{sources.length} SOURCES LIVE
             </span>
           ) : (
             <span>CONNECTING…</span>
@@ -1223,7 +1223,7 @@ function EmptyState({ text, onClear, onRetry }: { text: string; onClear?: () => 
     <div className="py-6 text-center">
       <div className="text-[11px] font-mono text-[var(--text-muted)]">{text}</div>
       {onClear && <button onClick={onClear} className="mt-2 text-[10px] font-mono text-[var(--cyan-primary)] hover:underline">CLEAR FILTERS</button>}
-      {onإعادة المحاولة && <button onClick={onRetry} className="mt-2 text-[10px] font-mono text-[var(--cyan-primary)] hover:underline">TRY AGAIN</button>}
+      {onRetry && <button onClick={onRetry} className="mt-2 text-[10px] font-mono text-[var(--cyan-primary)] hover:underline">TRY AGAIN</button>}
     </div>
   );
 }
