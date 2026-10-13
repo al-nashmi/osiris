@@ -1128,7 +1128,7 @@ export default function LiveAlerts({ data, onLocate, onWatchFeed, onRefresh, pin
             className="flex min-w-0 items-center gap-2 outline-none"
           >
             <Radio className="w-3.5 h-3.5 flex-shrink-0" style={{ color: ACCENT }} />
-            <span className="hud-text whitespace-nowrap text-[11px] text-[var(--text-primary)]">LIVE ALERTS</span>
+            <span className="hud-text whitespace-nowrap text-[11px] text-[var(--text-primary)]">التنبيهات المباشرة</span>
             <span className="gotham-tag gotham-tag--high" style={{ fontSize: '9px', padding: '1px 5px' }}>{news.length + quakes.length}</span>
           </button>
           <div className="flex items-center gap-0.5 flex-shrink-0">
