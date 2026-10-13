@@ -414,7 +414,7 @@ function Report({ camera, state, a }: { camera: VisionCamera; state: Look; a: Fr
       {named.length > 0 && (
         // One line, scrolling sideways, so naming never makes the report much taller.
         <div className="mt-1.5 flex items-center gap-x-3 overflow-x-auto whitespace-nowrap text-[9px] font-mono tracking-wide [scrollbar-width:none]">
-          <span className="text-white/50 tracking-[0.18em]">مسمّى</span>
+          <span className="text-white/50 tracking-[0.18em]">NAMED</span>
           {named.filter(id => id.make).map(id => (
             <span key={id.n} className="flex items-center gap-1 text-white">
               <Tag n={id.n} />{identityWords(id).toUpperCase()}
