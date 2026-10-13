@@ -65,7 +65,7 @@ export default function SharePanel({ mapView, activeLayers, mouseCoords }: Share
 
   return (
     <>
-      {/* مشاركة Button */}
+      {/* Share Button */}
       <motion.button
         onClick={() => setIsOpen(!isOpen)}
         whileHover={{ scale: 1.1 }}
@@ -76,7 +76,7 @@ export default function SharePanel({ mapView, activeLayers, mouseCoords }: Share
         <Share2 className="w-3.5 h-3.5 text-[var(--gold-primary)]" />
       </motion.button>
 
-      {/* مشاركة Panel */}
+      {/* Share Panel */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -95,21 +95,21 @@ export default function SharePanel({ mapView, activeLayers, mouseCoords }: Share
               </button>
             </div>
 
-            {/* Current عرض Info */}
+            {/* Current View Info */}
             <div className="mb-3 p-2 rounded-lg bg-[var(--bg-void)] border border-[var(--border-primary)]">
               <div className="flex items-center gap-1.5 mb-1">
                 <MapPin className="w-2.5 h-2.5 text-[var(--gold-primary)]" />
                 <span className="text-[9px] font-mono text-[var(--text-muted)] tracking-widest">CURRENT VIEW</span>
               </div>
               <div className="text-[9px] font-mono text-[var(--text-secondary)]">
-                {mouseCoords ? `${mouseCoords.lat.toFixed(4)}°, ${mouseCoords.lng.toFixed(4)}°` : '—'} · Zoom {mapعرض.zoom.toFixed(1)}
+                {mouseCoords ? `${mouseCoords.lat.toFixed(4)}°, ${mouseCoords.lng.toFixed(4)}°` : '—'} · Zoom {mapView.zoom.toFixed(1)}
               </div>
               <div className="text-[9px] font-mono text-[var(--text-muted)] mt-1">
                 {Object.values(activeLayers).filter(Boolean).length} layers active
               </div>
             </div>
 
-            {/* مشاركة URL */}
+            {/* Share URL */}
             <div className="mb-3">
               <div className="flex items-center gap-1.5 mb-1">
                 <Link2 className="w-2.5 h-2.5 text-[var(--text-muted)]" />
@@ -117,7 +117,7 @@ export default function SharePanel({ mapView, activeLayers, mouseCoords }: Share
               </div>
               <div className="flex gap-1.5">
                 <div className="flex-1 p-1.5 rounded bg-[var(--bg-void)] border border-[var(--border-primary)] text-[9px] font-mono text-[var(--gold-primary)] truncate">
-                  {generateمشاركةUrl()}
+                  {generateShareUrl()}
                 </div>
                 <button
                   onClick={copyToClipboard}
@@ -128,7 +128,7 @@ export default function SharePanel({ mapView, activeLayers, mouseCoords }: Share
               </div>
             </div>
 
-            {/* Quick مشاركة */}
+            {/* Quick Share */}
             <div className="flex gap-2">
               <a
                 href={`https://twitter.com/intent/tweet?text=${encodeURIComponent('🏛️ OSIRIS — Global Intelligence Dashboard')}&url=${encodeURIComponent(generateShareUrl())}`}
