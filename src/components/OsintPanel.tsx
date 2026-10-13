@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { ipToNumber, numberToIp, calculateSubnetStart, classifyDevice, assessRisk, batchFetch, ShodanInternetDBResponse, SweepDevice } from '@/lib/osint-utils';
 import ChainBrief from '@/components/ChainBrief';
-import Fingerprintبحث, { useFingerprintبحث } from '@/components/Fingerprintبحث';
+import FingerprintSearch, { useFingerprintSearch } from '@/components/FingerprintSearch';
 import DonBotScan from '@/components/DonBotScan';
 import DigitalDonMark from '@/components/DigitalDonMark';
 
@@ -94,7 +94,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
   /** Free-text filter over the toolkit — 19 modules is too many to scan. */
   const [toolFilter, setToolFilter] = useState('');
   // Owned here, not by the view: toggling the expanded view remounts it.
-  const fingerprint = useFingerprintبحث();
+  const fingerprint = useFingerprintSearch();
   /** DonBot's open token, kept for the same reason; its frame reloads on the remount, on the same token. */
   const [donbotQuery, setDonbotQuery] = useState<string | null>(null);
 
@@ -1236,7 +1236,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
       )}
 
       {/* FINGERPRINT brings its own search bar, results and history. */}
-      {activeTab === 'fingerprint' && <Fingerprintبحث fp={fingerprint} isFullScreen={isFullScreen} />}
+      {activeTab === 'fingerprint' && <FingerprintSearch fp={fingerprint} isFullScreen={isFullScreen} />}
 
       {/* So does DONBOT — the same scan as Markets → Crypto, sealed in its own frame. */}
       {activeTab === 'donbot' && <DonBotScan initial={donbotQuery} onScan={setDonbotQuery} />}
