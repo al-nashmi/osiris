@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Tajawal:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════════════
@@ -80,7 +80,7 @@
 
   /* ── Fonts ── */
   --font-hud: 'JetBrains Mono', 'Courier New', monospace;
-  --font-body: 'Inter', -apple-system, sans-serif;
+  --font-body: 'Tajawal', 'Inter', -apple-system, sans-serif;
 
   /* ── Spacing (responsive) ── */
   --panel-gap: 12px;
@@ -2637,3 +2637,26 @@ path.oi-graph-in { animation: oi-edge-in 0.9s ease-out both; }
   .vision-lock, .vision-flash, .vision-chip, .vision-grow, .vision-rise { animation: none; }
   .vision-region { transition: none; }
 }
+
+
+/* Arabic-first OSIRIS interface: legible typography and RTL support. */
+html[lang="ar"] body {
+  direction: rtl;
+  font-family: 'Tajawal', 'Inter', sans-serif;
+  font-size: 14px;
+  letter-spacing: 0;
+}
+html[lang="ar"] button,
+html[lang="ar"] input,
+html[lang="ar"] textarea,
+html[lang="ar"] select {
+  font-family: 'Tajawal', 'Inter', sans-serif;
+  letter-spacing: 0;
+}
+html[lang="ar"] [class*="text-[8px]"],
+html[lang="ar"] [class*="text-[9px]"],
+html[lang="ar"] [class*="text-[10px]"] { font-size: 11px !important; }
+html[lang="ar"] [class*="text-[11px]"] { font-size: 12px !important; }
+html[lang="ar"] [class*="tracking-["] { letter-spacing: 0.01em !important; }
+html[lang="ar"] input::placeholder,
+html[lang="ar"] textarea::placeholder { opacity: 0.78; }
