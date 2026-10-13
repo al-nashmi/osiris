@@ -4,15 +4,15 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { API_GROUPS, ENDPOINT_COUNT, endpointId } from './apiCatalog';
 import { Callout, Code, CodeBlock, Pre, Section } from './docsPrimitives';
-import EndpointCard from './EndpointCard';
+import نقطة نهايةCard from './نقطة نهايةCard';
 import CommandPalette, { buildPaletteItems } from './CommandPalette';
 
 const GUIDE_SECTIONS = [
-  { id: 'overview', title: 'Overview' },
-  { id: 'quickstart', title: 'Quick Start' },
-  { id: 'self-hosting', title: 'Self-Hosting' },
+  { id: 'overview', title: 'نظرة عامة' },
+  { id: 'quickstart', title: 'البدء السريع' },
+  { id: 'self-hosting', title: 'الاستضافة الذاتية' },
   { id: 'configuration', title: 'Configuration' },
-  { id: 'interface', title: 'Interface Guide' },
+  { id: 'interface', title: 'Interface دليل' },
   { id: 'oi', title: 'OI & MCP' },
   { id: 'shortcuts', title: 'Keyboard Shortcuts' },
 ];
@@ -25,7 +25,7 @@ const API_SECTIONS = [
 const ALL_SECTIONS = [...GUIDE_SECTIONS, ...API_SECTIONS];
 const FALLBACK_ORIGIN = 'https://osirisai.live';
 
-export default function DocsClient() {
+export default function مستندsClient() {
   const [active, setActive] = useState('overview');
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
@@ -156,7 +156,7 @@ export default function DocsClient() {
                 OSIRIS
               </span>
               <span className="text-[9px] font-mono tracking-[0.22em] text-[var(--text-muted)] uppercase mt-[3px]">
-                Docs
+                مستندs
               </span>
             </span>
           </Link>
@@ -167,13 +167,13 @@ export default function DocsClient() {
           <button
             onClick={() => setPaletteOpen(true)}
             className="group flex items-center gap-2 px-3 h-8 rounded-lg border border-white/[0.08] bg-white/[0.02] hover:border-[var(--gold-primary)]/30 hover:bg-white/[0.04] transition-colors"
-            aria-label="Search documentation"
+            aria-label="ابحث في التوثيق"
           >
             <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover:text-[var(--gold-primary)] transition-colors" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
               <circle cx="11" cy="11" r="7" />
               <path d="m20 20-3.5-3.5" />
             </svg>
-            <span className="hidden sm:inline text-[11.5px] text-[var(--text-muted)] font-mono">Search</span>
+            <span className="hidden sm:inline text-[11.5px] text-[var(--text-muted)] font-mono">بحث</span>
             <kbd className="hidden sm:inline text-[10px] font-mono px-1.5 py-0.5 rounded border border-white/10 text-[var(--text-muted)]">
               ⌘K
             </kbd>
@@ -203,7 +203,7 @@ export default function DocsClient() {
 
           <button
             onClick={() => setNavOpen(v => !v)}
-            aria-label="Toggle navigation"
+            aria-label="تبديل التنقل"
             aria-expanded={navOpen}
             className="lg:hidden w-8 h-8 flex items-center justify-center rounded-lg border border-white/[0.08] text-[var(--text-muted)] hover:text-[var(--gold-primary)]"
           >
@@ -237,7 +237,7 @@ export default function DocsClient() {
           } fixed lg:sticky top-14 left-0 bottom-0 lg:bottom-auto z-[260] lg:z-auto w-64 lg:w-56 shrink-0 lg:h-[calc(100vh-3.5rem)] overflow-y-auto styled-scrollbar bg-[var(--bg-void)] lg:bg-transparent border-r lg:border-r-0 border-white/[0.06] py-6 pr-2 pl-2 lg:pl-0 transition-all duration-200`}
         >
           <div className="text-[10px] font-mono tracking-[0.3em] uppercase text-[var(--text-muted)]/70 pl-4 mb-2">
-            Guide
+            دليل
           </div>
           {GUIDE_SECTIONS.map(navLink)}
 
@@ -248,7 +248,7 @@ export default function DocsClient() {
 
           <div className="mt-8 mx-2 rounded-lg border border-white/[0.07] bg-white/[0.02] p-3">
             <div className="text-[11px] font-mono text-[var(--text-secondary)] leading-relaxed">
-              <span className="text-[var(--gold-primary)] font-bold">{ENDPOINT_COUNT}</span> endpoints, no key
+              <span className="text-[var(--gold-primary)] font-bold">{ENDPOINT_COUNT}</span> نقطة نهاية، دون مفتاح
               required.
             </div>
           </div>
@@ -266,7 +266,7 @@ export default function DocsClient() {
             </div>
 
             <h1 className="text-[38px] md:text-[52px] leading-[1.05] font-bold tracking-[-0.02em] mb-5">
-              <span className="text-[var(--text-heading)]">Build on the</span>
+              <span className="text-[var(--text-heading)]">ابدأ البناء باستخدام</span>
               <br />
               <span className="bg-gradient-to-r from-[var(--gold-primary)] via-[#F0D060] to-[var(--cyan-primary)] bg-clip-text text-transparent">
                 OSIRIS platform
@@ -284,7 +284,7 @@ export default function DocsClient() {
                 href="#quickstart"
                 className="inline-flex items-center gap-2 px-4 h-10 rounded-lg text-[11px] font-mono tracking-wider uppercase border border-[var(--gold-primary)]/40 bg-[var(--gold-primary)]/10 text-[var(--gold-primary)] hover:bg-[var(--gold-primary)]/20 transition-colors"
               >
-                Quick Start
+                البدء السريع
                 <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M5 12h14M13 6l6 6-6 6" />
                 </svg>
@@ -299,7 +299,7 @@ export default function DocsClient() {
 
             <div className="grid grid-cols-3 gap-3 mt-10">
               {[
-                { n: String(ENDPOINT_COUNT), l: 'Endpoints' },
+                { n: String(ENDPOINT_COUNT), l: 'نقطة نهايةs' },
                 { n: '20+', l: 'Live feeds' },
                 { n: '0', l: 'Keys required' },
               ].map(s => (
@@ -314,7 +314,7 @@ export default function DocsClient() {
           </div>
 
           {/* ── GUIDE ── */}
-          <Section id="overview" eyebrow="Guide" title="Overview">
+          <Section id="overview" eyebrow="دليل" title="نظرة عامة">
             <p>
               Every data point on the map is rendered through WebGL via MapLibre GL, which is what lets the interface
               hold thousands of concurrent entities at 60fps. The application is a Next.js app: the map and HUD run in
@@ -325,19 +325,19 @@ export default function DocsClient() {
               That boundary is deliberate. Upstream sources disagree about formats, rate limits, and CORS policy, so
               the API layer absorbs those differences and hands back consistent JSON.
             </p>
-            <Callout tone="good" title="No credentials needed">
+            <Callout tone="good" title="لا حاجة إلى بيانات اعتماد">
               Aviation, maritime, satellites, fires, earthquakes, weather, news, and CVE data all come from public
               keyless feeds. Keys only matter for the optional RECON scanner and for raising rate limits.
             </Callout>
           </Section>
 
-          <Section id="quickstart" eyebrow="Guide" title="Quick Start">
+          <Section id="quickstart" eyebrow="دليل" title="البدء السريع">
             <p>
               Every read endpoint is a plain <Code>GET</Code> returning JSON. Nothing below needs authentication —
               paste any of it into a terminal.
             </p>
             <CodeBlock
-              label="Fetch live aircraft"
+              label="جلب الطائرات المباشرة"
               tabs={[
                 { label: 'cURL', lang: 'bash', code: `curl -s ${origin}/api/flights | jq '.commercial_flights | length'` },
                 {
@@ -361,39 +361,39 @@ print(len(data["commercial_flights"]), "commercial")`,
               If you only need magnitudes rather than geometry, <Code>/api/stats</Code> is the right endpoint to poll —
               it collapses the heavy feeds into a handful of counters.
             </p>
-            <Pre label="Aggregate counters" lang="bash">{`curl -s ${origin}/api/stats
+            <Pre label="إحصاءات مجمعة" lang="bash">{`curl -s ${origin}/api/stats
 # { "stats": { "flights": 9241, "sats": 2043, "cctv": 2117,
 #              "weather": 58, "nuclear": 191, "incidents": 412 },
 #   "timestamp": "2026-07-29T12:00:00Z" }`}</Pre>
             <p>The OSINT lookups each take one subject, so they compose cleanly in a pipeline:</p>
-            <Pre label="Passive subdomain enumeration" lang="bash">{`curl -s "${origin}/api/osint/certs?domain=example.com" | jq -r '.subdomains[]'`}</Pre>
-            <Callout tone="info" title="Try before you write code">
-              Every GET endpoint in the reference below has a <strong>Send request</strong> button that runs it against
+            <Pre label="حصر النطاقات الفرعية بشكل سلبي" lang="bash">{`curl -s "${origin}/api/osint/certs?domain=example.com" | jq -r '.subdomains[]'`}</Pre>
+            <Callout tone="info" title="جرّب قبل كتابة الكود">
+              Every GET endpoint in the reference below has a <strong>إرسال الطلب</strong> button that runs it against
               this instance and shows the live response.
             </Callout>
           </Section>
 
-          <Section id="self-hosting" eyebrow="Guide" title="Self-Hosting">
+          <Section id="self-hosting" eyebrow="دليل" title="الاستضافة الذاتية">
             <p>OSIRIS needs Node 20+ and no database. A local instance is three commands:</p>
-            <Pre label="Local development" lang="bash">{`git clone https://github.com/simplifaisoul/osiris.git
+            <Pre label="التطوير المحلي" lang="bash">{`git clone https://github.com/simplifaisoul/osiris.git
 cd osiris
 npm install
 npm run dev        # http://localhost:3000`}</Pre>
             <p>For a production build, or to run the checks:</p>
-            <Pre label="Build and test" lang="bash">{`npm run build && npm start
+            <Pre label="البناء والاختبار" lang="bash">{`npm run build && npm start
 npm run lint
 npm test           # vitest
 npm run test:live  # includes tests that hit live upstream feeds`}</Pre>
             <p>
-              A <Code>Dockerfile</Code> and <Code>docker-compose.yml</Code> ship with the repository. The container
+              A <Code>دوكرfile</Code> and <Code>docker-compose.yml</Code> ship with the repository. The container
               always listens on port 3000 internally; <Code>OSIRIS_PORT</Code> controls the host port it is published
               on.
             </p>
-            <Pre label="Docker" lang="bash">{`cp .env.example .env
+            <Pre label="دوكر" lang="bash">{`cp .env.example .env
 docker compose up -d`}</Pre>
           </Section>
 
-          <Section id="configuration" eyebrow="Guide" title="Configuration">
+          <Section id="configuration" eyebrow="دليل" title="Configuration">
             <p>
               Copy <Code>.env.example</Code> to <Code>.env</Code>. Read that file before filling anything in — most of
               the keys it lists are reserved for future sources and are not consumed by the current code.
@@ -433,7 +433,7 @@ docker compose up -d`}</Pre>
               Optional — higher rate limits only
             </h3>
             <p>
-              <Code>FIRMS_API_KEY</Code>, <Code>OPENSKY_CLIENT_ID</Code>, <Code>OPENSKY_CLIENT_SECRET</Code>,{' '}
+              <Code>FIRMS_API_KEY</Code>, <Code>فتحSKY_CLIENT_ID</Code>, <Code>فتحSKY_CLIENT_SECRET</Code>,{' '}
               <Code>N2YO_API_KEY</Code>, <Code>AIS_API_KEY</Code>. The public keyless feeds are used unless you extend
               the code to prefer these.
             </p>
@@ -443,7 +443,7 @@ docker compose up -d`}</Pre>
             </Callout>
           </Section>
 
-          <Section id="interface" eyebrow="Guide" title="Interface Guide">
+          <Section id="interface" eyebrow="دليل" title="Interface دليل">
             <p>
               The map fills the viewport and every control floats above it. Panels are toggles rather than
               destinations, so you can build up exactly the picture you need and drop the rest.
@@ -486,7 +486,7 @@ docker compose up -d`}</Pre>
             </div>
           </Section>
 
-          <Section id="oi" eyebrow="Guide" title="OI & MCP">
+          <Section id="oi" eyebrow="دليل" title="OI & MCP">
             <p>
               OI is the AI in OSIRIS, on your own model key, and it works two ways. <strong>Assist</strong> is a
               conversation (press <kbd>O</kbd>): ask in words, typed or spoken, and OI works the map for you. It flies
@@ -523,7 +523,7 @@ docker compose up -d`}</Pre>
                 { k: 'What it rests on', v: 'Every prediction is shown beside what can be checked, on one scale: the statistical baseline, the prediction market on the same question (real money, many traders), the simulation priced, how the worlds ended, and the prediction itself, each a click from its source. The report agent is told to move off a liquid market or the baseline only for reasons it can name.' },
                 { k: 'Every level', v: 'When a prediction market prices the question as a ladder (reach $160, $180, $200…, dip to $90, $60… by the same date), OI reads the whole ladder and sets it beside its own curve, the chance of trading at every level, rung by rung: where the model sees more upside or downside than the crowd, and where they part most.' },
                 { k: 'Its record', v: 'The statistical baseline is scored on the instrument’s own past: on days through five years of prices it forecasts, from the year before each day only, whether the price would trade at levels above and below within the question’s span, against what then happened. A calibration chart shows what it said against how often it happened, with its calibration gap and its Brier score beside hindsight.' },
-                { k: 'Sources', v: 'The actors back their moves with quotes from numbered sources: the research’s articles and background, items of the live feed, or passages the world model lifts word for word from your own data. Each quote says which way it pushed the actor and why, and links to where it was published; the report shows the evidence that moved the actors, source by source. Each quote is checked against its source and marked verbatim or paraphrase; an actor’s first move that quotes nothing is sent back once. In the research graph every quote is a dotted thread from the actor to its source, and the report joins at the end with a thread to each source its drivers rest on, so any conclusion can be followed back to the words it came from.' },
+                { k: 'Sources', v: 'The actors back their moves with quotes from numbered sources: the research’s articles and background, items of the live feed, or passages the world model lifts word for word from your own data. Each quote says which way it pushed the actor and why, and links to where it was published; the report shows the evidence that moved the actors, source by source. Each quote is checked against its source and marked verbatim or paraphrase; an actor’s أولاً move that quotes nothing is sent back once. In the research graph every quote is a dotted thread from the actor to its source, and the report joins at the end with a thread to each source its drivers rest on, so any conclusion can be followed back to the words it came from.' },
                 { k: 'Answers', v: 'Every run says what kind it is (binary, choice or number) and gives its answer in words, e.g. "62% YES", "Hold (55%)" or "86.4 USD per barrel (80–92)", alongside the figures.' },
               ].map(row => (
                 <div key={row.k} className="rounded-xl border border-white/[0.07] bg-white/[0.015] p-3.5">
@@ -544,7 +544,7 @@ docker compose up -d`}</Pre>
 curl -s -X POST ${origin}/api/oi/runs \\
   -H "Content-Type: application/json" \\
   -H "X-OI-Provider: openai" \\
-  -H "X-OI-Key: $OPENAI_API_KEY" \\
+  -H "X-OI-Key: $فتحAI_API_KEY" \\
   -d '{"question": "Will the Fed cut rates at its next meeting?", "depth": "quick"}'
 
 # Wait up to 55 s for the prediction (repeat until status is "done")
@@ -584,7 +584,7 @@ mcp_servers:
                   lang: 'bash',
                   code: `claude mcp add --transport http osiris ${origin}/api/mcp \\
   --header "X-OI-Provider: openai" \\
-  --header "X-OI-Key: $OPENAI_API_KEY"`,
+  --header "X-OI-Key: $فتحAI_API_KEY"`,
                 },
                 {
                   label: 'Cursor / JSON',
@@ -618,7 +618,7 @@ mcp_servers:
             </p>
           </Section>
 
-          <Section id="shortcuts" eyebrow="Guide" title="Keyboard Shortcuts">
+          <Section id="shortcuts" eyebrow="دليل" title="Keyboard Shortcuts">
             <p>
               Press <Code>?</Code> at any time inside the application to bring up this list.
             </p>
@@ -691,7 +691,7 @@ mcp_servers:
               <p>{group.blurb}</p>
               <div className="space-y-2.5 pt-1">
                 {group.endpoints.map(ep => (
-                  <EndpointCard key={endpointId(ep)} ep={ep} origin={origin} />
+                  <نقطة نهايةCard key={endpointId(ep)} ep={ep} origin={origin} />
                 ))}
               </div>
             </Section>
