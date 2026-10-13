@@ -369,7 +369,7 @@ function StyleStudio({ onClose, isMobile }: { onClose: () => void; isMobile?: bo
           <Row label="Private"><ResettableSwatch label="Private aircraft" value={s.map.flightPrivate} fallback={MAP_DEFAULTS.flightPrivate} onChange={v => setMap('flightPrivate', v)} /></Row>
           <Row label="Government"><ResettableSwatch label="Government aircraft" value={s.map.flightGov} fallback={MAP_DEFAULTS.flightGov} onChange={v => setMap('flightGov', v)} /></Row>
           <Row label="Military"><ResettableSwatch label="Military aircraft" value={s.map.flightMilitary} fallback={MAP_DEFAULTS.flightMilitary} onChange={v => setMap('flightMilitary', v)} /></Row>
-          <Row label="غير معروف"><ResettableSwatch label="Unknown aircraft" value={s.map.flightUnknown} fallback={MAP_DEFAULTS.flightUnknown} onChange={v => setMap('flightUnknown', v)} /></Row>
+          <Row label="Unknown"><ResettableSwatch label="Unknown aircraft" value={s.map.flightUnknown} fallback={MAP_DEFAULTS.flightUnknown} onChange={v => setMap('flightUnknown', v)} /></Row>
 
           <SubHead label="OI" note="The arcs a forecast draws through the sky." />
           <Row label="Aligned"><ResettableSwatch label="OI arcs: aligned or agreeing" value={s.map.oiSupport} fallback={MAP_DEFAULTS.oiSupport} onChange={v => setMap('oiSupport', v)} /></Row>
