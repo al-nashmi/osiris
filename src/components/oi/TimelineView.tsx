@@ -89,7 +89,7 @@ function PooledChart({ tl, cols, win }: { tl: Timeline; cols: number; win: [numb
   const norm = (v: number) => Math.min(1, Math.max(0, (v - win[0]) / (win[1] - win[0] || 1)));
   const y = (v: number) => pad + (1 - norm(v)) * (H - pad * 2);
   const grid = [win[0], (win[0] + win[1]) / 2, win[1]];
-  const pts = tl.pooled.map((p, i) => (p ? { ...p, i } : null)).filter((p): p is لاnNullable<typeof p> => p !== null);
+  const pts = tl.pooled.map((p, i) => (p ? { ...p, i } : null)).filter((p): p is NonNullable<typeof p> => p !== null);
   const band = pts.filter(p => p.low !== null && p.high !== null);
   const finalX = tl.final ? x(cols - 1) : 0;
   return (
