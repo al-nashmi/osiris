@@ -72,7 +72,7 @@ const formatChange = (change: number | undefined) => {
 };
 
 /** `revealed` is false while the splash is up; the bar rises when it turns true. */
-export default function GlobalالحالةBar({ revealed = true }: { revealed?: boolean }) {
+export default function GlobalStatusBar({ revealed = true }: { revealed?: boolean }) {
   const [crypto, setCrypto] = useState<CryptoPrice[]>([]);
   const [quakes, setQuakes] = useState<Earthquake[]>([]);
   const [hoveredQuake, setHoveredQuake] = useState<Earthquake | null>(null);
@@ -167,13 +167,13 @@ export default function GlobalالحالةBar({ revealed = true }: { revealed?: 
             className="h-full px-3 flex items-center gap-1.5 bg-[var(--gold-primary)]/10 text-[var(--gold-primary)]/80 hover:text-[var(--gold-primary)] hover:bg-[var(--gold-primary)]/25 border-r border-white/[0.04] transition-all duration-200"
           >
             <DocsIcon />
-            <span className="text-[9px] font-bold tracking-[0.15em] uppercase">التوثيق</span>
+            <span className="text-[9px] font-bold tracking-[0.15em] uppercase">Docs</span>
           </Link>
           {/* Data & privacy — what leaves this instance, and when */}
           <Link href="/privacy" title="Data & Privacy" aria-label="Data and Privacy"
             className="h-full px-3 hidden sm:flex items-center text-white/40 hover:text-white hover:bg-white/[0.04] border-r border-white/[0.04] transition-all duration-200"
           >
-            <span className="text-[9px] font-bold tracking-[0.15em] uppercase">الخصوصية</span>
+            <span className="text-[9px] font-bold tracking-[0.15em] uppercase">Privacy</span>
           </Link>
         </div>
 
@@ -216,7 +216,7 @@ export default function GlobalالحالةBar({ revealed = true }: { revealed?: 
         {/* ── RIGHT: Live SOL Price + Links ── */}
         <div className="flex-shrink-0 h-full flex items-center pointer-events-auto border-l border-white/[0.04]">
 
-          {/* الحالة indicator */}
+          {/* Status indicator */}
           <div className="h-full px-3 flex items-center gap-1.5">
             <div className="w-1.5 h-1.5 rounded-full bg-[#00E676] animate-pulse" />
             <span className="text-[#00E676]/70 text-[9px] tracking-[0.2em]">متصل</span>
@@ -237,8 +237,8 @@ export default function GlobalالحالةBar({ revealed = true }: { revealed?: 
               {hoveredQuake.place}
             </div>
             <div className="flex flex-col gap-1 text-[10px]">
-              <div className="text-white/50"><span className="text-white/30">العمق:</span> {hoveredQuake.depth} km</div>
-              <div className="text-white/50 mt-1"><span className="text-white/30">الوقت:</span> {new Date(hoveredQuake.time).toLocaleString()}</div>
+              <div className="text-white/50"><span className="text-white/30">Depth:</span> {hoveredQuake.depth} km</div>
+              <div className="text-white/50 mt-1"><span className="text-white/30">Time:</span> {new Date(hoveredQuake.time).toLocaleString()}</div>
             </div>
           </div>
         </div>
