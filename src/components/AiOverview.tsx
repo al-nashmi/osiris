@@ -121,7 +121,7 @@ function AlertsBrief({ result, accent, activeThreadId, onThreadSelect }: {
           <span className="flex-1 min-w-0 truncate text-[var(--text-secondary)]">
             Strongest quake <b className="text-[var(--text-primary)]">M{quake.magnitude.toFixed(1)}</b> {quake.place}
           </span>
-          {quake.tsunami && <span className="text-[8.5px] font-mono text-[#448AFF]">TSUNAMI FLAG</span>}
+          {quake.tsunami && <span className="text-[8.5px] font-mono text-[#448AFF]">تحذير تسونامي</span>}
           <span className="font-mono text-[9px] text-[var(--text-muted)] flex-shrink-0">{brief.seismic!.count} total</span>
         </div>
       )}
