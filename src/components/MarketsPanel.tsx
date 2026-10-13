@@ -138,10 +138,10 @@ function SecurityTable({ groups, selected, watchlist, sort, onSort, onOpen, onSt
             <th scope="col" className="font-normal text-right pr-2 hidden @2xl:table-cell">NET</th>
             <SortHeader label="%CHG" k="move" sort={sort} onSort={onSort} className="text-right pr-2" />
             <SortHeader label="1M" k="month" sort={sort} onSort={onSort} className="text-right pr-1 hidden @min-[20rem]:table-cell" />
-            <th scope="col" className="font-normal text-center px-2 hidden @2xl:table-cell">نطاق اليوم</th>
+            <th scope="col" className="font-normal text-center px-2 hidden @2xl:table-cell">DAY RANGE</th>
             <th scope="col" className="font-normal text-center px-2 hidden @3xl:table-cell">52W</th>
-            <th scope="col" className="font-normal text-right pl-3 pr-2 hidden @4xl:table-cell">حجم التداول</th>
-            <th scope="col" className="font-normal text-right pl-3 pr-1 hidden @3xl:table-cell">الوقت</th>
+            <th scope="col" className="font-normal text-right pl-3 pr-2 hidden @4xl:table-cell">VOLUME</th>
+            <th scope="col" className="font-normal text-right pl-3 pr-1 hidden @3xl:table-cell">TIME</th>
           </tr>
         </thead>
         {groups.map((g, gi) => (
@@ -679,7 +679,7 @@ export default function MarketsPanel({ data, spaceWeather }: MarketsPanelProps) 
       <div className="flex items-center justify-between gap-2 px-3.5 py-2.5 border-b border-[rgba(255,255,255,0.05)] bg-[rgba(0,0,0,0.3)] hover:bg-[var(--hover-accent)] transition-colors shrink-0">
         <button onClick={() => setExpanded(e => !e)} className="flex items-center gap-2 min-w-0">
           <BarChart3 className="w-3.5 h-3.5 shrink-0" style={{ color: T.accent }} />
-          <span className="hud-text text-[11px] text-[var(--text-primary)]">الأسواق</span>
+          <span className="hud-text text-[11px] text-[var(--text-primary)]">MARKETS</span>
           <span className="gotham-tag gotham-tag--classified truncate" style={{ fontSize: '9px', padding: '1px 5px' }}>{current ? current.code : 'HELP'}</span>
         </button>
         <div className="flex items-center gap-2.5 shrink-0">
