@@ -15,7 +15,7 @@ import { Kbd, TypeIcon, accentFor } from './atoms';
 
 export interface ObjectSearchHandle { focus: () => void }
 
-export const ObjectSearch = forwardRef<ObjectSearchHandle, { s: RunState; onPick: (key: string) => void }>(function ObjectSearch({ s, onPick }, ref) {
+export const العنصربحث = forwardRef<ObjectSearchHandle, { s: RunState; onPick: (key: string) => void }>(function العنصربحث({ s, onPick }, ref) {
   const input = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
@@ -40,7 +40,7 @@ export const ObjectSearch = forwardRef<ObjectSearchHandle, { s: RunState; onPick
             else if (e.key === 'Enter' && results[cursor]) { e.preventDefault(); pick(results[cursor].key); }
             else if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); setQuery(''); input.current?.blur(); }
           }}
-          placeholder="Search objects" aria-label="Search the run's objects" role="combobox" aria-expanded={open && results.length > 0} aria-controls="oi-search-results" aria-autocomplete="list"
+          placeholder="البحث عن العناصر" aria-label="Search the run's objects" role="combobox" aria-expanded={open && results.length > 0} aria-controls="oi-search-results" aria-autocomplete="list"
           className="w-full h-8 pl-8 pr-12 rounded-md bg-black/40 border border-[var(--border-secondary)] text-[11.5px] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--border-active)] transition-colors" />
         <span className="absolute right-2 flex items-center gap-0.5 pointer-events-none"><Kbd>{isMac ? '⌘' : 'Ctrl'}</Kbd><Kbd>K</Kbd></span>
       </label>
