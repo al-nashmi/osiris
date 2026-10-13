@@ -96,10 +96,10 @@ const STORED: { what: string; detail: string }[] = [
 ];
 
 const PROMISES: { icon: ReactNode; title: string; body: string }[] = [
-  { icon: <UserX className="h-4 w-4" />, title: 'لا حاجة إلى حساب', body: 'لا تحتاج إلى التسجيل أو تسجيل الدخول. لا نعرف هويتك ولم نطلبها منك.' },
-  { icon: <EyeOff className="h-4 w-4" />, title: 'لا تتبّع', body: 'لا توجد أدوات تحليل أو شبكات إعلانية أو ملفات تعريف ارتباط للتتبّع. لا ننشئ ملفاً عنك أو عن نشاطك هنا.' },
-  { icon: <HardDrive className="h-4 w-4" />, title: 'بياناتك تبقى لديك', body: 'تُحفظ إعداداتك وسجلك ومفاتيحك في متصفحك، ويمكنك الاطلاع عليها ومسحها. لا تُحفظ على خوادمنا.' },
-  { icon: <KeyRound className="h-4 w-4" />, title: 'مفتاح الذكاء الاصطناعي ملكك', body: 'يُستخدم فقط لتنفيذ طلبك ويُرسل مباشرة إلى المزوّد الذي اخترته، ولا يُحفظ على خوادمنا أو في السجلات.' },
+  { icon: <UserX className="h-4 w-4" />, title: 'لا حاجة إلى حساب', body: 'There is nothing to sign up for and nothing to log in to. We do not know who you are, and we have not asked.' },
+  { icon: <EyeOff className="h-4 w-4" />, title: 'لا تتبّع', body: 'No analytics, no advertising networks, no tracking cookies. We do not build a profile of you or of what you do here.' },
+  { icon: <HardDrive className="h-4 w-4" />, title: 'Your things stay with you', body: 'Your settings, history and keys are kept in your own browser, where you can see them and clear them. Not on our servers.' },
+  { icon: <KeyRound className="h-4 w-4" />, title: 'Your AI key is yours', body: 'Used only for the request you make, passed straight to the provider you chose, and never stored on our servers or written to a log.' },
 ];
 
 /* ───────────── The page ───────────── */
@@ -264,11 +264,11 @@ export default function PrivacyPage() {
           <div className="mt-4 flex flex-wrap gap-2.5">
             <a href="https://github.com/simplifaisoul/osiris/issues" target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-lg border border-[var(--border-primary)] px-3.5 py-2 text-[13px] hover:border-[var(--cyan-primary)] hover:text-[var(--cyan-primary)]">
-              <ExternalLink className="h-4 w-4" /> افتح بلاغاً على GitHub
+              <ExternalLink className="h-4 w-4" /> Open an issue on GitHub
             </a>
             <a href="https://discord.gg/umBykEpb98" target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-lg border border-[var(--border-primary)] px-3.5 py-2 text-[13px] hover:border-[var(--cyan-primary)] hover:text-[var(--cyan-primary)]">
-              <MessageCircle className="h-4 w-4" /> اسأل عبر Discord
+              <MessageCircle className="h-4 w-4" /> Ask on Discord
             </a>
           </div>
         </Section>
