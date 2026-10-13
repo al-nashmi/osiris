@@ -354,7 +354,7 @@ export function ObjectView({ s, sel, onSelect, onLocate, onAsk, onGraph, variant
       const behind = s.moves.filter(m => m.world === e.world && m.period === e.period && (e.actors.length === 0 || e.actors.includes(m.actor)));
       props = [
         ['World', <ObjectChip key="w" s={s} k={`w:${e.world}`} onSelect={onSelect} />],
-        ['Date', <span key="d">{e.date}{period && <span className="text-[var(--text-muted)]"> · P{period.index}, {period.label}</span>}</span>],
+        ['التاريخ', <span key="d">{e.date}{period && <span className="text-[var(--text-muted)]"> · P{period.index}, {period.label}</span>}</span>],
         ['Pushes', <PushTag key="p" c={e} frame={s.frame} />],
         ['Where', e.place],
         ['Involves', e.actors.length ? <div key="a" className="flex flex-wrap gap-1.5">{e.actors.map(id => <ObjectChip key={id} s={s} k={`a:${id}`} onSelect={onSelect} />)}</div> : null],
@@ -560,7 +560,7 @@ export function ObjectView({ s, sel, onSelect, onLocate, onAsk, onGraph, variant
       <div className="flex flex-col h-full min-h-0" aria-label={`${type}: ${typeof title === 'string' ? title : ''}`}>
         <div className="flex items-center gap-1 h-11 px-2 border-b border-[var(--border-secondary)] flex-shrink-0 relative">
           {onBack && <button onClick={onBack} className={`inline-flex items-center gap-1.5 h-7 px-2 rounded-md ${LABEL} text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--hover-accent)]`}><ArrowLeft className="w-3 h-3" /> Lists</button>}
-          <span className={`ml-1 ${LABEL} text-[var(--text-secondary)]`}>العنصر</span>
+          <span className={`ml-1 ${LABEL} text-[var(--text-secondary)]`}>Object</span>
           <span className="ml-auto flex items-center">{actions}</span>
         </div>
         <div className="flex-1 min-h-0 overflow-y-auto styled-scrollbar p-4 flex flex-col gap-5">{content}</div>
