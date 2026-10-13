@@ -153,7 +153,7 @@ function CardView({ card, oi, onLocate, onOpenForecast, onWorkspace }: {
           <button onClick={() => { if (card.runId && oi.runId !== card.runId) void oi.watch(card.runId); onOpenForecast(); }} className="oi-btn !h-7">
             <Orbit className="w-3 h-3" /> Open forecast
           </button>
-          {onWorkspace && live && <button onClick={onWorkspace} className="oi-btn !h-7"><ExternalLink className="w-3 h-3" /> مساحة العمل</button>}
+          {onWorkspace && live && <button onClick={onWorkspace} className="oi-btn !h-7"><ExternalLink className="w-3 h-3" /> Workspace</button>}
         </div>
       </div>
     );
@@ -228,7 +228,7 @@ function Turn({ e, oi, onLocate, onOpenForecast, onWorkspace, onRetry }: {
         {e.error && (
           <div className="flex items-center gap-2 text-[11.5px]">
             <span className="text-[var(--alert-red)]">{e.error}</span>
-            {e.retry && <button onClick={() => onRetry(e.retry!.text, e.retry!.mode)} className="inline-flex items-center gap-1 text-[11px] text-[var(--cyan-primary)] hover:underline"><RotateCcw className="w-3 h-3" /> حاول مرة أخرى</button>}
+            {e.retry && <button onClick={() => onRetry(e.retry!.text, e.retry!.mode)} className="inline-flex items-center gap-1 text-[11px] text-[var(--cyan-primary)] hover:underline"><RotateCcw className="w-3 h-3" /> Try again</button>}
           </div>
         )}
       </div>
