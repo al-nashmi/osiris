@@ -158,7 +158,7 @@ export default function IntelFeed({ data, onLocate }: IntelFeedProps) {
                             onClick={(e) => e.stopPropagation()}
                           >
                             <ExternalLink className="w-2.5 h-2.5" />
-                            OPEN SOURCE
+                            فتح SOURCE
                           </a>
                         </motion.div>
                       )}
