@@ -226,7 +226,7 @@ export default function OiPanel(props: OiPanelProps) {
                 className="group -mt-1 flex items-center gap-3 w-full rounded-lg border border-[var(--border-secondary)] bg-white/[0.015] px-3 py-2.5 text-left transition-colors hover:border-[var(--border-active)] hover:bg-[var(--hover-accent)]">
                 <Maximize2 className="w-4 h-4 flex-shrink-0 text-[var(--gold-primary)]" />
                 <span className="flex-1 min-w-0">
-                  <span className="block text-[12px] font-medium text-[var(--text-heading)]">Open the workspace</span>
+                  <span className="block text-[12px] font-medium text-[var(--text-heading)]">فتح مساحة العمل</span>
                   <span className="block text-[10.5px] text-[var(--text-muted)] truncate">The research graph, every world on a timeline, every object in tables</span>
                 </span>
                 <ArrowRight className="w-3.5 h-3.5 flex-shrink-0 text-[var(--text-muted)] transition-transform group-hover:translate-x-0.5 group-hover:text-[var(--gold-light)]" />
