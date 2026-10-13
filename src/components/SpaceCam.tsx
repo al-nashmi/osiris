@@ -97,7 +97,7 @@ export default function SpaceCam() {
       <div className="flex items-center gap-2 px-3 py-2 border-b border-[var(--border-secondary)]/40">
         <Radio className="w-3.5 h-3.5 text-[#00E5FF]" />
         <span className="text-[11px] font-mono font-bold tracking-widest text-[#00E5FF]">
-          LIVE FROM SPACE
+          مباشر FROM SPACE
         </span>
         <span className="ml-auto flex items-center gap-1">
           <span className="w-1.5 h-1.5 rounded-full bg-[#FF3D3D] animate-pulse" />
@@ -178,7 +178,7 @@ export default function SpaceCam() {
             <div className="flex items-center gap-2 mb-2">
               <Radio className="w-4 h-4 text-[#00E5FF]" />
               <span className="text-[11px] font-mono font-bold tracking-widest text-[#00E5FF]">
-                LIVE FROM SPACE
+                مباشر FROM SPACE
               </span>
               <span className="text-[11px] font-mono text-[var(--text-muted)]">· {active.detail}</span>
               <span className="ml-auto flex items-center gap-1">
