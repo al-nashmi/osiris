@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 import {
-  Bot, Camera, ChevronDown, ExternalLink, HardDrive, KeyRound, Map as MapIcon, MessageCircle, بحث, ShieldCheck, Sparkles, UserX, EyeOff,
+  Bot, Camera, ChevronDown, ExternalLink, HardDrive, KeyRound, Map as MapIcon, MessageCircle, Search, ShieldCheck, Sparkles, UserX, EyeOff,
 } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -174,7 +174,7 @@ export default function PrivacyPage() {
                 { name: 'Google Fonts', what: 'the typefaces the site uses' },
               ]} />
 
-            <Flow icon={<بحث className="h-4 w-4" />} title="البحث عن معلومة"
+            <Flow icon={<Search className="h-4 w-4" />} title="البحث عن معلومة"
               summary={<>
                 The RECON tools answer by asking the public service that holds the answer, from our server. That service
                 sees the email, domain, address or name you looked up, but not who you are. Two checks never leave our
