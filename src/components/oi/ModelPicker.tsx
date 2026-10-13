@@ -31,14 +31,14 @@ export function ModelPicker({ provider, models, value, onChange, suggested, defa
   value: string;
   onChange: (id: string) => void;
   suggested: string[];
-  defaultالنموذج: string;
+  defaultModel: string;
   /** The list came from the key itself, not the known names. */
   listed: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [snapshots, setSnapshots] = useState(false);
-  const [active, setنشط] = useState(0);
+  const [active, setActive] = useState(0);
   const root = useRef<HTMLDivElement>(null);
   const list = useRef<HTMLDivElement>(null);
 
@@ -75,8 +75,8 @@ export function ModelPicker({ provider, models, value, onChange, suggested, defa
   }, [open]);
 
   const onKey = (e: React.KeyboardEvent) => {
-    if (e.key === 'ArrowDown') { e.preventDefault(); setنشط(Math.min(at + 1, count - 1)); }
-    else if (e.key === 'ArrowUp') { e.preventDefault(); setنشط(Math.max(at - 1, 0)); }
+    if (e.key === 'ArrowDown') { e.preventDefault(); setActive(Math.min(at + 1, count - 1)); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); setActive(Math.max(at - 1, 0)); }
     else if (e.key === 'Enter') {
       e.preventDefault();
       const id = at < flat.length ? flat[at]?.id : custom;
@@ -97,7 +97,7 @@ export function ModelPicker({ provider, models, value, onChange, suggested, defa
     index++;
     const i = index;
     const on = m.id === value;
-    const isنشط = i === at;
+    const isActive = i === at;
     return (
       <button key={m.id} type="button" role="option" aria-selected={on} data-active={isActive}
         onClick={() => pick(m.id)} onPointerMove={() => { if (!isActive) setActive(i); }}
