@@ -2,23 +2,23 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, ExternalLink, تحديثCw, MapPin, الكاميرا, الكاميراOff, Maximize2, PlayCircle } from 'lucide-react';
+import { X, ExternalLink, RefreshCw, MapPin, Camera, CameraOff, Maximize2, PlayCircle } from 'lucide-react';
 import Hls from 'hls.js';
-import { isHostedOffPlatform, liveFeedAtالمصدر, localEmbed, needsResolution, offPlatformView } from '@/lib/camera-feed';
+import { isHostedOffPlatform, liveFeedAtSource, localEmbed, needsResolution, offPlatformView } from '@/lib/camera-feed';
 import { clearLook, registerVideo } from '@/lib/vision/store';
-import الكاميراVision, { VisionReport } from './الكاميراVision';
+import CameraVision, { VisionReport } from './CameraVision';
 
-interface الكاميراViewerProps {
+interface CameraViewerProps {
   camera: any | null;
-  onإغلاق: () => void;
+  onClose: () => void;
   onLocate?: (lat: number, lng: number) => void;
   /** The OI panel is open on the right: sit beside it, so OI Assist's conversation stays readable while it looks. */
   besideOi?: boolean;
 }
 
-export default function الكاميراViewer({ camera, onإغلاق, onLocate, besideOi = false }: الكاميراViewerProps) {
+export default function CameraViewer({ camera, onإغلاق, onLocate, besideOi = false }: CameraViewerProps) {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [loading, setجارٍ التحميل] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [error, setخطأ] = useState(false);
   const [retryCount, setإعادة المحاولةCount] = useState(0);
   const [fullscreen, setFullscreen] = useState(false);
@@ -60,7 +60,7 @@ export default function الكاميراViewer({ camera, onإغلاق, onLocate,
   // Snapshot cameras are checked too, in the background: the picture shows
   // immediately and is withdrawn only if the source says the camera is gone.
   const resolveKey: string | null =
-    (needsResolution(camera) ? camera.external_url : null) ?? liveFeedAtالمصدر(camera);
+    (needsResolution(camera) ? camera.external_url : null) ?? liveFeedAtSource(camera);
   const [resolution, setResolution] = useState<{ key: string; embed: string | null; offline: boolean; kind?: string } | null>(null);
   const resolvedEmbed = directEmbed ?? (resolution && resolution.key === resolveKey ? resolution.embed : null);
   const resolving = Boolean(resolveKey) && resolution?.key !== resolveKey;
@@ -69,7 +69,7 @@ export default function الكاميراViewer({ camera, onإغلاق, onLocate,
 
   // Live video exists at the source but cannot be replayed here, so offer the
   // way through to it and stop calling the still image a live feed.
-  const watchLiveUrl = liveFeedAtالمصدر(camera);
+  const watchLiveUrl = liveFeedAtSource(camera);
 
   useEffect(() => {
     if (!resolveKey) return;
@@ -89,8 +89,8 @@ export default function الكاميراViewer({ camera, onإغلاق, onLocate,
 
   useEffect(() => {
     if (!camera) return;
-    setجارٍ التحميل(true);
-    setخطأ(false);
+    setLoading(true);
+    setError(false);
     setImageUrl(null);
 
     // Cleanup previous HLS instance
@@ -100,7 +100,7 @@ export default function الكاميراViewer({ camera, onإغلاق, onLocate,
     }
 
     if (externalOnly) {
-      setجارٍ التحميل(false);
+      setLoading(false);
       return;
     }
 
@@ -108,19 +108,19 @@ export default function الكاميراViewer({ camera, onإغلاق, onLocate,
       if (Hls.isSupported() && videoRef.current) {
         const hls = new Hls({ enableWorker: false });
         hlsRef.current = hls;
-        hls.loadالمصدر(camera.stream_url);
+        hls.loadSource(camera.stream_url);
         hls.attachMedia(videoRef.current);
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          setجارٍ التحميل(false);
+          setLoading(false);
           videoRef.current?.play().catch(() => {});
         });
         hls.on(Hls.Events.ERROR, (event, data) => {
-          if (data.fatal) setخطأ(true);
+          if (data.fatal) setError(true);
         });
       } else if (videoRef.current?.canPlayType('application/vnd.apple.mpegurl')) {
         videoRef.current.src = camera.stream_url;
         videoRef.current.addEventListener('loadedmetadata', () => {
-          setجارٍ التحميل(false);
+          setLoading(false);
           videoRef.current?.play().catch(() => {});
         });
       }
@@ -128,12 +128,12 @@ export default function الكاميراViewer({ camera, onإغلاق, onLocate,
     }
 
     if (streamType === 'mjpeg' && camera.stream_url) {
-      setجارٍ التحميل(false);
+      setLoading(false);
       return;
     }
 
     if ((streamType === 'iframe' || streamType === 'mp4') && streamUrl) {
-      setجارٍ التحميل(false);
+      setLoading(false);
       return;
     }
 
@@ -143,8 +143,8 @@ export default function الكاميراViewer({ camera, onإغلاق, onLocate,
       const url = targetUrl.includes('?') ? `${targetUrl}&_t=${Date.now()}` : `${targetUrl}?_t=${Date.now()}`;
       setImageUrl(url);
     } else {
-      setخطأ(true);
-      setجارٍ التحميل(false);
+      setError(true);
+      setLoading(false);
     }
   }, [camera, streamType, streamUrl, externalOnly, retryCount]);
 
@@ -218,7 +218,7 @@ export default function الكاميراViewer({ camera, onإغلاق, onLocate,
               <div className="flex items-center justify-between px-3 md:px-4 py-2 md:py-3">
                 <div className="flex items-center gap-3 flex-1 min-w-0">
                   <div className="relative flex items-center justify-center w-6 h-6 border border-[var(--gold-primary)] bg-[var(--gold-primary)]/10 rounded-sm">
-                    <الكاميرا className="w-3.5 h-3.5 text-[var(--gold-primary)]" />
+                    <Camera className="w-3.5 h-3.5 text-[var(--gold-primary)]" />
                     <div className="absolute top-0 left-0 w-1 h-1 border-t border-l border-[var(--gold-primary)]" />
                     <div className="absolute bottom-0 right-0 w-1 h-1 border-b border-r border-[var(--gold-primary)]" />
                   </div>
@@ -241,7 +241,7 @@ export default function الكاميراViewer({ camera, onإغلاق, onLocate,
                       }} 
                       className="p-1.5 rounded-sm bg-white/5 border border-white/10 hover:bg-[var(--gold-primary)]/20 hover:border-[var(--gold-primary)] transition-all" title="تحديث feed"
                     >
-                      <تحديثCw className="w-3 h-3 text-[var(--text-secondary)] hover:text-[var(--gold-primary)]" />
+                      <RefreshCw className="w-3 h-3 text-[var(--text-secondary)] hover:text-[var(--gold-primary)]" />
                     </button>
                   )}
                   {camera.lat && camera.lng && (
@@ -252,14 +252,14 @@ export default function الكاميراViewer({ camera, onإغلاق, onLocate,
                   <button onClick={() => setFullscreen(!fullscreen)} className="hidden md:block p-1.5 rounded-sm bg-white/5 border border-white/10 hover:bg-[var(--text-primary)]/20 hover:border-[var(--text-primary)] transition-all" title="Toggle fullscreen">
                     <Maximize2 className="w-3 h-3 text-[var(--text-secondary)] hover:text-[var(--text-primary)]" />
                   </button>
-                  <button onClick={onإغلاق} className="p-1.5 rounded-sm bg-red-900/30 border border-red-500/30 hover:bg-red-500/30 hover:border-red-500 transition-all ml-2">
+                  <button onClick={onClose} className="p-1.5 rounded-sm bg-red-900/30 border border-red-500/30 hover:bg-red-500/30 hover:border-red-500 transition-all ml-2">
                     <X className="w-4 h-4 md:w-3 md:h-3 text-red-400 hover:text-red-200" />
                   </button>
                 </div>
               </div>
             </div>
 
-          {/* الكاميرا Feed */}
+          {/* Camera Feed */}
           <div className={`relative bg-[#020202] ${fullscreen ? 'flex-1 overflow-hidden' : 'aspect-video max-h-[35vh] md:max-h-none'}`}>
             {/* Tactical CRT Overlay */}
             <div className="absolute inset-0 pointer-events-none z-20" style={{
@@ -285,8 +285,8 @@ export default function الكاميراViewer({ camera, onإغلاق, onLocate,
               </div>
             ) : view === 'offline' ? (
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/90 z-30 backdrop-blur-sm p-4 text-center">
-                <الكاميراOff className="w-6 h-6 mb-3 opacity-50 text-[var(--text-muted)]" />
-                <p className="text-[11px] font-mono uppercase tracking-widest text-[var(--text-secondary)]">{gone ? 'CAMERA WITHDRAWN' : 'CAMERA OFFLINE'}</p>
+                <CameraOff className="w-6 h-6 mb-3 opacity-50 text-[var(--text-muted)]" />
+                <p className="text-[11px] font-mono uppercase tracking-widest text-[var(--text-secondary)]">{gone ? 'CAMERA WITHالرسمN' : 'CAMERA غير متصل'}</p>
                 <p className="text-[9px] font-mono text-[var(--text-muted)] mt-2 max-w-[80%] uppercase">{gone ? 'No longer published at source' : 'The operator has this feed off air'}</p>
                 {/* No ACCESS TERMINAL button: the page it would open is either
                     showing the same 'offline' banner we just read, or a 404. */}
@@ -309,10 +309,10 @@ export default function الكاميراViewer({ camera, onإغلاق, onLocate,
             ) : error ? (
               <div className="absolute inset-0 flex items-center justify-center bg-black/90">
                 <div className="text-center">
-                  <div className="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center mb-2 mx-auto"><الكاميرا className="w-4 h-4 text-red-400" /></div>
+                  <div className="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center mb-2 mx-auto"><Camera className="w-4 h-4 text-red-400" /></div>
                   <span className="text-[10px] font-mono text-red-400 tracking-widest block mb-1">البث غير متاح</span>
                   <span className="text-[9px] font-mono text-[var(--text-muted)]">قد تكون الكاميرا متوقفة أو مقيّدة الوصول</span>
-                  <button onClick={() => { setخطأ(false); setإعادة المحاولةCount(c => c + 1); }} className="block mx-auto mt-3 px-3 py-1 text-[9px] font-mono text-[#7E57C2] border border-[#7E57C2]/30 rounded hover:bg-[#7E57C2]/10 transition-colors tracking-wider">
+                  <button onClick={() => { setError(false); setRetryCount(c => c + 1); }} className="block mx-auto mt-3 px-3 py-1 text-[9px] font-mono text-[#7E57C2] border border-[#7E57C2]/30 rounded hover:bg-[#7E57C2]/10 transition-colors tracking-wider">
                     RETRY
                   </button>
                 </div>
@@ -330,8 +330,8 @@ export default function الكاميراViewer({ camera, onإغلاق, onLocate,
                 src={camera.stream_url}
                 alt={camera.name}
                 className={`w-full h-full ${fullscreen ? 'object-contain' : 'object-cover'}`}
-                onLoad={() => setجارٍ التحميل(false)}
-                onخطأ={() => { setجارٍ التحميل(false); setخطأ(true); }}
+                onLoad={() => setLoading(false)}
+                onError={() => { setLoading(false); setError(true); }}
               />
             ) : streamType === 'mp4' && camera.stream_url ? (
               <video
@@ -354,13 +354,13 @@ export default function الكاميراViewer({ camera, onإغلاق, onLocate,
                 src={imageUrl}
                 alt={camera.name}
                 className={`w-full h-full ${fullscreen ? 'object-contain' : 'object-cover'}`}
-                onLoad={() => setجارٍ التحميل(false)}
-                onخطأ={() => { setجارٍ التحميل(false); setخطأ(true); }}
+                onLoad={() => setLoading(false)}
+                onError={() => { setLoading(false); setError(true); }}
               />
             ) : null}
 
             {/* Built-in analysis: counted on the reader's device, and what OI Assist sees. */}
-            <الكاميراVision camera={camera} fit={fullscreen ? 'contain' : 'cover'} ready={!loading && !error && !externalOnly} />
+            <CameraVision camera={camera} fit={fullscreen ? 'contain' : 'cover'} ready={!loading && !error && !externalOnly} />
 
             {/* Live indicator */}
             {!error && !loading && !externalOnly && (
@@ -405,7 +405,7 @@ export default function الكاميراViewer({ camera, onإغلاق, onLocate,
                 <div className="flex flex-col">
                   <span className="text-[9px] text-[var(--text-muted)] font-mono tracking-widest">نوع البث</span>
                   <span className="text-[9px] text-white font-mono tracking-widest uppercase">
-                    {view === 'offline' ? (gone ? 'WITHDRAWN' : 'OFFLINE') : watchLiveUrl ? 'SNAPSHOT' : externalOnly ? 'EXTERNAL' : resolvedEmbed ? 'YOUTUBE مباشر' : streamType}
+                    {view === 'offline' ? (gone ? 'WITHالرسمN' : 'غير متصل') : watchLiveUrl ? 'SNAPSHOT' : externalOnly ? 'EXTERNAL' : resolvedEmbed ? 'YOUTUBE مباشر' : streamType}
                   </span>
                 </div>
                 <div className="flex flex-col border-l border-white/10 pl-4">
