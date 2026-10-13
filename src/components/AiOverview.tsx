@@ -2,7 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Loader2, تحديثCw, X, Activity, ArrowLeftRight, CircleDot } from 'lucide-react';
+import { Sparkles, Loader2, RefreshCw, X, Activity, ArrowLeftRight, CircleDot } from 'lucide-react';
 import { BLOCS, BLOC_ORDER, timeAgo, type AlertBrief, type AlertThread } from '@/lib/alert-digest';
 
 /**
@@ -158,8 +158,8 @@ export default function AiOverview({
   const [error, setخطأ] = useState<string | null>(null);
 
   const generate = useCallback(async () => {
-    setجارٍ التحميل(true);
-    setخطأ(null);
+    setLoading(true);
+    setError(null);
     const sig = signature;
     try {
       const res = await fetch('/api/ai/overview', {
@@ -167,13 +167,13 @@ export default function AiOverview({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ mode, payload }),
       });
-      if (!res.ok) throw new خطأ(`HTTP ${res.status}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       setResult(await res.json());
       setResultSignature(sig);
     } catch (e) {
-      setخطأ(e instanceof خطأ ? e.message : 'Failed to generate overview');
+      setError(e instanceof Error ? e.message : 'Failed to generate overview');
     } finally {
-      setجارٍ التحميل(false);
+      setLoading(false);
     }
   }, [mode, payload, signature]);
 
@@ -224,9 +224,9 @@ export default function AiOverview({
                 </span>
                 <div className="flex items-center gap-2">
                   <button onClick={generate} disabled={loading} className="hover:opacity-70 transition-opacity" title="Regenerate" aria-label="Regenerate overview">
-                    <تحديثCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} style={{ color: accent }} />
+                    <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} style={{ color: accent }} />
                   </button>
-                  <button onClick={() => setOpen(false)} className="hover:opacity-70 transition-opacity" title="إغلاق" aria-label="إغلاق overview">
+                  <button onClick={() => setOpen(false)} className="hover:opacity-70 transition-opacity" title="إغلاق" aria-label="Close overview">
                     <X className="w-3 h-3 text-[var(--text-muted)]" />
                   </button>
                 </div>
