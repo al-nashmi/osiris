@@ -3,7 +3,7 @@
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion } from 'framer-motion';
-import { X, RotateCcw, Copy, Check, ClipboardPaste, تراجع2 } from 'lucide-react';
+import { X, RotateCcw, Copy, Check, ClipboardPaste, Undo2 } from 'lucide-react';
 import { MAP_DEFAULTS, type MapPaletteKey } from '@/lib/map-palette';
 import {
   applySettings,
@@ -11,7 +11,7 @@ import {
   FONT_UI,
   HEX_RE,
   clearSettings,
-  loadحفظdSettings,
+  loadSavedSettings,
   PRESETS,
   readTheme,
   sanitize,
@@ -21,7 +21,7 @@ import {
 } from '@/lib/style-tokens';
 
 /**
- * استوديو المظهر — the panel. All token maths lives in `@/lib/style-tokens`;
+ * Style Studio — the panel. All token maths lives in `@/lib/style-tokens`;
  * this file is the controls and the wiring around them.
  */
 
@@ -77,15 +77,15 @@ function Slider({ label, value, min, max, step, onChange, format }: {
  * A slider with an explicit AUTO state. AUTO means "emit no rule", which is
  * how an untouched knob leaves the app's own styling intact.
  */
-function AutoSlider({ label, value, min, max, step, whenمفعّل, onChange, format }: {
+function AutoSlider({ label, value, min, max, step, whenEnabled, onChange, format }: {
   label: string; value: number | null; min: number; max: number; step: number;
-  whenمفعّل: number; onChange: (v: number | null) => void; format: (v: number) => string;
+  whenEnabled: number; onChange: (v: number | null) => void; format: (v: number) => string;
 }) {
   const auto = value === null;
   return (
     <div className="flex items-center gap-1.5 flex-1 max-w-[168px]">
       <button
-        onClick={() => onChange(auto ? whenمفعّل : null)}
+        onClick={() => onChange(auto ? whenEnabled : null)}
         aria-pressed={auto}
         title={auto ? `${label}: following the app's own styling` : `${label}: overridden`}
         className={`px-1.5 py-0.5 rounded text-[8px] font-mono tracking-wider border transition-colors shrink-0 ${
@@ -98,7 +98,7 @@ function AutoSlider({ label, value, min, max, step, whenمفعّل, onChange, fo
       </button>
       <input
         type="range" min={min} max={max} step={step}
-        value={auto ? whenمفعّل : value}
+        value={auto ? whenEnabled : value}
         disabled={auto}
         onChange={(e) => onChange(parseFloat(e.target.value))}
         aria-label={label}
@@ -153,7 +153,7 @@ function SubHead({ label, note }: { label: string; note?: string }) {
  * not just a colour, it is what keeps each satellite's own mission colour, so
  * getting back to it has to be possible without resetting the whole theme.
  */
-function إعادة ضبطtableSwatch({ label, value, fallback, onChange }: {
+function ResettableSwatch({ label, value, fallback, onChange }: {
   label: string; value: string; fallback: string; onChange: (v: string) => void;
 }) {
   const changed = value.toLowerCase() !== fallback.toLowerCase();
@@ -167,7 +167,7 @@ function إعادة ضبطtableSwatch({ label, value, fallback, onChange }: {
           changed ? 'text-white/35 hover:text-white/80 hover:bg-white/5' : 'opacity-0 pointer-events-none'
         }`}
       >
-        <تراجع2 className="w-3 h-3" />
+        <Undo2 className="w-3 h-3" />
       </button>
       <Swatch label={label} value={value} onChange={onChange} />
     </div>
@@ -185,13 +185,13 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-function StyleStudio({ onإغلاق, isMobile }: { onإغلاق: () => void; isMobile?: boolean }) {
+function StyleStudio({ onClose, isMobile }: { onClose: () => void; isMobile?: boolean }) {
   const [s, setS] = useState<StyleSettings | null>(null);
-  const [copied, setتم النسخ] = useState(false);
+  const [copied, setCopied] = useState(false);
   const initialised = useRef(false);
   /**
    * Until the user actually changes something there is nothing to override.
-   * Without this, إعادة ضبط would immediately re-apply a snapshot of the current
+   * Without this, Reset would immediately re-apply a snapshot of the current
    * theme as inline vars — which look identical but pin the palette, so the
    * Ghost Protocol toggle would silently stop doing anything.
    */
@@ -200,7 +200,7 @@ function StyleStudio({ onإغلاق, isMobile }: { onإغلاق: () => void; isM
   useEffect(() => {
     if (initialised.current) return;
     initialised.current = true;
-    const saved = loadحفظdSettings();
+    const saved = loadSavedSettings();
     if (saved) dirty.current = true;
     setS(saved ?? readTheme());
   }, []);
@@ -216,7 +216,7 @@ function StyleStudio({ onإغلاق, isMobile }: { onإغلاق: () => void; isM
   }, [s]);
 
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onإغلاق(); };
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [onإغلاق]);
@@ -257,8 +257,8 @@ function StyleStudio({ onإغلاق, isMobile }: { onإغلاق: () => void; isM
     if (!s) return;
     try {
       await navigator.clipboard.writeText(JSON.stringify(s, null, 2));
-      setتم النسخ(true);
-      setTimeout(() => setتم النسخ(false), 1600);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
     } catch { /* clipboard blocked */ }
   };
 
@@ -303,10 +303,10 @@ function StyleStudio({ onإغلاق, isMobile }: { onإغلاق: () => void; isM
           <button onClick={copy} title="Copy this theme as JSON" aria-label="Copy theme" className="w-7 h-7 rounded-md flex items-center justify-center text-white/30 hover:text-white/70 hover:bg-white/5 transition-colors">
             {copied ? <Check className="w-3.5 h-3.5 text-[var(--alert-green)]" /> : <Copy className="w-3.5 h-3.5" />}
           </button>
-          <button onClick={reset} title="إعادة ضبط to the active theme" aria-label="إعادة ضبط" className="w-7 h-7 rounded-md flex items-center justify-center text-white/30 hover:text-white/70 hover:bg-white/5 transition-colors">
+          <button onClick={reset} title="Reset to the active theme" aria-label="إعادة ضبط" className="w-7 h-7 rounded-md flex items-center justify-center text-white/30 hover:text-white/70 hover:bg-white/5 transition-colors">
             <RotateCcw className="w-3.5 h-3.5" />
           </button>
-          <button onClick={onإغلاق} title="إغلاق" aria-label="إغلاق استوديو المظهر" className="w-7 h-7 rounded-md flex items-center justify-center text-white/30 hover:text-white/70 hover:bg-white/5 transition-colors">
+          <button onClick={onClose} title="إغلاق" aria-label="Close Style Studio" className="w-7 h-7 rounded-md flex items-center justify-center text-white/30 hover:text-white/70 hover:bg-white/5 transition-colors">
             <X className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -354,34 +354,34 @@ function StyleStudio({ onإغلاق, isMobile }: { onإغلاق: () => void; isM
 
         <Section title="Map layers">
           <SubHead label="Cameras" />
-          <Row label="Dots &amp; labels"><إعادة ضبطtableSwatch label="Camera colour" value={s.map.cctv} fallback={MAP_DEFAULTS.cctv} onChange={v => setMap('cctv', v)} /></Row>
+          <Row label="Dots &amp; labels"><ResettableSwatch label="Camera colour" value={s.map.cctv} fallback={MAP_DEFAULTS.cctv} onChange={v => setMap('cctv', v)} /></Row>
 
-          <SubHead label="Satellites" note="افتراضي keeps each satellite's own mission colour. Change one and it takes over that whole category." />
-          <Row label="Comms"><إعادة ضبطtableSwatch label="Comms satellites" value={s.map.satComms} fallback={MAP_DEFAULTS.satComms} onChange={v => setMap('satComms', v)} /></Row>
-          <Row label="Military"><إعادة ضبطtableSwatch label="Military satellites" value={s.map.satMilitary} fallback={MAP_DEFAULTS.satMilitary} onChange={v => setMap('satMilitary', v)} /></Row>
-          <Row label="Navigation"><إعادة ضبطtableSwatch label="Navigation satellites" value={s.map.satNavigation} fallback={MAP_DEFAULTS.satNavigation} onChange={v => setMap('satNavigation', v)} /></Row>
-          <Row label="Earth obs"><إعادة ضبطtableSwatch label="Earth observation satellites" value={s.map.satEarth} fallback={MAP_DEFAULTS.satEarth} onChange={v => setMap('satEarth', v)} /></Row>
-          <Row label="Science"><إعادة ضبطtableSwatch label="Science satellites" value={s.map.satScience} fallback={MAP_DEFAULTS.satScience} onChange={v => setMap('satScience', v)} /></Row>
-          <Row label="Other"><إعادة ضبطtableSwatch label="Other satellites" value={s.map.satOther} fallback={MAP_DEFAULTS.satOther} onChange={v => setMap('satOther', v)} /></Row>
+          <SubHead label="Satellites" note="Default keeps each satellite's own mission colour. Change one and it takes over that whole category." />
+          <Row label="Comms"><ResettableSwatch label="Comms satellites" value={s.map.satComms} fallback={MAP_DEFAULTS.satComms} onChange={v => setMap('satComms', v)} /></Row>
+          <Row label="Military"><ResettableSwatch label="Military satellites" value={s.map.satMilitary} fallback={MAP_DEFAULTS.satMilitary} onChange={v => setMap('satMilitary', v)} /></Row>
+          <Row label="Navigation"><ResettableSwatch label="Navigation satellites" value={s.map.satNavigation} fallback={MAP_DEFAULTS.satNavigation} onChange={v => setMap('satNavigation', v)} /></Row>
+          <Row label="Earth obs"><ResettableSwatch label="Earth observation satellites" value={s.map.satEarth} fallback={MAP_DEFAULTS.satEarth} onChange={v => setMap('satEarth', v)} /></Row>
+          <Row label="Science"><ResettableSwatch label="Science satellites" value={s.map.satScience} fallback={MAP_DEFAULTS.satScience} onChange={v => setMap('satScience', v)} /></Row>
+          <Row label="Other"><ResettableSwatch label="Other satellites" value={s.map.satOther} fallback={MAP_DEFAULTS.satOther} onChange={v => setMap('satOther', v)} /></Row>
 
           <SubHead label="Aircraft" />
-          <Row label="Civil"><إعادة ضبطtableSwatch label="Civil aircraft" value={s.map.flightCivil} fallback={MAP_DEFAULTS.flightCivil} onChange={v => setMap('flightCivil', v)} /></Row>
-          <Row label="Private"><إعادة ضبطtableSwatch label="Private aircraft" value={s.map.flightPrivate} fallback={MAP_DEFAULTS.flightPrivate} onChange={v => setMap('flightPrivate', v)} /></Row>
-          <Row label="Government"><إعادة ضبطtableSwatch label="Government aircraft" value={s.map.flightGov} fallback={MAP_DEFAULTS.flightGov} onChange={v => setMap('flightGov', v)} /></Row>
-          <Row label="Military"><إعادة ضبطtableSwatch label="Military aircraft" value={s.map.flightMilitary} fallback={MAP_DEFAULTS.flightMilitary} onChange={v => setMap('flightMilitary', v)} /></Row>
-          <Row label="غير معروف"><إعادة ضبطtableSwatch label="غير معروف aircraft" value={s.map.flightغير معروف} fallback={MAP_DEFAULTS.flightغير معروف} onChange={v => setMap('flightغير معروف', v)} /></Row>
+          <Row label="Civil"><ResettableSwatch label="Civil aircraft" value={s.map.flightCivil} fallback={MAP_DEFAULTS.flightCivil} onChange={v => setMap('flightCivil', v)} /></Row>
+          <Row label="Private"><ResettableSwatch label="Private aircraft" value={s.map.flightPrivate} fallback={MAP_DEFAULTS.flightPrivate} onChange={v => setMap('flightPrivate', v)} /></Row>
+          <Row label="Government"><ResettableSwatch label="Government aircraft" value={s.map.flightGov} fallback={MAP_DEFAULTS.flightGov} onChange={v => setMap('flightGov', v)} /></Row>
+          <Row label="Military"><ResettableSwatch label="Military aircraft" value={s.map.flightMilitary} fallback={MAP_DEFAULTS.flightMilitary} onChange={v => setMap('flightMilitary', v)} /></Row>
+          <Row label="غير معروف"><ResettableSwatch label="Unknown aircraft" value={s.map.flightUnknown} fallback={MAP_DEFAULTS.flightUnknown} onChange={v => setMap('flightUnknown', v)} /></Row>
 
           <SubHead label="OI" note="The arcs a forecast draws through the sky." />
-          <Row label="Aligned"><إعادة ضبطtableSwatch label="OI arcs: aligned or agreeing" value={s.map.oiSupport} fallback={MAP_DEFAULTS.oiSupport} onChange={v => setMap('oiSupport', v)} /></Row>
-          <Row label="Opposed"><إعادة ضبطtableSwatch label="OI arcs: opposed or disputing" value={s.map.oiOppose} fallback={MAP_DEFAULTS.oiOppose} onChange={v => setMap('oiOppose', v)} /></Row>
-          <Row label="Neutral"><إعادة ضبطtableSwatch label="OI arcs: neutral, evidence" value={s.map.oiNeutral} fallback={MAP_DEFAULTS.oiNeutral} onChange={v => setMap('oiNeutral', v)} /></Row>
+          <Row label="Aligned"><ResettableSwatch label="OI arcs: aligned or agreeing" value={s.map.oiSupport} fallback={MAP_DEFAULTS.oiSupport} onChange={v => setMap('oiSupport', v)} /></Row>
+          <Row label="Opposed"><ResettableSwatch label="OI arcs: opposed or disputing" value={s.map.oiOppose} fallback={MAP_DEFAULTS.oiOppose} onChange={v => setMap('oiOppose', v)} /></Row>
+          <Row label="Neutral"><ResettableSwatch label="OI arcs: neutral, evidence" value={s.map.oiNeutral} fallback={MAP_DEFAULTS.oiNeutral} onChange={v => setMap('oiNeutral', v)} /></Row>
         </Section>
 
         <Section title="Surface">
           <Row label="Background"><Swatch label="Background colour" value={s.bg} onChange={setBg} /></Row>
           <Row label="Panel"><Slider label="Panel opacity" value={s.panelAlpha} min={0.2} max={1} step={0.01} onChange={v => set('panelAlpha', v)} format={v => `${Math.round(v * 100)}%`} /></Row>
           <Row label="Border"><Slider label="Border strength" value={s.borderAlpha} min={0} max={0.6} step={0.01} onChange={v => set('borderAlpha', v)} format={v => `${Math.round(v * 100)}%`} /></Row>
-          <Row label="Blur"><AutoSlider label="Backdrop blur" value={s.blur} min={0} max={64} step={1} whenمفعّل={24} onChange={v => set('blur', v)} format={v => `${v}px`} /></Row>
+          <Row label="Blur"><AutoSlider label="Backdrop blur" value={s.blur} min={0} max={64} step={1} whenEnabled={24} onChange={v => set('blur', v)} format={v => `${v}px`} /></Row>
           <Row label="Radius"><Slider label="Corner radius" value={s.radius} min={0} max={2.5} step={0.05} onChange={v => set('radius', v)} format={v => `${v.toFixed(2)}x`} /></Row>
         </Section>
 
@@ -395,7 +395,7 @@ function StyleStudio({ onإغلاق, isMobile }: { onإغلاق: () => void; isM
         <Section title="Typography">
           <Row label="UI font"><Segmented label="UI font" options={FONT_UI} value={s.fontUi} onChange={v => set('fontUi', v)} /></Row>
           <Row label="Mono font"><Segmented label="Mono font" options={FONT_MONO} value={s.fontMono} onChange={v => set('fontMono', v)} /></Row>
-          <Row label="Tracking"><AutoSlider label="Mono tracking" value={s.tracking} min={-0.05} max={0.4} step={0.005} whenمفعّل={0.2} onChange={v => set('tracking', v)} format={v => `${v.toFixed(2)}em`} /></Row>
+          <Row label="Tracking"><AutoSlider label="Mono tracking" value={s.tracking} min={-0.05} max={0.4} step={0.005} whenEnabled={0.2} onChange={v => set('tracking', v)} format={v => `${v.toFixed(2)}em`} /></Row>
         </Section>
 
         <Section title="Motion & FX">
