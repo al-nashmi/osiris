@@ -24,7 +24,7 @@ import {
  *
  * Driven the way a market terminal is — a command line that takes a ticker or
  * a function code, numbered function keys, one dense monitor — and dressed in
- * OSIRIS's own glass, gold and theme colours, so it sits with الاستطلاع and the
+ * OSIRIS's own glass, gold and theme colours, so it sits with RECON and the
  * rest of the HUD rather than apart from them. The monitor widens to more
  * columns as the panel does: price and move docked; net change, day range,
  * 52-week position, last trade and volume in full screen.
@@ -354,7 +354,7 @@ export default function MarketsPanel({ data, spaceWeather }: MarketsPanelProps) 
         <span key={c.code} className="flex items-center gap-1">
           <span style={{ color: T.faint }}>{c.code}</span>
           <span style={{ color: T.dim }}>{c.time}</span>
-          <span className="w-1.5 h-1.5 rounded-full" style={{ background: c.open ? T.up : T.faint, opacity: c.open ? 1 : 0.5 }} title={c.open ? 'Open' : 'إغلاقd'} />
+          <span className="w-1.5 h-1.5 rounded-full" style={{ background: c.open ? T.up : T.faint, opacity: c.open ? 1 : 0.5 }} title={c.open ? 'Open' : 'Closed'} />
         </span>
       ))}
     </div>
