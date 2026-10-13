@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   LocateFixed,
-  بحث, Radar, Globe, Shield, FileText, Radio,
+  Search, Radar, Globe, Shield, FileText, Radio,
   ChevronDown, ChevronUp, Loader2, AlertTriangle, Server,
   Wifi, Lock, MapPin, Bug, Code, Layers, Network, Fingerprint,
   CheckCircle, XCircle, Clock, ExternalLink, Crosshair,
@@ -44,25 +44,25 @@ interface ToolDef {
 }
 
 const TABS: ToolDef[] = [
-  { id: 'scanner', label: 'PORT SCAN', icon: Radar, placeholder: 'IP or hostname', color: '#00E5FF', group: 'network', blurb: 'فتح ports and running services' },
+  { id: 'scanner', label: 'PORT SCAN', icon: Radar, placeholder: 'IP or hostname', color: '#00E5FF', group: 'network', blurb: 'Open ports and running services' },
   { id: 'vuln', label: 'VULN SWEEP', icon: Bug, placeholder: 'IP or hostname', color: '#FF3D3D', group: 'network', blurb: 'Known CVEs affecting the host' },
   { id: 'shodan', label: 'SHODAN IOT', icon: Network, placeholder: 'عنوان IP', color: '#FF3D3D', group: 'network', blurb: 'Internet-exposed device record' },
   { id: 'bgp', label: 'BGP ROUTE', icon: Globe, placeholder: 'IP or ASN', color: '#00E5FF', group: 'network', blurb: 'Autonomous system and prefixes' },
   { id: 'mac', label: 'MAC ADDR', icon: Fingerprint, placeholder: 'عنوان MAC', color: '#FFD700', group: 'network', blurb: 'Hardware vendor lookup' },
-  { id: 'sweep', label: 'IP SWEEP', icon: Crosshair, placeholder: 'Enter عنوان IP (e.g. 8.8.8.8)', color: '#FF3D3D', group: 'network', blurb: 'Scan an entire subnet' },
+  { id: 'sweep', label: 'IP SWEEP', icon: Crosshair, placeholder: 'Enter IP address (e.g. 8.8.8.8)', color: '#FF3D3D', group: 'network', blurb: 'Scan an entire subnet' },
 
-  { id: 'dns', label: 'DNS', icon: Server, placeholder: 'النطاق name', color: '#448AFF', group: 'domain', blurb: 'All record types' },
-  { id: 'whois', label: 'WHOIS', icon: FileText, placeholder: 'النطاق name', color: '#FFD700', group: 'domain', blurb: 'Registrar and ownership' },
-  { id: 'certs', label: 'CERTS', icon: Lock, placeholder: 'النطاق name', color: '#E040FB', group: 'domain', blurb: 'الشهادة transparency log' },
-  { id: 'ssl', label: 'SSL/TLS', icon: Shield, placeholder: 'النطاق name', color: '#76FF03', group: 'domain', blurb: 'Cipher and certificate health' },
-  { id: 'subdomains', label: 'SUBDOMAINS', icon: Layers, placeholder: 'النطاق to enumerate', color: '#00BCD4', group: 'domain', blurb: 'Enumerate attack surface' },
+  { id: 'dns', label: 'DNS', icon: Server, placeholder: 'Domain name', color: '#448AFF', group: 'domain', blurb: 'All record types' },
+  { id: 'whois', label: 'WHOIS', icon: FileText, placeholder: 'Domain name', color: '#FFD700', group: 'domain', blurb: 'Registrar and ownership' },
+  { id: 'certs', label: 'CERTS', icon: Lock, placeholder: 'Domain name', color: '#E040FB', group: 'domain', blurb: 'Certificate transparency log' },
+  { id: 'ssl', label: 'SSL/TLS', icon: Shield, placeholder: 'Domain name', color: '#76FF03', group: 'domain', blurb: 'Cipher and certificate health' },
+  { id: 'subdomains', label: 'SUBDOMAINS', icon: Layers, placeholder: 'Domain to enumerate', color: '#00BCD4', group: 'domain', blurb: 'Enumerate attack surface' },
   { id: 'headers', label: 'HEADERS', icon: Code, placeholder: 'URL to inspect', color: '#87CEEB', group: 'domain', blurb: 'Security headers audit' },
   { id: 'tech', label: 'TECH DETECT', icon: Code, placeholder: 'URL to fingerprint', color: '#9C27B0', group: 'domain', blurb: 'Frameworks and stack' },
 
-  { id: 'username', label: 'USERNAME', icon: User, placeholder: 'اسم المستخدم / handle to hunt', color: '#00E676', group: 'identity', blurb: 'Hunt a handle across platforms' },
+  { id: 'username', label: 'USERNAME', icon: User, placeholder: 'Username / handle to hunt', color: '#00E676', group: 'identity', blurb: 'Hunt a handle across platforms' },
   { id: 'github', label: 'GITHUB RECON', icon: Terminal, placeholder: 'GitHub username', color: '#87CEEB', group: 'identity', blurb: 'Profile, repos and contacts' },
-  { id: 'phone', label: 'PHONE INTEL', icon: Phone, placeholder: 'رقم الهاتف (e.g. +1...)', color: '#FF9500', group: 'identity', blurb: 'Carrier, region and line type' },
-  { id: 'fingerprint', label: 'FINGERPRINT', icon: Fingerprint, placeholder: 'اسم المستخدم, email or phone', color: '#3B82F6', group: 'identity', blurb: 'Public profile search, streamed live' },
+  { id: 'phone', label: 'PHONE INTEL', icon: Phone, placeholder: 'Phone number (e.g. +1...)', color: '#FF9500', group: 'identity', blurb: 'Carrier, region and line type' },
+  { id: 'fingerprint', label: 'FINGERPRINT', icon: Fingerprint, placeholder: 'Username, email or phone', color: '#3B82F6', group: 'identity', blurb: 'Public profile search, streamed live' },
 
   { id: 'threats', label: 'THREATS', icon: AlertTriangle, placeholder: 'IP, domain, or hash', color: '#FF9500', group: 'threat', blurb: 'Reputation across feeds' },
   { id: 'leaks', label: 'DATA LEAKS', icon: ShieldAlert, placeholder: 'Email address', color: '#E040FB', group: 'threat', blurb: 'Breach exposure for an address' },
@@ -72,14 +72,14 @@ const TABS: ToolDef[] = [
   { id: 'donbot', label: 'DONBOT', icon: DigitalDonMark, placeholder: 'Ticker, name or contract address', color: '#E8E6E0', group: 'chain', blurb: 'Token signal and holder clusters' },
 ];
 
-interface OsintPanelProps { isفتح?: boolean; onإغلاق?: () => void; isMobile?: boolean; onSweepVisualize?: (data: any) => void; onScanGeolocate?: (target: string, data: any) => void; }
+interface OsintPanelProps { isOpen?: boolean; onClose?: () => void; isMobile?: boolean; onSweepVisualize?: (data: any) => void; onScanGeolocate?: (target: string, data: any) => void; }
 
 function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintPanelProps) {
   const [activeTab, setActiveTab] = useState('scanner');
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<any>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setجارٍ التحميل] = useState(false);
   const [error, setخطأ] = useState('');
   const [scanType, setScanType] = useState('quick');
   const [expanded, setExpanded] = useState(true);
@@ -94,7 +94,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
   /** Free-text filter over the toolkit — 19 modules is too many to scan. */
   const [toolFilter, setToolFilter] = useState('');
   // Owned here, not by the view: toggling the expanded view remounts it.
-  const fingerprint = useFingerprintSearch();
+  const fingerprint = useFingerprintبحث();
   /** DonBot's open token, kept for the same reason; its frame reloads on the remount, on the same token. */
   const [donbotQuery, setDonbotQuery] = useState<string | null>(null);
 
@@ -102,7 +102,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
     setActiveTab(id);
     setQuery('');
     setResults(null);
-    setخطأ('');
+    setError('');
     setSweepResult(null);
   }, []);
 
@@ -127,7 +127,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
   const [expandedDevice, setExpandedDevice] = useState<string | null>(null);
 
   // Fetch CVE details when a device is expanded in full-screen mode
-  const fetchCveالتفاصيل = useCallback(async (cveIds: string[]) => {
+  const fetchCveDetails = useCallback(async (cveIds: string[]) => {
     const missing = cveIds.filter(id => !cveCache[id]);
     if (missing.length === 0) return;
     // Mark as loading
@@ -153,10 +153,10 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
 
     const handleSelfTrack = () => {
       setLoading(true);
-      setخطأ('');
+      setError('');
       fetch('/api/geo')
         .then(r => {
-          if (!r.ok) throw new خطأ(`Server returned ${r.status}`);
+          if (!r.ok) throw new Error(`Server returned ${r.status}`);
           return r.json();
         })
         .then(geo => {
@@ -165,26 +165,26 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
             onScanGeolocate(geo.query || 'local', {
               lat: geo.lat,
               lng: geo.lon,
-              city: geo.city || 'غير معروف',
-              country: geo.country || 'غير معروف',
-              isp: geo.isp || 'غير معروف',
-              org: geo.org || 'غير معروف',
-              as: geo.as || 'غير معروف',
+              city: geo.city || 'Unknown',
+              country: geo.country || 'Unknown',
+              isp: geo.isp || 'Unknown',
+              org: geo.org || 'Unknown',
+              as: geo.as || 'Unknown',
               type: 'self_track'
             });
           } else {
-            setخطأ("Could not retrieve your IP location.");
+            setError("Could not retrieve your IP location.");
           }
         })
         .catch(err => {
           setLoading(false);
-          setخطأ("Network error: " + err.message);
+          setError("Network error: " + err.message);
         });
     };
 
   const runLookup = useCallback(async () => {
     if (!query.trim() || loading) return;
-    setLoading(true); setخطأ(''); setResults(null);
+    setLoading(true); setError(''); setResults(null);
 
     // IP Sweep — separate flow (only for the sweep tab)
     if (activeTab === 'sweep') {
@@ -200,8 +200,8 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
 
         const ipParts = initData.target_ip.split('.').map(Number) as [number, number, number, number];
         const ipNum = ipToNumber(ipParts);
-        const subnetStart = calculateSubnetStart(ipNum, cidr);
-        const subnet = numberToIp(subnetStart);
+        const subnetابدأ = calculateSubnetابدأ(ipNum, cidr);
+        const subnet = numberToIp(subnetابدأ);
 
         const urls: string[] = [];
         for (let i = 0; i < totalHosts; i++) {
@@ -248,7 +248,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
         setSweepProgress(null);
         setHistory(prev => [{ tab: activeTab, query, time: new Date().toLocaleTimeString() }, ...prev.slice(0, 9)]);
       } catch (err: any) {
-        setخطأ(err.message);
+        setError(err.message);
         setSweepProgress(null);
       } finally {
         setLoading(false);
@@ -288,7 +288,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
       if (activeTab === 'leaks' && res.status === 404) {
         setResults({ email: query, breached: false, breaches: [], data_exposed: [] });
         setHistory(prev => [{ tab: activeTab, query, time: new Date().toLocaleTimeString() }, ...prev.slice(0, 9)]);
-        setLoading(false);
+        setجارٍ التحميل(false);
         return;
       }
       const data = await res.json();
@@ -335,9 +335,9 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
             .catch(() => {});
         }
       } else {
-        setخطأ(data.error || 'Lookup failed');
+        setError(data.error || 'Lookup failed');
       }
-    } catch { setخطأ('Network error'); }
+    } catch { setError('Network error'); }
     finally { setLoading(false); }
   }, [query, activeTab, scanType, loading, sweepCidr]);
 
@@ -426,10 +426,10 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
           <SectionHeader title="HOST INFO" icon={Server} color="#00E5FF" />
           <ResultRow label="Target" value={host} color="#00E5FF" />
           <ResultRow label="Scan Type" value={r.scan_type || scanType} />
-          <ResultRow label="Duration" value={r.duration || r.scan_time} />
+          <ResultRow label="المدة" value={r.duration || r.scan_time} />
           {Array.isArray(ports) && ports.length > 0 && (
             <>
-              <SectionHeader title={`فتح PORTS (${ports.length})`} icon={Wifi} color="#00E676" />
+              <SectionHeader title={`OPEN PORTS (${ports.length})`} icon={Wifi} color="#00E676" />
               <div className="space-y-0.5">
                 {ports.map((p: any, i: number) => (
                   <PortRow key={i} port={p.port || p} state={p.state || 'open'} service={p.service || p.name} version={p.version} />
@@ -471,7 +471,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
           
           {exploits.length > 0 && (
             <div className="mt-4">
-              <SectionHeader title={`POSSIBLE عمليات الاستغلال (${exploits.length})`} icon={AlertTriangle} color="#FF9500" />
+              <SectionHeader title={`POSSIBLE EXPLOITS (${exploits.length})`} icon={AlertTriangle} color="#FF9500" />
               <div className="mt-2 space-y-1">
                 {exploits.slice(0, 10).map((e: any, i: number) => (
                   <div key={i} className="p-2 rounded-lg border border-orange-500/30 bg-orange-500/10 flex flex-col">
@@ -781,7 +781,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
       const المخاطر_COLOR: Record<string, string> = {
         critical: '#FF1744', high: '#FF3D3D', medium: '#FF9500', low: '#FFD700', info: '#00E676',
       };
-      const riskColor = المخاطر_COLOR[r.risk?.level] || '#00E676';
+      const riskColor = RISK_COLOR[r.risk?.level] || '#00E676';
       const fmt = (n: number, d = 4) =>
         typeof n === 'number' && Number.isFinite(n)
           ? n.toLocaleString(undefined, { maximumFractionDigits: d })
@@ -860,11 +860,11 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
 
           {r.risk?.factors?.length > 0 && (
             <>
-              <SectionHeader title="المخاطر FACTORS" icon={AlertTriangle} color={riskColor} />
+              <SectionHeader title="RISK FACTORS" icon={AlertTriangle} color={riskColor} />
               {r.risk.factors.map((f: any, i: number) => (
                 <div key={i} className="py-1.5 border-b border-[var(--border-secondary)]/20 last:border-0">
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono font-bold" style={{ color: المخاطر_COLOR[f.severity] || '#00E676' }}>
+                    <span className="text-[10px] font-mono font-bold" style={{ color: RISK_COLOR[f.severity] || '#00E676' }}>
                       {f.label}
                     </span>
                     {f.weight > 0 && (
@@ -984,7 +984,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
         <div>
           <SectionHeader title="CERTIFICATE TRANSPARENCY" icon={Lock} color="#E040FB" />
           <ResultRow label="النطاق" value={query} color="#E040FB" />
-          <ResultRow label="الشهادةs" value={Array.isArray(certs) ? certs.length : 0} />
+          <ResultRow label="Certificates" value={Array.isArray(certs) ? certs.length : 0} />
           {Array.isArray(certs) && certs.slice(0, 15).map((c: any, i: number) => (
             <div key={i} className="mt-1.5 p-2 rounded border border-[var(--border-secondary)]/30 bg-[var(--bg-tertiary)]/30">
               <ResultRow label="Issuer" value={c.issuer_name || c.issuer} />
@@ -1071,7 +1071,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
   const renderToolRail = () => (
     <div className="flex flex-col h-full">
       <div className="relative p-3 pb-2 flex-shrink-0">
-        <بحث className="absolute left-5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--text-muted)]" />
+        <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--text-muted)]" />
         <input
           value={toolFilter}
           onChange={e => setToolFilter(e.target.value)}
@@ -1163,7 +1163,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
         <div className="grid grid-cols-2 gap-2">
           {TABS.filter(t => t.id === 'sweep').map(tab => (
             <button key={tab.id} onClick={() => { 
-                  setActiveTab(tab.id); setQuery(''); setResults(null); setخطأ(''); setSweepResult(null); 
+                  setActiveTab(tab.id); setQuery(''); setResults(null); setError(''); setSweepResult(null); 
                 }}
                 className={`w-full py-4 rounded-lg border flex flex-col items-center justify-center gap-2 transition-all ${
                   activeTab === tab.id ? 'bg-[var(--bg-tertiary)] border-opacity-50' : 'bg-[#0D0D0C] hover:bg-[var(--hover-accent)] border-transparent'
@@ -1191,7 +1191,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
             every label fits without truncation. */}
         <div className="mt-2">
           <div className="relative mb-1.5">
-            <بحث className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-[var(--text-muted)]" />
+            <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-[var(--text-muted)]" />
             <input
               value={toolFilter}
               onChange={e => setToolFilter(e.target.value)}
@@ -1250,12 +1250,12 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
             {([['brief', 'DAILY BRIEF'], ['wallet', 'WALLET FORENSICS']] as const).map(([id, label]) => (
               <button
                 key={id}
-                onClick={() => setChainعرض(id)}
+                onClick={() => setChainView(id)}
                 className="px-2 py-1 rounded text-[10px] font-mono font-bold tracking-wider transition-colors"
                 style={{
-                  color: chainعرض === id ? currentTab?.color : 'var(--text-muted)',
-                  background: chainعرض === id ? `${currentTab?.color}1a` : 'transparent',
-                  border: `1px solid ${chainعرض === id ? `${currentTab?.color}55` : 'rgba(255,255,255,0.1)'}`,
+                  color: chainView === id ? currentTab?.color : 'var(--text-muted)',
+                  background: chainView === id ? `${currentTab?.color}1a` : 'transparent',
+                  border: `1px solid ${chainView === id ? `${currentTab?.color}55` : 'rgba(255,255,255,0.1)'}`,
                 }}
               >
                 {label}
@@ -1267,7 +1267,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
         {!(activeTab === 'crypto' && chainعرض === 'brief') && (
         <div className="flex gap-1.5">
           <div className="flex-1 relative">
-            <بحث className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--text-muted)]" />
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--text-muted)]" />
             <input type="text" value={query} onChange={e => setQuery(e.target.value)} onKeyDown={e => e.key === 'Enter' && runLookup()}
               placeholder={currentTab?.placeholder}
               className="w-full bg-[var(--bg-primary)]/60 border border-[var(--border-primary)] rounded-lg pl-8 pr-3 py-2.5 text-[10px] font-mono text-[var(--text-primary)] placeholder:text-[var(--text-muted)]/40 focus:outline-none transition-colors"
@@ -1387,7 +1387,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
                     if (!isFullScreen) return;
                     const next = isExpanded ? null : device.ip;
                     setExpandedDevice(next);
-                    if (next && device.vulns.length > 0) fetchCveالتفاصيل(device.vulns);
+                    if (next && device.vulns.length > 0) fetchCveDetails(device.vulns);
                   }}
                 >
                   <div className="flex items-center gap-2 min-w-0 flex-1 pr-2">
@@ -1471,7 +1471,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
                         <div className="flex flex-col gap-2">
                           {device.vulns.map((cveId: string) => {
                             const info = cveCache[cveId];
-                            const isLoading = !info || info.loading;
+                            const isجارٍ التحميل = !info || info.loading;
                             const severityColor = !info?.severity ? '#5C5A54'
                               : info.severity === 'CRITICAL' ? '#FF3D3D'
                               : info.severity === 'HIGH' ? '#FF6B00'
@@ -1495,7 +1495,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
                                     </a>
                                   </div>
                                 </div>
-                                {isLoading ? (
+                                {isجارٍ التحميل ? (
                                   <div className="flex items-center gap-2 py-1">
                                     <Loader2 className="w-3 h-3 animate-spin text-[#5C5A54]" />
                                     <span className="text-[11px] font-mono text-[#5C5A54]">جارٍ جلب معلومات الثغرات...</span>
