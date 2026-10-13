@@ -12,16 +12,16 @@ import { TERRAIN_MIN_ZOOM, type TerrainStatus } from '@/lib/map-terrain';
 
 interface LayerPanelProps {
   data: any;
-  activeالطبقات: any;
-  setActiveالطبقات: React.Dispatch<React.SetStateAction<any>>;
+  activeLayers: any;
+  setActiveLayers: React.Dispatch<React.SetStateAction<any>>;
   isMobile?: boolean;
   theme?: 'core' | 'ghost';
   setTheme?: (theme: 'core' | 'ghost') => void;
-  /** Server-side capabilities, e.g. { cloudflare: true }. الطبقات declaring a
+  /** Server-side capabilities, e.g. { cloudflare: true }. Layers declaring a
    *  `requires` key stay hidden until the matching capability is present. */
   capabilities?: Record<string, boolean>;
   terrainStatus?: TerrainStatus;
-  onTerrainإعادة المحاولة?: () => void;
+  onTerrainRetry?: () => void;
   onTerrainFocus?: () => void;
   on3DModeSelected?: () => void;
   /** False while the splash is up; the rail slides in when it turns true. */
@@ -71,8 +71,8 @@ const LAYER_GROUPS: LayerGroupDef[] = [
     ],
   },
   {
-    label: 'MARITIME',
-    fullLabel: 'MARITIME',
+    label: 'MARIالوقت',
+    fullLabel: 'MARIالوقت',
     icon: Ship,
     layers: [
       { key: 'maritime', label: 'Maritime / Naval', dataKey: 'maritime_ships,maritime_ports,maritime_chokepoints' },
@@ -83,7 +83,7 @@ const LAYER_GROUPS: LayerGroupDef[] = [
     fullLabel: 'الفضاء TRACKING',
     icon: Satellite,
     layers: [
-      { key: 'satellites', label: 'All الأقمار الصناعية', dataKey: 'satellites' },
+      { key: 'satellites', label: 'All Satellites', dataKey: 'satellites' },
       { key: 'sat_comms', label: 'Starlink / Comms', dataKey: 'satellites', catKey: 'comms' },
       { key: 'sat_military', label: 'Military / Intel', dataKey: 'satellites', catKey: 'military' },
       { key: 'sat_navigation', label: 'GPS / Navigation', dataKey: 'satellites', catKey: 'navigation' },
@@ -96,7 +96,7 @@ const LAYER_GROUPS: LayerGroupDef[] = [
     fullLabel: 'SURVEILLANCE',
     icon: Camera,
     layers: [
-      { key: 'cctv', label: 'CCTV الكاميرات', dataKey: 'cameras' },
+      { key: 'cctv', label: 'CCTV Cameras', dataKey: 'cameras' },
       { key: 'cctv_previews', label: 'Live Previews', dataKey: '', parent: 'cctv' },
       { key: 'live_news', label: 'Live News Feeds', dataKey: 'live_feeds' },
     ],
@@ -106,9 +106,9 @@ const LAYER_GROUPS: LayerGroupDef[] = [
     fullLabel: 'NATURAL HAZARDS',
     icon: CloudLightning,
     layers: [
-      { key: 'earthquakes', label: 'الزلازل', dataKey: 'earthquakes' },
-      { key: 'fires', label: 'Active الحرائق', dataKey: 'fires' },
-      { key: 'weather', label: 'Severe الطقس', dataKey: 'weather_events' },
+      { key: 'earthquakes', label: 'Earthquakes', dataKey: 'earthquakes' },
+      { key: 'fires', label: 'Active Fires', dataKey: 'fires' },
+      { key: 'weather', label: 'Severe Weather', dataKey: 'weather_events' },
     ],
   },
   {
@@ -116,7 +116,7 @@ const LAYER_GROUPS: LayerGroupDef[] = [
     fullLabel: 'THREATS & INTEL',
     icon: AlertTriangle,
     layers: [
-      { key: 'infrastructure', label: 'المنشآت النووية', dataKey: 'infrastructure' },
+      { key: 'infrastructure', label: 'Nuclear Facilities', dataKey: 'infrastructure' },
       { key: 'global_incidents', label: 'Global Incidents', dataKey: 'gdelt' },
       { key: 'alert_pins', label: 'Live Alert Pins', dataKey: 'alert_pins' },
       { key: 'gdelt_events', label: 'GDELT Events', dataKey: 'gdelt_events' },
@@ -201,7 +201,7 @@ function SubLayerStem() {
   );
 }
 
-function LayerPanel({ data, activeالطبقات, setActiveالطبقات, isMobile, theme = 'core', setTheme, capabilities = {}, terrainStatus = 'idle', onTerrainإعادة المحاولة, onTerrainFocus, on3DModeSelected, revealed = true }: LayerPanelProps) {
+function LayerPanel({ data, activeLayers, setActiveLayers, isMobile, theme = 'core', setTheme, capabilities = {}, terrainStatus = 'idle', onTerrainإعادة المحاولة, onTerrainFocus, on3DModeSelected, revealed = true }: LayerPanelProps) {
   const [hoveredGroup, setHoveredGroup] = useState<string | null>(null);
   /**
    * A pinned group stays open when the pointer leaves. Hover-only flyouts are
@@ -219,14 +219,14 @@ function LayerPanel({ data, activeالطبقات, setActiveالطبقات, isMob
   }, [pinnedGroup]);
 
   const toggle = (key: string) => {
-    if ((key === 'terrain_elevation' || key === 'terrain_3d') && !activeالطبقات[key]) on3DModeSelected?.();
-    setActiveالطبقات((prev: any) => ({ ...prev, [key]: !prev[key] }));
+    if ((key === 'terrain_elevation' || key === 'terrain_3d') && !activeLayers[key]) on3DModeSelected?.();
+    setActiveLayers((prev: any) => ({ ...prev, [key]: !prev[key] }));
   };
-  const terrainDetails = activeالطبقات.terrain_elevation ? (
+  const terrainDetails = activeLayers.terrain_elevation ? (
     <div className="mt-2 rounded-lg border border-white/10 bg-white/[0.03] p-2.5 text-[10px] text-white/60">
       <p role="status">{terrainStatus === 'idle' ? `Terrain at zoom ${TERRAIN_MIN_ZOOM}+ · zoom in` : terrainStatus === 'waiting' ? 'Terrain starts when you stop moving' : terrainStatus === 'loading' ? 'Loading nearby terrain…' : terrainStatus === 'error' ? 'Terrain unavailable; the map is still usable.' : 'Terrain on'}</p>
       {terrainStatus === 'idle' && <button type="button" onClick={onTerrainFocus} className="mt-2 min-h-8 rounded border border-white/15 px-2 text-[var(--gold-primary)] hover:bg-white/10">تكبير إلى مستوى التضاريس</button>}
-      {terrainStatus === 'error' && <button type="button" onClick={onTerrainإعادة المحاولة} className="mt-2 min-h-8 rounded border border-white/15 px-2 text-[var(--gold-primary)] hover:bg-white/10">إعادة محاولة تحميل التضاريس</button>}
+      {terrainStatus === 'error' && <button type="button" onClick={onTerrainRetry} className="mt-2 min-h-8 rounded border border-white/15 px-2 text-[var(--gold-primary)] hover:bg-white/10">إعادة محاولة تحميل التضاريس</button>}
       <p className="mt-2 text-white/35">تفاصيل قريبة فقط · مربعات مخزنة</p>
       <a className="mt-1 inline-block underline underline-offset-2" href="https://github.com/tilezen/joerd/blob/master/docs/attribution.md" target="_blank" rel="noopener noreferrer">مصادر بيانات التضاريس</a>
     </div>
@@ -234,9 +234,9 @@ function LayerPanel({ data, activeالطبقات, setActiveالطبقات, isMob
 
   /** Switch a whole group at once — off if any are on, otherwise all on. */
   const toggleGroup = (layers: LayerDef[]) => {
-    const anyOn = layers.some(l => activeالطبقات[l.key]);
+    const anyOn = layers.some(l => activeLayers[l.key]);
     if (!anyOn && layers.some(l => l.key === 'terrain_elevation' || l.key === 'terrain_3d')) on3DModeSelected?.();
-    setActiveالطبقات((prev: any) => {
+    setActiveLayers((prev: any) => {
       const next = { ...prev };
       for (const l of layers) next[l.key] = !anyOn;
       return next;
@@ -277,9 +277,9 @@ function LayerPanel({ data, activeالطبقات, setActiveالطبقات, isMob
             </div>
             <div className="flex flex-col gap-1">
               {group.layers.map((layer) => {
-                const isLayerActive = activeالطبقات[layer.key];
+                const isLayerActive = activeLayers[layer.key];
                 const count = getCount(layer.dataKey, layer.catKey);
-                const dormant = !!layer.parent && !activeالطبقات[layer.parent];
+                const dormant = !!layer.parent && !activeLayers[layer.parent];
                 return (
                   <button
                     key={layer.key}
@@ -323,7 +323,7 @@ function LayerPanel({ data, activeالطبقات, setActiveالطبقات, isMob
           </button>
         </div>
         <AnimatePresence>
-          {studioOpen && <StyleStudio isMobile onإغلاق={() => setStudioOpen(false)} />}
+          {studioOpen && <StyleStudio isMobile onClose={() => setStudioOpen(false)} />}
         </AnimatePresence>
 
         {/* MOBILE GHOST TOGGLE */}
@@ -356,7 +356,7 @@ function LayerPanel({ data, activeالطبقات, setActiveالطبقات, isMob
       style={{
         background: 'rgba(0,0,0,0.15)',
         backdropFilter: 'blur(24px) saturate(1.2)',
-        WebkitرجوعdropFilter: 'blur(24px) saturate(1.2)',
+        WebkitBackdropFilter: 'blur(24px) saturate(1.2)',
       }}
     >
       <div className="flex-1 flex flex-col items-center gap-1">
@@ -364,11 +364,11 @@ function LayerPanel({ data, activeالطبقات, setActiveالطبقات, isMob
           /* Sub-layers modify a parent rather than draw anything of their own,
              so they do not count towards the rail's reading. */
           const counted = group.layers.filter(l => !l.parent);
-          const groupActive = counted.some(l => activeالطبقات[l.key]);
+          const groupActive = counted.some(l => activeLayers[l.key]);
           const isHovered = hoveredGroup === group.label;
           const Icon = group.icon;
 
-          const activeCount = counted.filter(l => activeالطبقات[l.key]).length;
+          const activeCount = counted.filter(l => activeLayers[l.key]).length;
           const isPinned = pinnedGroup === group.label;
           const isOpen = isHovered || isPinned;
 
@@ -436,7 +436,7 @@ function LayerPanel({ data, activeالطبقات, setActiveالطبقات, isMob
                     style={{
                       background: 'rgba(0,0,0,0.6)',
                       backdropFilter: 'blur(40px) saturate(1.5)',
-                      WebkitرجوعdropFilter: 'blur(40px) saturate(1.5)',
+                      WebkitBackdropFilter: 'blur(40px) saturate(1.5)',
                       border: '1px solid rgba(255,255,255,0.06)',
                       boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
                     }}
@@ -465,9 +465,9 @@ function LayerPanel({ data, activeالطبقات, setActiveالطبقات, isMob
                     </div>
                     <div className="flex flex-col gap-0.5">
                       {group.layers.map((layer) => {
-                        const isLayerActive = activeالطبقات[layer.key];
+                        const isLayerActive = activeLayers[layer.key];
                         const count = getCount(layer.dataKey, layer.catKey);
-                        const dormant = !!layer.parent && !activeالطبقات[layer.parent];
+                        const dormant = !!layer.parent && !activeLayers[layer.parent];
 
                         return (
                           <button
@@ -524,7 +524,7 @@ function LayerPanel({ data, activeالطبقات, setActiveالطبقات, isMob
         />
       </button>
       <AnimatePresence>
-        {studioOpen && <StyleStudio onإغلاق={() => setStudioOpen(false)} />}
+        {studioOpen && <StyleStudio onClose={() => setStudioOpen(false)} />}
       </AnimatePresence>
 
       {/* Ghost Protocol Toggle */}
