@@ -173,7 +173,7 @@ export default function DocsClient() {
               <circle cx="11" cy="11" r="7" />
               <path d="m20 20-3.5-3.5" />
             </svg>
-            <span className="hidden sm:inline text-[11.5px] text-[var(--text-muted)] font-mono">بحث</span>
+            <span className="hidden sm:inline text-[11.5px] text-[var(--text-muted)] font-mono">Search</span>
             <kbd className="hidden sm:inline text-[10px] font-mono px-1.5 py-0.5 rounded border border-white/10 text-[var(--text-muted)]">
               ⌘K
             </kbd>
@@ -266,7 +266,7 @@ export default function DocsClient() {
             </div>
 
             <h1 className="text-[38px] md:text-[52px] leading-[1.05] font-bold tracking-[-0.02em] mb-5">
-              <span className="text-[var(--text-heading)]">ابدأ البناء باستخدام</span>
+              <span className="text-[var(--text-heading)]">Build on the</span>
               <br />
               <span className="bg-gradient-to-r from-[var(--gold-primary)] via-[#F0D060] to-[var(--cyan-primary)] bg-clip-text text-transparent">
                 OSIRIS platform
@@ -368,7 +368,7 @@ print(len(data["commercial_flights"]), "commercial")`,
             <p>The OSINT lookups each take one subject, so they compose cleanly in a pipeline:</p>
             <Pre label="حصر النطاقات الفرعية بشكل سلبي" lang="bash">{`curl -s "${origin}/api/osint/certs?domain=example.com" | jq -r '.subdomains[]'`}</Pre>
             <Callout tone="info" title="جرّب قبل كتابة الكود">
-              Every GET endpoint in the reference below has a <strong>إرسال الطلب</strong> button that runs it against
+              Every GET endpoint in the reference below has a <strong>Send request</strong> button that runs it against
               this instance and shows the live response.
             </Callout>
           </Section>
