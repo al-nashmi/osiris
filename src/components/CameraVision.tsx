@@ -376,7 +376,7 @@ function Report({ camera, state, a }: { camera: VisionCamera; state: Look; a: Fr
         {!busy && (
           <button onClick={() => clearLook(camera.id)} aria-label="Back to the live feed"
             className={`${canIdentify ? '' : 'ml-auto '}flex-shrink-0 flex items-center gap-1 px-1.5 py-0.5 border border-white/15 text-white hover:border-white/40`}>
-            <X className="w-2.5 h-2.5" /> مباشر
+            <X className="w-2.5 h-2.5" /> LIVE
           </button>
         )}
       </div>
@@ -387,7 +387,7 @@ function Report({ camera, state, a }: { camera: VisionCamera; state: Look; a: Fr
         <div className="ml-auto pb-0.5 text-right text-[9px] font-mono tracking-wide text-[var(--text-secondary)] leading-relaxed">
           <div>{kinds.length ? kinds.map(([l, n]) => `${n} ${labelWord(l, n)}`).join(' · ').toUpperCase() : vehicles + people ? '' : 'NOTHING IN VIEW IT CAN COUNT'}</div>
           <div className="text-white/45" title="Read by a detector running in this browser: nothing is sent anywhere">
-            {a.passes > 1 ? `${a.passes} PASSES · ` : ''}<span style={{ color: accent }}>{a.ms < 1000 ? `${a.ms} MS` : `${(a.ms / 1000).toFixed(1)} S`}</span> · على هذا الجهاز
+            {a.passes > 1 ? `${a.passes} PASSES · ` : ''}<span style={{ color: accent }}>{a.ms < 1000 ? `${a.ms} MS` : `${(a.ms / 1000).toFixed(1)} S`}</span> · ON THIS DEVICE
           </div>
         </div>
       </div>
