@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 import {
-  Bot, Camera, ChevronDown, ExternalLink, HardDrive, KeyRound, Map as MapIcon, MessageCircle, Search, ShieldCheck, Sparkles, UserX, EyeOff,
+  Bot, Camera, ChevronDown, ExternalLink, HardDrive, KeyRound, Map as MapIcon, MessageCircle, بحث, ShieldCheck, Sparkles, UserX, EyeOff,
 } from 'lucide-react';
 
 export const metadata: Metadata = {
@@ -96,10 +96,10 @@ const STORED: { what: string; detail: string }[] = [
 ];
 
 const PROMISES: { icon: ReactNode; title: string; body: string }[] = [
-  { icon: <UserX className="h-4 w-4" />, title: 'No account, ever', body: 'There is nothing to sign up for and nothing to log in to. We do not know who you are, and we have not asked.' },
-  { icon: <EyeOff className="h-4 w-4" />, title: 'No tracking', body: 'No analytics, no advertising networks, no tracking cookies. We do not build a profile of you or of what you do here.' },
-  { icon: <HardDrive className="h-4 w-4" />, title: 'Your things stay with you', body: 'Your settings, history and keys are kept in your own browser, where you can see them and clear them. Not on our servers.' },
-  { icon: <KeyRound className="h-4 w-4" />, title: 'Your AI key is yours', body: 'Used only for the request you make, passed straight to the provider you chose, and never stored on our servers or written to a log.' },
+  { icon: <UserX className="h-4 w-4" />, title: 'لا حاجة إلى حساب', body: 'لا تحتاج إلى التسجيل أو تسجيل الدخول. لا نعرف هويتك ولم نطلبها منك.' },
+  { icon: <EyeOff className="h-4 w-4" />, title: 'لا تتبّع', body: 'لا توجد أدوات تحليل أو شبكات إعلانية أو ملفات تعريف ارتباط للتتبّع. لا ننشئ ملفاً عنك أو عن نشاطك هنا.' },
+  { icon: <HardDrive className="h-4 w-4" />, title: 'بياناتك تبقى لديك', body: 'تُحفظ إعداداتك وسجلك ومفاتيحك في متصفحك، ويمكنك الاطلاع عليها ومسحها. لا تُحفظ على خوادمنا.' },
+  { icon: <KeyRound className="h-4 w-4" />, title: 'مفتاح الذكاء الاصطناعي ملكك', body: 'يُستخدم فقط لتنفيذ طلبك ويُرسل مباشرة إلى المزوّد الذي اخترته، ولا يُحفظ على خوادمنا أو في السجلات.' },
 ];
 
 /* ───────────── The page ───────────── */
@@ -114,8 +114,8 @@ export default function PrivacyPage() {
         </Link>
 
         <header className="mt-8">
-          <p className="font-mono text-[11px] tracking-[0.25em] text-[var(--gold-primary)]">PRIVACY</p>
-          <h1 className="mt-2 text-3xl font-bold tracking-wide sm:text-4xl">Privacy, in plain words</h1>
+          <p className="font-mono text-[11px] tracking-[0.25em] text-[var(--gold-primary)]">الخصوصية</p>
+          <h1 className="mt-2 text-3xl font-bold tracking-wide sm:text-4xl">الخصوصية بكلمات واضحة</h1>
           <p className="mt-4 text-[15px] leading-relaxed text-[var(--text-muted)]">
             OSIRIS is a window onto public information: flights, ships, cameras, news, markets and more, gathered onto
             one map. We built it so you can use it without telling us who you are. This page says what that means in
@@ -127,7 +127,7 @@ export default function PrivacyPage() {
           {PROMISES.map(p => <Pledge key={p.title} icon={p.icon} title={p.title}>{p.body}</Pledge>)}
         </div>
 
-        <Section id="short" title="The short version">
+        <Section id="short" title="باختصار">
           <ul className="flex flex-col gap-3 text-sm leading-relaxed text-[var(--text-muted)]">
             {[
               'Most of what you see comes from public sources. To show it, our server asks those sources, much as your browser would.',
@@ -145,7 +145,7 @@ export default function PrivacyPage() {
           </ul>
         </Section>
 
-        <Section id="device" title="What stays on your device"
+        <Section id="device" title="ما يبقى على جهازك"
           intro="These are kept in your browser’s own storage on this device. We never receive them unless a feature you use needs one, like your AI key for an OI request. Clearing this site’s data in your browser settings removes them all.">
           <div className="divide-y divide-[var(--border-primary)]/60 rounded-xl border border-[var(--border-primary)]">
             {STORED.map(s => (
@@ -157,10 +157,10 @@ export default function PrivacyPage() {
           </div>
         </Section>
 
-        <Section id="services" title="When we reach out to other services"
+        <Section id="services" title="متى نتصل بخدمات أخرى"
           intro="OSIRIS does not keep a database of intelligence of its own: it asks public services in real time. Here is what that involves, by what you are doing. Each service treats what it receives under its own privacy policy.">
           <div className="flex flex-col gap-3">
-            <Flow icon={<MapIcon className="h-4 w-4" />} title="Opening the map"
+            <Flow icon={<MapIcon className="h-4 w-4" />} title="فتح الخريطة"
               summary={<>
                 So the map can open over your part of the world, our server asks an IP location service roughly where your
                 connection is. It is a city-level guess, it is not stored, and if it cannot tell, the map opens on a
@@ -174,7 +174,7 @@ export default function PrivacyPage() {
                 { name: 'Google Fonts', what: 'the typefaces the site uses' },
               ]} />
 
-            <Flow icon={<Search className="h-4 w-4" />} title="Looking something up"
+            <Flow icon={<بحث className="h-4 w-4" />} title="البحث عن معلومة"
               summary={<>
                 The RECON tools answer by asking the public service that holds the answer, from our server. That service
                 sees the email, domain, address or name you looked up, but not who you are. Two checks never leave our
@@ -193,7 +193,7 @@ export default function PrivacyPage() {
                 { name: 'mempool.space, Blockscout, the public Solana network, CoinGecko', what: 'a wallet address, and prices to value it' },
               ]} />
 
-            <Flow icon={<Camera className="h-4 w-4" />} title="Watching cameras and live alerts"
+            <Flow icon={<Camera className="h-4 w-4" />} title="مشاهدة الكاميرات والتنبيهات المباشرة"
               summary={<>
                 Camera pictures and streams come straight from whoever runs each camera (a road authority, a harbour, a
                 city) or from the video service it uses, such as YouTube, which may set its own cookies when a video plays.
@@ -202,7 +202,7 @@ export default function PrivacyPage() {
                 browser, as for any picture on the web.
               </>} />
 
-            <Flow icon={<Sparkles className="h-4 w-4" />} title="Using OI, on your own AI key"
+            <Flow icon={<Sparkles className="h-4 w-4" />} title="استخدام OI بمفتاح الذكاء الاصطناعي الخاص بك"
               summary={<>
                 OI runs on the AI provider and key you choose. When you start a prediction, talk to OI Assist or check your
                 key, your request goes from our server to that provider: your question and any data you add for a
@@ -223,7 +223,7 @@ export default function PrivacyPage() {
               </p>
             </Flow>
 
-            <Flow icon={<Bot className="h-4 w-4" />} title="AI briefings and token scans"
+            <Flow icon={<Bot className="h-4 w-4" />} title="ملخصات الذكاء الاصطناعي وفحص الرموز"
               summary={<>
                 The briefing, analysis and overview buttons send the feed headlines they summarise to Google Gemini, on this
                 site’s own key. A DonBot token scan opens DigitalDon’s scanner in a sealed frame, which receives the token
@@ -232,7 +232,7 @@ export default function PrivacyPage() {
           </div>
         </Section>
 
-        <Section id="good-to-know" title="Good to know">
+        <Section id="good-to-know" title="معلومات مهمة">
           <div className="grid gap-3 sm:grid-cols-2">
             {[
               { t: 'A lookup is a question to someone else', b: 'The service that answers a lookup sees what was asked. If what you are researching is sensitive, keep that in mind before you search.' },
@@ -248,27 +248,27 @@ export default function PrivacyPage() {
           </div>
         </Section>
 
-        <Section id="choices" title="Your choices">
+        <Section id="choices" title="خياراتك">
           <ul className="flex flex-col gap-2.5 text-sm leading-relaxed text-[var(--text-muted)]">
-            <li><span className="text-[var(--text-primary)]">Clear everything</span> by clearing this site’s data in your browser settings.</li>
-            <li><span className="text-[var(--text-primary)]">Keep your AI key to one session</span> by leaving “Remember on this device” unticked; it is then forgotten when the tab closes.</li>
-            <li><span className="text-[var(--text-primary)]">Use only what you need</span>: map layers, cameras and AI features reach out only when you switch them on or use them.</li>
-            <li><span className="text-[var(--text-primary)]">Run your own copy</span>: OSIRIS is open source, so you can host it yourself and decide who operates it.</li>
+            <li><span className="text-[var(--text-primary)]">مسح كل شيء</span> by clearing this site’s data in your browser settings.</li>
+            <li><span className="text-[var(--text-primary)]">استخدام مفتاح الذكاء الاصطناعي لجلسة واحدة</span> by leaving “Remember on this device” unticked; it is then forgotten when the tab closes.</li>
+            <li><span className="text-[var(--text-primary)]">استخدم ما تحتاج إليه فقط</span>: map layers, cameras and AI features reach out only when you switch them on or use them.</li>
+            <li><span className="text-[var(--text-primary)]">شغّل نسختك الخاصة</span>: OSIRIS is open source, so you can host it yourself and decide who operates it.</li>
           </ul>
         </Section>
 
-        <Section id="contact" title="Questions?">
+        <Section id="contact" title="هل لديك أسئلة؟">
           <p className="text-sm leading-relaxed text-[var(--text-muted)]">
             If something here is unclear, or you think we have missed something, tell us and we will put it right.
           </p>
           <div className="mt-4 flex flex-wrap gap-2.5">
             <a href="https://github.com/simplifaisoul/osiris/issues" target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-lg border border-[var(--border-primary)] px-3.5 py-2 text-[13px] hover:border-[var(--cyan-primary)] hover:text-[var(--cyan-primary)]">
-              <ExternalLink className="h-4 w-4" /> Open an issue on GitHub
+              <ExternalLink className="h-4 w-4" /> افتح بلاغاً على GitHub
             </a>
             <a href="https://discord.gg/umBykEpb98" target="_blank" rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-lg border border-[var(--border-primary)] px-3.5 py-2 text-[13px] hover:border-[var(--cyan-primary)] hover:text-[var(--cyan-primary)]">
-              <MessageCircle className="h-4 w-4" /> Ask on Discord
+              <MessageCircle className="h-4 w-4" /> اسأل عبر Discord
             </a>
           </div>
         </Section>
