@@ -21,22 +21,22 @@ import {
    ═══════════════════════════════════════════════════════════════ */
 
 /* ── UUID DATABASE ── */
-const SVC_NAMES:Record<number,string>={0x1800:'Generic Access',0x1801:'Generic Attribute',0x1802:'Immediate Alert',0x1803:'Link Loss',0x1804:'TX Power',0x1805:'Current Time',0x1806:'Reference Time Update',0x1807:'Next DST Change',0x1808:'Glucose',0x1809:'Health Thermometer',0x180A:'Device Information',0x180B:'Network Availability',0x180D:'Heart Rate',0x180E:'Phone Alert Status',0x180F:'Battery Service',0x1810:'Blood Pressure',0x1811:'Alert Notification',0x1812:'Human Interface Device',0x1813:'Scan Parameters',0x1814:'Running Speed',0x1815:'Automation IO',0x1816:'Cycling Speed',0x1818:'Cycling Power',0x1819:'Location & Navigation',0x181A:'Environmental Sensing',0x181B:'Body Composition',0x181C:'User Data',0x181D:'Weight Scale',0x181E:'Bond Management',0x181F:'Continuous Glucose',0x1820:'IP Support',0x1821:'Indoor Positioning',0x1822:'Pulse Oximeter',0x1823:'HTTP Proxy',0x1824:'Transport Discovery',0x1825:'Object Transfer',0x1826:'Fitness Machine',0x1827:'Mesh Provisioning',0x1828:'Mesh Proxy',0x1843:'Audio Input Control',0x1844:'Volume Control',0x1848:'Media Control',0x184D:'Microphone Control',0x184E:'Audio Stream Control',0x1854:'Hearing Access',0xFE95:'Xiaomi',0xFEB3:'Tile',0xFE9F:'Google',0xFD6F:'Exposure Notification',0xFEAA:'Eddystone'};
-const CHAR_NAMES:Record<number,string>={0x2A00:'Device Name',0x2A01:'Appearance',0x2A04:'Preferred Conn Params',0x2A05:'Service Changed',0x2A06:'Alert Level',0x2A07:'TX Power Level',0x2A19:'Battery Level',0x2A23:'System ID',0x2A24:'Model Number',0x2A25:'Serial Number',0x2A26:'Firmware Rev',0x2A27:'Hardware Rev',0x2A28:'Software Rev',0x2A29:'Manufacturer Name',0x2A2A:'IEEE 11073-20601',0x2A37:'Heart Rate Measurement',0x2A38:'Body Sensor Location',0x2A4D:'Report',0x2A50:'PnP ID',0x2A6E:'Temperature',0x2A6F:'Humidity',0x2A6D:'Pressure'};
+const SVC_NAMES:Record<number,string>={0x1800:'Generic Access',0x1801:'Generic Attribute',0x1802:'Immediate Alert',0x1803:'Link Loss',0x1804:'TX Power',0x1805:'Current Time',0x1806:'Reference Time Update',0x1807:'التالي DST Change',0x1808:'Glucose',0x1809:'Health Thermometer',0x180A:'Device Information',0x180B:'الشبكة Availability',0x180D:'Heart Rate',0x180E:'Phone Alert الحالة',0x180F:'Battery Service',0x1810:'Blood Pressure',0x1811:'Alert Notification',0x1812:'Human Interface Device',0x1813:'Scan Parameters',0x1814:'تشغيلning Speed',0x1815:'Automation IO',0x1816:'Cycling Speed',0x1818:'Cycling Power',0x1819:'Location & Navigation',0x181A:'Environmental Sensing',0x181B:'Body Composition',0x181C:'User Data',0x181D:'Weight Scale',0x181E:'Bond Management',0x181F:'Continuous Glucose',0x1820:'IP الدعم',0x1821:'Indoor Positioning',0x1822:'Pulse Oximeter',0x1823:'HTTP Proxy',0x1824:'Transport Discovery',0x1825:'Object Transfer',0x1826:'Fitness Machine',0x1827:'Mesh Provisioning',0x1828:'Mesh Proxy',0x1843:'Audio Input Control',0x1844:'Volume Control',0x1848:'Media Control',0x184D:'Microphone Control',0x184E:'Audio Stream Control',0x1854:'Hearing Access',0xFE95:'Xiaomi',0xFEB3:'Tile',0xFE9F:'Google',0xFD6F:'Exposure Notification',0xFEAA:'Eddystone'};
+const CHAR_NAMES:Record<number,string>={0x2A00:'Device Name',0x2A01:'Appearance',0x2A04:'Preferred Conn Params',0x2A05:'Service Changed',0x2A06:'Alert Level',0x2A07:'TX Power Level',0x2A19:'Battery Level',0x2A23:'النظام ID',0x2A24:'Model Number',0x2A25:'Serial Number',0x2A26:'Firmware Rev',0x2A27:'Hardware Rev',0x2A28:'Software Rev',0x2A29:'Manufacturer Name',0x2A2A:'IEEE 11073-20601',0x2A37:'Heart Rate Measurement',0x2A38:'Body Sensor Location',0x2A4D:'Report',0x2A50:'PnP ID',0x2A6E:'Temperature',0x2A6F:'Humidity',0x2A6D:'Pressure'};
 const ALL_N={...SVC_NAMES,...CHAR_NAMES};
 const PROBE_SVCS=[0x1800,0x180A,0x180F,0x180D,0x1810,0x1809,0x1812,0x1814,0x1816,0x1818,0x181A,0x181B,0x181C,0x181D,0x180E,0x1848,0x1815,0x1802,0x1803,0x1804,0x1805,0x1808,0x1811,0x1819,0x1820,0x1822,0x1826,0x1843,0x1844,0x184D,0x184E,0x1854];
 const ALL_OPT=[...new Set([...Object.keys(SVC_NAMES).map(Number),...PROBE_SVCS])];
 
 /* ── APPEARANCE TABLE ── */
-const APP_L:Record<number,string>={0:'Unknown',64:'Phone',128:'Computer',192:'Watch',193:'Sports Watch',256:'Clock',320:'Display',384:'Remote',448:'Glasses',512:'Tag',576:'Keyring',640:'Media Player',768:'Thermometer',832:'Heart Rate Sensor',896:'Blood Pressure',960:'Generic HID',961:'Keyboard',962:'Mouse',963:'Joystick',964:'Gamepad',965:'Digitizer',966:'Card Reader',968:'Barcode Scanner',969:'Touchpad',970:'Presenter',1024:'Glucose Meter',1088:'Running Sensor',1152:'Cycling Sensor',1216:'Control Device',1217:'Switch',1218:'Multi-Switch',1280:'Network Device',1281:'Access Point',1344:'Sensor',1345:'Motion Sensor',1346:'Air Quality',1347:'Temperature Sensor',1348:'Humidity Sensor',1408:'Light Fixture',1472:'Fan',1536:'HVAC',1537:'Thermostat',1600:'Air Conditioning',1792:'Access Control',1793:'Access Door',1856:'Motorized Device',1920:'Power Device',1921:'Power Outlet',1984:'Light Source',2048:'Window Covering',2112:'Audio Sink',2113:'Standalone Speaker',2114:'Soundbar',2176:'Audio Source',2177:'Microphone'};
+const APP_L:Record<number,string>={0:'غير معروف',64:'Phone',128:'Computer',192:'Watch',193:'Sports Watch',256:'Clock',320:'Display',384:'Remote',448:'Glasses',512:'Tag',576:'Keyring',640:'Media Player',768:'Thermometer',832:'Heart Rate Sensor',896:'Blood Pressure',960:'Generic HID',961:'Keyboard',962:'Mouse',963:'Joystick',964:'Gamepad',965:'Digitizer',966:'Card Reader',968:'Barcode Scanner',969:'Touchpad',970:'Presenter',1024:'Glucose Meter',1088:'Running Sensor',1152:'Cycling Sensor',1216:'Control Device',1217:'Switch',1218:'Multi-Switch',1280:'Network Device',1281:'Access Point',1344:'Sensor',1345:'Motion Sensor',1346:'Air Quality',1347:'Temperature Sensor',1348:'Humidity Sensor',1408:'Light Fixture',1472:'Fan',1536:'HVAC',1537:'Thermostat',1600:'Air Conditioning',1792:'Access Control',1793:'Access Door',1856:'Motorized Device',1920:'Power Device',1921:'Power Outlet',1984:'Light Source',2048:'Window Covering',2112:'Audio Sink',2113:'Standalone Speaker',2114:'Soundbar',2176:'Audio Source',2177:'Microphone'};
 
 /* ── CLASSIFICATION ── */
 function classify(name:string,appearance?:number,mfr?:string,svcs?:number[]):{type:string;icon:typeof Bluetooth;color:string;by:string}{
   if(appearance!=null){const c=(appearance>>6)&0x3FF;const s=appearance&0x3F;if(c===1)return{type:'Phone',icon:Smartphone,color:'#FFB74D',by:'appearance'};if(c===2)return{type:'Computer',icon:Cpu,color:'#80DEEA',by:'appearance'};if(c===3)return{type:'Watch',icon:Watch,color:'#FF6BCD',by:'appearance'};if(c===5)return{type:'Display',icon:Tv,color:'#00E6FF',by:'appearance'};if(c===6)return{type:'Remote',icon:Radio,color:'#90A4AE',by:'appearance'};if(c===10)return{type:'Media Player',icon:Tv,color:'#00E6FF',by:'appearance'};if(c===15){if(s===1)return{type:'Keyboard',icon:Keyboard,color:'#64FFDA',by:'appearance'};if(s===2)return{type:'Mouse',icon:Mouse,color:'#80DEEA',by:'appearance'};if(s===4)return{type:'Gamepad',icon:Gamepad2,color:'#FF6B6B',by:'appearance'};return{type:'HID',icon:Keyboard,color:'#64FFDA',by:'appearance'};}if(c===33)return{type:'Speaker',icon:Speaker,color:'#FFB800',by:'appearance'};if(appearance>=0x0841&&appearance<=0x087F)return{type:'Headphones',icon:Headphones,color:'#B388FF',by:'appearance'};if(appearance===0x0840)return{type:'Speaker',icon:Speaker,color:'#FFB800',by:'appearance'};}
   if(svcs&&svcs.length>0){if(svcs.includes(0x1848)||svcs.includes(0x1844))return{type:'Audio',icon:Speaker,color:'#FFB800',by:'service'};if(svcs.includes(0x1812))return{type:'HID',icon:Keyboard,color:'#64FFDA',by:'service'};if(svcs.includes(0x180D))return{type:'Heart Rate',icon:Watch,color:'#FF6BCD',by:'service'};if(svcs.includes(0x181A))return{type:'Env Sensor',icon:Fan,color:'#00FF88',by:'service'};}
   if(mfr){if(/bose|jbl|sonos|harman|marshall|yamaha|denon|b&o/i.test(mfr))return{type:'Speaker',icon:Speaker,color:'#FFB800',by:'manufacturer'};if(/logitech|corsair|razer|steelseries/i.test(mfr))return{type:'Peripheral',icon:Mouse,color:'#80DEEA',by:'manufacturer'};if(/fitbit|garmin|polar|suunto|coros/i.test(mfr))return{type:'Wearable',icon:Watch,color:'#FF6BCD',by:'manufacturer'};}
-  const l=name.toLowerCase();if(/\btv\b|bravia|roku|chromecast|fire.?stick|apple.?tv/i.test(l))return{type:'Television',icon:Tv,color:'#00E6FF',by:'name'};if(/speaker|soundbar|bose|jbl|sonos|echo|homepod/i.test(l))return{type:'Speaker',icon:Speaker,color:'#FFB800',by:'name'};if(/headphone|airpod|buds|earbud|wh-1000|wf-1000|qc|jabra|galaxy.?buds/i.test(l))return{type:'Headphones',icon:Headphones,color:'#B388FF',by:'name'};if(/watch|band|fitbit|garmin|amazfit|polar|mi.?band/i.test(l))return{type:'Wearable',icon:Watch,color:'#FF6BCD',by:'name'};if(/gamepad|controller|xbox|playstation|dualsense|joy.?con/i.test(l))return{type:'Controller',icon:Gamepad2,color:'#FF6B6B',by:'name'};if(/keyboard|keychron/i.test(l))return{type:'Keyboard',icon:Keyboard,color:'#64FFDA',by:'name'};if(/mouse|mx.?master|trackpad/i.test(l))return{type:'Mouse',icon:Mouse,color:'#80DEEA',by:'name'};if(/phone|iphone|galaxy.?[saz]|pixel/i.test(l))return{type:'Phone',icon:Smartphone,color:'#FFB74D',by:'name'};if(/bulb|light|hue|lifx|nanoleaf|govee/i.test(l))return{type:'Light',icon:Lightbulb,color:'#FFD700',by:'name'};if(/printer|epson|canon|brother/i.test(l))return{type:'Printer',icon:Printer,color:'#90A4AE',by:'name'};if(/tile|chipolo|tracker|airtag|smarttag/i.test(l))return{type:'Tracker',icon:Radio,color:'#90A4AE',by:'name'};if(/lock|schlage|august|yale/i.test(l))return{type:'Smart Lock',icon:Plug,color:'#FF6B6B',by:'name'};if(/scale|withings|renpho/i.test(l))return{type:'Scale',icon:Watch,color:'#FF6BCD',by:'name'};
-  return{type:'Unknown',icon:Bluetooth,color:'#90A4AE',by:'—'};
+  const l=name.toLowerCase();if(/\btv\b|bravia|roku|chromecast|fire.?stick|apple.?tv/i.test(l))return{type:'Television',icon:Tv,color:'#00E6FF',by:'name'};if(/speaker|soundbar|bose|jbl|sonos|echo|homepod/i.test(l))return{type:'Speaker',icon:Speaker,color:'#FFB800',by:'name'};if(/headphone|airpod|buds|earbud|wh-1000|wf-1000|qc|jabra|galaxy.?buds/i.test(l))return{type:'Headphones',icon:Headphones,color:'#B388FF',by:'name'};if(/watch|band|fitbit|garmin|amazfit|polar|mi.?band/i.test(l))return{type:'Wearable',icon:Watch,color:'#FF6BCD',by:'name'};if(/gamepad|controller|xbox|playstation|dualsense|joy.?con/i.test(l))return{type:'Controller',icon:Gamepad2,color:'#FF6B6B',by:'name'};if(/keyboard|keychron/i.test(l))return{type:'Keyboard',icon:Keyboard,color:'#64FFDA',by:'name'};if(/mouse|mx.?master|trackpad/i.test(l))return{type:'Mouse',icon:Mouse,color:'#80DEEA',by:'name'};if(/phone|iphone|galaxy.?[saz]|pixel/i.test(l))return{type:'Phone',icon:Smartphone,color:'#FFB74D',by:'name'};if(/bulb|light|hue|lifx|nanoleaf|govee/i.test(l))return{type:'فاتح',icon:Lightbulb,color:'#FFD700',by:'name'};if(/printer|epson|canon|brother/i.test(l))return{type:'Printer',icon:Printer,color:'#90A4AE',by:'name'};if(/tile|chipolo|tracker|airtag|smarttag/i.test(l))return{type:'Tracker',icon:Radio,color:'#90A4AE',by:'name'};if(/lock|schlage|august|yale/i.test(l))return{type:'Smart Lock',icon:Plug,color:'#FF6B6B',by:'name'};if(/scale|withings|renpho/i.test(l))return{type:'Scale',icon:Watch,color:'#FF6BCD',by:'name'};
+  return{type:'غير معروف',icon:Bluetooth,color:'#90A4AE',by:'—'};
 }
 
 /* ── HELPERS ── */
@@ -47,16 +47,16 @@ function validHex(s:string){const h=s.replace(/[\s,:-]/g,'');return h.length>0&&
 function parseHex(s:string){const h=s.replace(/[\s,:-]/g,'');return new Uint8Array((h.match(/.{1,2}/g)||[]).map(b=>parseInt(b,16)));}
 async function writeSafe(ch:BluetoothRemoteGATTCharacteristic,d:BufferSource,resp:boolean){if(resp&&typeof ch.writeValueWithResponse==='function')await ch.writeValueWithResponse(d);else if(!resp&&typeof ch.writeValueWithoutResponse==='function')await ch.writeValueWithoutResponse(d);else await(ch as any).writeValue(d);}
 function fts(t:number){const d=new Date(t);return d.toLocaleTimeString('en-US',{hour12:false})+'.'+d.getMilliseconds().toString().padStart(3,'0');}
-function toHex(s:string){return Array.from(new TextEncoder().encode(s)).map(x=>x.toString(16).padStart(2,'0')).join(' ');}
+function toHex(s:string){return Array.from(new TextEncoder().encode(s)).map(x=>x.toString(16).padبدء(2,'0')).join(' ');}
 
 /* ═══════════════════════════════════════════════════════════════
    IndexedDB VAULT — persists captures across reloads
    ═══════════════════════════════════════════════════════════════ */
 const DB_NAME='marauder_v8'; const DB_VER=1; const STORE='captures';
 function openDB():Promise<IDBDatabase>{return new Promise((res,rej)=>{const r=indexedDB.open(DB_NAME,DB_VER);r.onupgradeneeded=()=>{const db=r.result;if(!db.objectStoreNames.contains(STORE))db.createObjectStore(STORE,{keyPath:'id'});};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);});}
-async function vaultSave(dev:any){const db=await openDB();return new Promise<void>((res,rej)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).put(dev);tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error);});}
-async function vaultLoadAll():Promise<any[]>{const db=await openDB();return new Promise((res,rej)=>{const tx=db.transaction(STORE,'readonly');const req=tx.objectStore(STORE).getAll();req.onsuccess=()=>res(req.result);req.onerror=()=>rej(req.error);});}
-async function vaultClear(){const db=await openDB();return new Promise<void>((res,rej)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).clear();tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error);});}
+async function vaultحفظ(dev:any){const db=await openDB();return new Promise<void>((res,rej)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).put(dev);tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error);});}
+async function vaultLoadالكل():Promise<any[]>{const db=await openDB();return new Promise((res,rej)=>{const tx=db.transaction(STORE,'readonly');const req=tx.objectStore(STORE).getAll();req.onsuccess=()=>res(req.result);req.onerror=()=>rej(req.error);});}
+async function vaultمسح(){const db=await openDB();return new Promise<void>((res,rej)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).clear();tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error);});}
 async function vaultDelete(id:string){const db=await openDB();return new Promise<void>((res,rej)=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).delete(id);tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error);});}
 
 /* ═══════════════════════════════════════════════════════════════
@@ -69,7 +69,7 @@ function getGPS():Promise<GeoFix|null>{return new Promise(res=>{if(!navigator.ge
    NETWORK RECON — WebRTC + connection + port probe
    ═══════════════════════════════════════════════════════════════ */
 interface NetIntel { localIPs:string[]; type?:string; downlink?:number; rtt?:number; saveData?:boolean; openPorts:{port:number;service:string;ms:number}[]; ts:number; }
-async function probeNetwork():Promise<NetIntel>{
+async function probeالشبكة():Promise<NetIntel>{
   const intel:NetIntel={localIPs:[],openPorts:[],ts:Date.now()};
   // Connection API
   const conn=(navigator as any).connection;
@@ -113,24 +113,24 @@ export default function WorldRemote({onClose,onPlaceOnMap}:{onClose?:()=>void,on
   const [devices,setDevices]=useState<BLEDev[]>([]);
   const [scanning,setScanning]=useState(false);
   const [btOk,setBtOk]=useState(true);
-  const [error,setError]=useState<string|null>(null);
-  const [connecting,setConnecting]=useState<string|null>(null);
+  const [error,setخطأ]=useState<string|null>(null);
+  const [connecting,setجارٍ الاتصال]=useState<string|null>(null);
   const [gattTarget,setGattTarget]=useState<string|null>(null);
   const [gattSvcs,setGattSvcs]=useState<Svc[]>([]);
-  const [gattLoading,setGattLoading]=useState(false);
+  const [gattجارٍ التحميل,setGattجارٍ التحميل]=useState(false);
   const [exSvc,setExSvc]=useState<string|null>(null);
   const [wIn,setWIn]=useState<Record<string,string>>({});
-  const [copied,setCopied]=useState<string|null>(null);
+  const [copied,setتم النسخ]=useState<string|null>(null);
   const [pkts,setPkts]=useState<Pkt[]>([]);
   const [bytes,setBytes]=useState(0);
-  const [view,setView]=useState<'scan'|'intel'|'log'>('scan');
+  const [view,setعرض]=useState<'scan'|'intel'|'log'>('scan');
   const [autoScr,setAutoScr]=useState(true);
   const [exDev,setExDev]=useState<string|null>(null);
   const [full,setFull]=useState(false);
-  const [paused,setPaused]=useState(false);
+  const [paused,setإيقاف مؤقتd]=useState(false);
   const [expanded,setExpanded]=useState(true);
   const [netIntel,setNetIntel]=useState<NetIntel|null>(null);
-  const [netLoading,setNetLoading]=useState(false);
+  const [netجارٍ التحميل,setNetجارٍ التحميل]=useState(false);
   const [vaultCount,setVaultCount]=useState(0);
   const [vaultLoaded,setVaultLoaded]=useState(false);
 
@@ -259,7 +259,7 @@ export default function WorldRemote({onClose,onPlaceOnMap}:{onClose?:()=>void,on
       if(devices.find(x=>x.id===d.id)){log('INFO','SCANNER','Already captured');setScanning(false);return;}
       d.addEventListener('gattserverdisconnected',onDC);
       log('SCAN','SCANNER',`Target acquired: "${d.name||d.id}"`);
-      const raw:BLEDev={id:d.id,name:d.name||`Device-${d.id.slice(0,6)}`,type:'Unknown',icon:Bluetooth,color:'#90A4AE',classBy:'—',connected:false,probing:true,services:[],serviceCount:0,charCount:0,totalBytes:0,gattDump:[],rssiHistory:[],capturedAt:Date.now(),bt:d};
+      const raw:BLEDev={id:d.id,name:d.name||`Device-${d.id.slice(0,6)}`,type:'غير معروف',icon:Bluetooth,color:'#90A4AE',classBy:'—',connected:false,probing:true,services:[],serviceCount:0,charCount:0,totalBytes:0,gattDump:[],rssiHistory:[],capturedAt:Date.now(),bt:d};
       setDevices(p=>[...p,raw]);
       const probed=await deepProbe(raw);
       if(mtd.current){setDevices(p=>p.map(x=>x.id===d.id?probed:x));await saveToVault(probed);}
@@ -369,7 +369,7 @@ export default function WorldRemote({onClose,onPlaceOnMap}:{onClose?:()=>void,on
             ))}
           </div>
 
-          {/* Error */}
+          {/* خطأ */}
           <AnimatePresence>{error&&<motion.div initial={{height:0}} animate={{height:'auto'}} exit={{height:0}} className="overflow-hidden shrink-0"><div className="mx-2 mt-1.5 px-2.5 py-1.5 rounded-lg flex items-center gap-2" style={{background:'rgba(255,61,61,0.04)',border:'1px solid rgba(255,61,61,0.1)'}}><AlertTriangle className="w-3 h-3 text-[#FF3D3D] shrink-0"/><span className="text-[9px] font-mono text-[#FF3D3D] flex-1 truncate">{error}</span><button onClick={()=>setError(null)}><X className="w-2.5 h-2.5 text-[#FF3D3D]/50"/></button></div></motion.div>}</AnimatePresence>
 
           {/* Content */}
@@ -402,7 +402,7 @@ export default function WorldRemote({onClose,onPlaceOnMap}:{onClose?:()=>void,on
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-1.5 mb-0.5">
                             <span className="text-[11px] font-mono font-bold text-[var(--text-primary)] truncate">{dev.name}</span>
-                            {dev.connected&&<span className="text-[9px] font-mono px-1 py-0.5 rounded bg-[var(--alert-green)]/10 text-[var(--alert-green)] tracking-widest font-bold">LIVE</span>}
+                            {dev.connected&&<span className="text-[9px] font-mono px-1 py-0.5 rounded bg-[var(--alert-green)]/10 text-[var(--alert-green)] tracking-widest font-bold">مباشر</span>}
                           </div>
                           {dev.probing?(
                             <div className="flex items-center gap-2"><motion.div className="h-1 rounded-full flex-1" style={{background:`${dev.color}10`}}><motion.div className="h-full rounded-full" style={{background:dev.color}} animate={{width:['0%','60%','100%']}} transition={{duration:3}}/></motion.div><span className="text-[9px] font-mono animate-pulse" style={{color:dev.color}}>VACUUMING</span></div>
@@ -457,7 +457,7 @@ export default function WorldRemote({onClose,onPlaceOnMap}:{onClose?:()=>void,on
                         {/* GATT Explorer */}
                         <AnimatePresence>{isG&&(<motion.div initial={{height:0,opacity:0}} animate={{height:'auto',opacity:1}} exit={{height:0,opacity:0}} className="overflow-hidden"><div className="mt-2.5 pt-2.5" style={{borderTop:`1px solid ${dev.color}08`}}>
                           <div className="flex items-center justify-between mb-2"><span className="text-[9px] font-mono font-bold tracking-[0.12em]" style={{color:dev.color}}>GATT TREE</span><button onClick={()=>{setGattTarget(null);setGattSvcs([]);}}><X className="w-2.5 h-2.5 text-[var(--text-muted)]"/></button></div>
-                          {gattLoading?<div className="flex items-center justify-center py-3 gap-1.5"><div className="w-3.5 h-3.5 border-2 rounded-full animate-spin" style={{borderColor:dev.color,borderTopColor:'transparent'}}/><span className="text-[9px] font-mono animate-pulse" style={{color:dev.color}}>Enumerating...</span></div>
+                          {gattجارٍ التحميل?<div className="flex items-center justify-center py-3 gap-1.5"><div className="w-3.5 h-3.5 border-2 rounded-full animate-spin" style={{borderColor:dev.color,borderTopColor:'transparent'}}/><span className="text-[9px] font-mono animate-pulse" style={{color:dev.color}}>Enumerating...</span></div>
                           :gattSvcs.map(svc=>(<div key={svc.uuid} className="mb-0.5">
                             <button onClick={()=>setExSvc(exSvc===svc.uuid?null:svc.uuid)} className="w-full px-2 py-1.5 rounded-lg flex items-center gap-1.5 text-left hover:bg-white/[0.02]">
                               <Bluetooth className="w-2.5 h-2.5 shrink-0" style={{color:dev.color}}/><span className="text-[9px] font-mono font-bold text-[var(--text-primary)] truncate flex-1">{svc.name}</span><span className="text-[9px] font-mono" style={{color:`${dev.color}80`}}>{svc.chars.length}</span><ChevronRight className={`w-2.5 h-2.5 text-[var(--text-muted)] transition-transform ${exSvc===svc.uuid?'rotate-90':''}`}/>
@@ -468,7 +468,7 @@ export default function WorldRemote({onClose,onPlaceOnMap}:{onClose?:()=>void,on
                                 {ch.value&&<div className="flex items-center gap-1 mb-1"><div className="flex-1 rounded px-1.5 py-1 min-w-0" style={{background:'rgba(0,0,0,0.3)'}}><div className={`text-[9px] font-mono truncate ${ch.notifying?'text-[#00FF88]':'text-[var(--alert-green)]'}`}>{ch.value}</div>{ch.hex&&ch.hex!==ch.value&&<div className="text-[9px] font-mono text-[var(--text-muted)] truncate mt-0.5 opacity-40">{ch.hex}</div>}</div><button onClick={()=>{navigator.clipboard?.writeText(ch.value||'');setCopied(ck);setTimeout(()=>setCopied(null),1500);}} className="p-0.5 rounded hover:bg-white/5 shrink-0">{copied===ck?<Check className="w-2 h-2 text-[var(--alert-green)]"/>:<Copy className="w-2 h-2 text-[var(--text-muted)]"/>}</button></div>}
                                 <div className="flex items-center gap-1 flex-wrap">
                                   {ch.p.r&&<button onClick={async()=>{if(!ch.char)return;try{const v=await ch.char.readValue();const d=decode(v);setGattSvcs(sv=>sv.map(s=>s.uuid===svc.uuid?{...s,chars:s.chars.map(c=>c.uuid===ch.uuid?{...c,value:d.text,hex:d.hex}:c)}:s));log('READ',dev.name,`${ch.name}: ${d.text.slice(0,50)}`,d.hex,v.byteLength);}catch{log('ERROR',dev.name,`Read: ${ch.name}`);}}} className="flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[9px] font-mono" style={{background:`${dev.color}06`,color:dev.color}}><Eye className="w-2 h-2"/>READ</button>}
-                                  {ch.p.n&&<button onClick={()=>toggleN(svc.uuid,ch,dev.name)} className="flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[9px] font-mono" style={{background:ch.notifying?'rgba(0,255,136,0.06)':'rgba(255,255,255,0.02)',color:ch.notifying?'#00FF88':'var(--text-muted)'}}>{ch.notifying?<Bell className="w-2 h-2"/>:<BellOff className="w-2 h-2"/>}{ch.notifying?'LIVE':'SUB'}</button>}
+                                  {ch.p.n&&<button onClick={()=>toggleN(svc.uuid,ch,dev.name)} className="flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[9px] font-mono" style={{background:ch.notifying?'rgba(0,255,136,0.06)':'rgba(255,255,255,0.02)',color:ch.notifying?'#00FF88':'var(--text-muted)'}}>{ch.notifying?<Bell className="w-2 h-2"/>:<BellOff className="w-2 h-2"/>}{ch.notifying?'مباشر':'SUB'}</button>}
                                   {(ch.p.w||ch.p.wn)&&<div className="flex items-center gap-0.5 flex-1"><input type="text" placeholder="FF 01" value={wV} onChange={e=>setWIn(iv=>({...iv,[ck]:e.target.value}))} className="flex-1 rounded px-1.5 py-0.5 text-[9px] font-mono text-[var(--text-primary)] outline-none min-w-0" style={{background:'rgba(0,0,0,0.3)',border:`1px solid ${wOk?'transparent':'rgba(255,61,61,0.3)'}`}}/><button onClick={async()=>{if(!ch.char||!wV||!validHex(wV))return;try{await writeSafe(ch.char,parseHex(wV),ch.p.w);log('WRITE',dev.name,`${ch.name} ← ${wV}`);setWIn(iv=>({...iv,[ck]:''}));}catch{log('ERROR',dev.name,`Write: ${ch.name}`);}}} disabled={!wV||!wOk} className="p-0.5 rounded shrink-0 disabled:opacity-30" style={{color:'#FFB800'}}><Send className="w-2 h-2"/></button></div>}
                                 </div>
                               </div>);})}</div></motion.div>)}</AnimatePresence>
@@ -484,20 +484,20 @@ export default function WorldRemote({onClose,onPlaceOnMap}:{onClose?:()=>void,on
             {/* ═══ INTEL TAB ═══ */}
             {view==='intel'&&(
               <div className="flex-1 overflow-y-auto styled-scrollbar p-2.5 space-y-2.5">
-                {/* Network Recon */}
+                {/* الشبكة Recon */}
                 <div className="rounded-xl overflow-hidden" style={{background:'rgba(255,255,255,0.015)',border:'1px solid rgba(255,255,255,0.04)'}}>
                   <div className="px-3 py-2 flex items-center justify-between" style={{borderBottom:'1px solid rgba(255,255,255,0.03)'}}>
                     <div className="flex items-center gap-1.5"><Globe className="w-3 h-3 text-[#80DEEA]"/><span className="text-[9px] font-mono font-bold tracking-[0.12em] text-[var(--text-primary)]">NETWORK RECON</span></div>
-                    <motion.button whileTap={{scale:0.95}} onClick={runNetRecon} disabled={netLoading} className="px-2 py-0.5 rounded text-[9px] font-mono font-bold tracking-wider disabled:opacity-30" style={{background:'rgba(128,222,234,0.06)',color:'#80DEEA',border:'1px solid rgba(128,222,234,0.08)'}}>{netLoading?'...':'PROBE'}</motion.button>
+                    <motion.button whileTap={{scale:0.95}} onClick={runNetRecon} disabled={netLoading} className="px-2 py-0.5 rounded text-[9px] font-mono font-bold tracking-wider disabled:opacity-30" style={{background:'rgba(128,222,234,0.06)',color:'#80DEEA',border:'1px solid rgba(128,222,234,0.08)'}}>{netجارٍ التحميل?'...':'PROBE'}</motion.button>
                   </div>
                   {!netIntel&&<div className="px-3 py-4 text-center"><span className="text-[9px] font-mono text-[var(--text-muted)] opacity-30">Tap PROBE to scan local network</span></div>}
                   {netIntel&&<div className="p-2.5 space-y-2">
                     {netIntel.localIPs.length>0&&<div><div className="text-[9px] font-mono text-[var(--text-muted)] tracking-wider mb-1 font-bold">LOCAL IPs</div>{netIntel.localIPs.map((ip,i)=><div key={i} className="text-[10px] font-mono text-[#80DEEA] pl-2">{ip}</div>)}</div>}
                     {netIntel.type&&<div className="flex gap-3">{[{l:'TYPE',v:netIntel.type},{l:'DOWN',v:netIntel.downlink!=null?`${netIntel.downlink}Mbps`:undefined},{l:'RTT',v:netIntel.rtt!=null?`${netIntel.rtt}ms`:undefined}].filter(x=>x.v).map(x=><div key={x.l}><div className="text-[9px] font-mono text-[var(--text-muted)] tracking-wider">{x.l}</div><div className="text-[10px] font-mono text-[var(--text-primary)] font-bold">{x.v}</div></div>)}</div>}
-                    {netIntel.openPorts.length>0&&<div><div className="text-[9px] font-mono text-[var(--text-muted)] tracking-wider mb-1 font-bold">OPEN PORTS</div>{netIntel.openPorts.map((p,i)=><div key={i} className="flex items-center gap-2 pl-2 py-0.5"><span className="text-[9px] font-mono font-bold text-[var(--alert-green)]">:{p.port}</span><span className="text-[9px] font-mono text-[var(--text-muted)]">{p.service}</span></div>)}</div>}
+                    {netIntel.openPorts.length>0&&<div><div className="text-[9px] font-mono text-[var(--text-muted)] tracking-wider mb-1 font-bold">فتح PORTS</div>{netIntel.openPorts.map((p,i)=><div key={i} className="flex items-center gap-2 pl-2 py-0.5"><span className="text-[9px] font-mono font-bold text-[var(--alert-green)]">:{p.port}</span><span className="text-[9px] font-mono text-[var(--text-muted)]">{p.service}</span></div>)}</div>}
                   </div>}
                 </div>
-                {/* Export */}
+                {/* تصدير */}
                 <div className="rounded-xl overflow-hidden" style={{background:'rgba(255,255,255,0.015)',border:'1px solid rgba(255,255,255,0.04)'}}>
                   <div className="px-3 py-2 flex items-center gap-1.5" style={{borderBottom:'1px solid rgba(255,255,255,0.03)'}}><Database className="w-3 h-3 text-[#FFB800]"/><span className="text-[9px] font-mono font-bold tracking-[0.12em] text-[var(--text-primary)]">VAULT & EXPORT</span></div>
                   <div className="p-2.5 space-y-1.5">
@@ -518,7 +518,7 @@ export default function WorldRemote({onClose,onPlaceOnMap}:{onClose?:()=>void,on
                 <div className="flex items-center justify-between px-3 py-1 shrink-0" style={{background:'rgba(0,0,0,0.3)',borderBottom:'1px solid rgba(255,255,255,0.03)'}}>
                   <span className="text-[9px] font-mono text-[var(--text-muted)] tracking-wider">{pkts.length} pkts · {bytes>1024?`${(bytes/1024).toFixed(1)}KB`:`${bytes}B`}</span>
                   <div className="flex items-center gap-1.5">
-                    <button onClick={()=>setPaused(!paused)} className={`text-[9px] font-mono tracking-wider px-1 py-0.5 rounded flex items-center gap-0.5 ${paused?'text-[#FFB800]':'text-[var(--text-muted)]'}`}>{paused?<><Pause className="w-2 h-2"/>PAUSE</>:<><Play className="w-2 h-2"/>LIVE</>}</button>
+                    <button onClick={()=>setPaused(!paused)} className={`text-[9px] font-mono tracking-wider px-1 py-0.5 rounded flex items-center gap-0.5 ${paused?'text-[#FFB800]':'text-[var(--text-muted)]'}`}>{paused?<><Pause className="w-2 h-2"/>PAUSE</>:<><Play className="w-2 h-2"/>مباشر</>}</button>
                     <button onClick={()=>{setPkts([]);setBytes(0);pid.current=0;}} className="text-[9px] font-mono text-[var(--text-muted)] tracking-wider px-1 py-0.5 rounded hover:bg-white/5 flex items-center gap-0.5"><Trash2 className="w-2 h-2"/>CLR</button>
                   </div>
                 </div>
@@ -532,7 +532,7 @@ export default function WorldRemote({onClose,onPlaceOnMap}:{onClose?:()=>void,on
 
           {/* Footer */}
           <div className="flex items-center justify-between px-3 py-1.5 shrink-0" style={{borderTop:'1px solid rgba(255,255,255,0.03)',background:'rgba(0,0,0,0.2)'}}>
-            <div className="flex items-center gap-1.5"><div className={`w-1.5 h-1.5 rounded-full ${btOk?'bg-[var(--alert-green)]':'bg-[#FF3D3D]'} ${scanning?'animate-pulse':''}`}/><span className="text-[9px] font-mono text-[var(--text-muted)] tracking-wider">{scanning?'SCANNING':liveCount>0?`${liveCount} LIVE`:'STANDBY'} · {upStr}</span></div>
+            <div className="flex items-center gap-1.5"><div className={`w-1.5 h-1.5 rounded-full ${btOk?'bg-[var(--alert-green)]':'bg-[#FF3D3D]'} ${scanning?'animate-pulse':''}`}/><span className="text-[9px] font-mono text-[var(--text-muted)] tracking-wider">{scanning?'SCANNING':liveCount>0?`${liveCount} مباشر`:'STANDBY'} · {upStr}</span></div>
             <span className="text-[9px] font-mono text-[var(--text-muted)]/15 tracking-[0.2em]">MARAUDER V8</span>
           </div>
         </motion.div>
