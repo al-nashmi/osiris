@@ -59,11 +59,11 @@ export interface ArcGISPanelProps {
 }
 
 const CATEGORIES = [
-  { label: 'خطوط الأنابيب', query: 'pipeline' },
-  { label: 'شبكة الكهرباء', query: 'power grid transmission' },
+  { label: 'Pipelines', query: 'pipeline' },
+  { label: 'Power Grid', query: 'power grid transmission' },
   { label: 'البنية التحتية', query: 'critical infrastructure' },
-  { label: 'عسكري', query: 'military base installation' },
-  { label: 'طوارئ', query: 'emergency shelter evacuation' },
+  { label: 'Military', query: 'military base installation' },
+  { label: 'Emergency', query: 'emergency shelter evacuation' },
 ] as const;
 
 const LAYER_COLORS = [
@@ -437,7 +437,7 @@ export default function ArcGISPanel({
 
       {/* ── بحث Results ────────────────────────────────────── */}
       <div className="flex-1 overflow-y-auto styled-scrollbar -mx-1 px-1 space-y-1.5">
-        {/* جارٍ التحميل skeleton */}
+        {/* Loading skeleton */}
         {searching && (
           <div className="space-y-2 py-1">
             {[...Array(4)].map((_, i) => (
@@ -506,7 +506,7 @@ export default function ArcGISPanel({
                           </span>
                           <span className="text-[9px] font-mono text-[#D4AF37]/70 tabular-nums flex items-center gap-0.5">
                             <Eye className="w-2.5 h-2.5" />
-                            {result.numعرضs?.toLocaleString() ?? 0}
+                            {result.numViews?.toLocaleString() ?? 0}
                           </span>
                         </div>
                       </div>
@@ -589,7 +589,7 @@ export default function ArcGISPanel({
                 No active search
               </span>
               <span className="text-[10px] font-mono text-[var(--text-muted)] max-w-[200px] leading-relaxed">
-                Try searching for Power Plants, Substations, Evacuation المسارs, or Pipelines in the designated area.
+                Try searching for Power Plants, Substations, Evacuation Routes, or Pipelines in the designated area.
               </span>
             </div>
           </div>
@@ -606,7 +606,7 @@ export default function ArcGISPanel({
         </div>
         <div className="flex items-center gap-2.5">
           <span className="text-[9px] font-mono text-[var(--text-muted)] uppercase tracking-wider">
-            اتصالion Health
+            Connection Health
           </span>
           <div className="relative flex items-center justify-center">
             <Wifi className={`w-3 h-3 ${searching ? 'text-[#D4AF37]' : 'text-[var(--alert-green)]'}`} />
