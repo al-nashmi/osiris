@@ -40,10 +40,10 @@ function Head({ title, icon: Icon, color, right }: { title: string; icon: any; c
 
 function ChainBriefInner() {
   const [brief, setBrief] = useState<any>(null);
-  const [loading, setجارٍ التحميل] = useState(false);
-  const [error, setخطأ] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [days, setDays] = useState(30);
-  const [lastتحديث, setLastتحديث] = useState<Date | null>(null);
+  const [lastRefresh, setLastRefresh] = useState<Date | null>(null);
   const [ai, setAi] = useState('');
   const [aiLoading, setAiLoading] = useState(false);
 
@@ -79,7 +79,7 @@ function ChainBriefInner() {
 
   const runAi = useCallback(async () => {
     if (!briefRef.current) return;
-    setAiجارٍ التحميل(true);
+    setAiLoading(true);
     setAi('');
     try {
       const res = await fetch('/api/ai/overview', {
@@ -92,7 +92,7 @@ function ChainBriefInner() {
     } catch {
       setAi('AI overview unavailable.');
     } finally {
-      setAiجارٍ التحميل(false);
+      setAiLoading(false);
     }
   }, []);
 
@@ -122,7 +122,7 @@ function ChainBriefInner() {
           className="ml-auto text-[9px] font-mono text-[var(--text-muted)] hover:text-white/70 transition-colors"
           title="تحديث الآن"
         >
-          {lastتحديث ? lastتحديث.toLocaleTimeString() : 'refresh'}
+          {lastRefresh ? lastRefresh.toLocaleTimeString() : 'refresh'}
         </button>
       </div>
 
@@ -155,7 +155,7 @@ function ChainBriefInner() {
             className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded text-[10px] font-mono font-bold tracking-wider transition-colors disabled:opacity-50"
             style={{ color: ACCENT, background: `${ACCENT}14`, border: `1px solid ${ACCENT}44` }}
           >
-            {aiجارٍ التحميل ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
+            {aiLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
             AI OVERVIEW
           </button>
           {ai && (
@@ -226,7 +226,7 @@ function ChainBriefInner() {
           )}
 
           <div className="mt-2 text-[9px] font-mono text-[var(--text-muted)]">
-            المصدرs: {(brief.sources || []).join(' · ')} · auto-refresh 15m
+            Sources: {(brief.sources || []).join(' · ')} · auto-refresh 15m
           </div>
         </>
       )}
