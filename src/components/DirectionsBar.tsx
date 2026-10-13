@@ -68,8 +68,8 @@ interface Place {
   kind?: string;
 }
 
-interface DirectionsBarProps {
-  onRoute: (route: (RouteResult & {
+interface الاتجاهاتBarProps {
+  onالمسار: (route: (المسارResult & {
     from: Place;
     to: Place;
     alternates?: Array<{ type: 'LineString'; coordinates: [number, number][] }>;
@@ -86,7 +86,7 @@ interface DirectionsBarProps {
   onFollowChange?: (follow: boolean) => void;
   /** Hand the chosen route to the parent to drive live navigation. */
   onStartNavigation?: (route: RouteResult, destinationLabel: string) => void;
-  /** A destination to open with, handed over from Search ("Directions to here"). */
+  /** A destination to open with, handed over from بحث ("الاتجاهات to here"). */
   initialTo?: Place | null;
 }
 
@@ -96,7 +96,7 @@ const MODES = [
   { id: 'bicycle', label: 'Bike', Icon: Bike },
 ] as const;
 
-export function formatDistance(m: number): string {
+export function formatالمسافة(m: number): string {
   if (m < 1000) return `${Math.round(m)} m`;
   return `${(m / 1000).toFixed(m < 10000 ? 1 : 0)} km`;
 }
@@ -225,7 +225,7 @@ export function viaRoad(steps: RouteStep[]): string | null {
 /* ───────────── marks ───────────── */
 
 /** The start: a hollow ivory ring, as on the rail. */
-function StartMark({ size = 12 }: { size?: number }) {
+function ابدأMark({ size = 12 }: { size?: number }) {
   return <span className="rounded-full flex-shrink-0 border-2 border-[var(--text-heading)] bg-black" style={{ width: size, height: size }} />;
 }
 
@@ -235,7 +235,7 @@ function EndMark({ className = 'w-4 h-4' }: { className?: string }) {
 }
 
 /** A stop on the way: a small gold diamond. */
-function StopMark() {
+function إيقافMark() {
   return <span className="w-2 h-2 rotate-45 flex-shrink-0" style={{ background: 'var(--gold-light)', opacity: 0.8 }} />;
 }
 
@@ -295,11 +295,11 @@ function PlaceInput({
   /** When a live fix exists, every field offers it first. */
   liveFix?: { lat: number; lng: number } | null;
   /** Offered while the field is empty. */
-  recent: RecentPlace[];
+  recent: الأخيرةPlace[];
   trailing?: ReactNode;
 }) {
   const [results, setResults] = useState<Place[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setجارٍ التحميل] = useState(false);
   const [open, setOpen] = useState(false);
   const [idx, setIdx] = useState(0);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -418,7 +418,7 @@ function PlaceInput({
         <div role="listbox" aria-label={empty ? 'Suggestions' : 'Places found'}
           className="absolute top-full -left-[26px] -right-[42px] mt-1.5 z-[10000] rounded-xl border border-[var(--border-primary)] p-1.5 max-h-[280px] overflow-y-auto styled-scrollbar"
           style={{ background: 'var(--oi-solid)', boxShadow: '0 18px 44px rgba(0,0,0,0.75)' }}>
-          {empty && recent.length > 0 && <span className="block px-3 pt-1 pb-1 text-[9.5px] font-mono tracking-[0.14em] uppercase text-[var(--text-muted)]">Recent</span>}
+          {empty && recent.length > 0 && <span className="block px-3 pt-1 pb-1 text-[9.5px] font-mono tracking-[0.14em] uppercase text-[var(--text-muted)]">الأخيرة</span>}
           {options.map((r, i) => (
             <PlaceRow key={`${r.kind}-${r.label}-${r.lat}-${i}`} place={r} query={empty ? '' : value} on={i === at}
               onPick={() => choose(r)} onHover={() => setIdx(i)} from={center} kindOverride={r.recent ? 'recent' : undefined} />
@@ -441,27 +441,27 @@ function IconBtn({ children, label, onClick, on, className = '' }: { children: R
   );
 }
 
-export default function DirectionsBar({ onRoute, onLocate, onClose, center = null, onLiveLocation, onActiveSegment, onFollowChange, onStartNavigation, initialTo = null }: DirectionsBarProps) {
+export default function الاتجاهاتBar({ onالمسار, onLocate, onإغلاق, center = null, onLiveLocation, onActiveSegment, onFollowChange, onابدأNavigation, initialTo = null }: الاتجاهاتBarProps) {
   const [fromText, setFromText] = useState('');
   const [toText, setToText] = useState(initialTo?.label ?? '');
   const [from, setFrom] = useState<Place | null>(null);
   const [to, setTo] = useState<Place | null>(initialTo);
   const [mode, setMode] = useState<string>('auto');
-  const [route, setRoute] = useState<RouteResult | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [route, setالمسار] = useState<RouteResult | null>(null);
+  const [loading, setجارٍ التحميل] = useState(false);
+  const [error, setخطأ] = useState<string | null>(null);
   const [activeStep, setActiveStep] = useState<number | null>(null);
   const [locating, setLocating] = useState(false);
-  const [locateError, setLocateError] = useState<string | null>(null);
+  const [locateخطأ, setLocateخطأ] = useState<string | null>(null);
   const [live, setLive] = useState<LiveLocation | null>(null);
   const [tracking, setTracking] = useState(false);
   const [follow, setFollow] = useState(false);
-  const [routes, setRoutes] = useState<RouteResult[]>([]);
+  const [routes, setالمسارs] = useState<RouteResult[]>([]);
   const [chosen, setChosen] = useState(0);
   const [vias, setVias] = useState<Array<{ place: Place | null; text: string }>>([]);
   const [avoid, setAvoid] = useState({ tolls: false, highways: false, ferries: false });
   const [showOptions, setShowOptions] = useState(false);
-  const [recent, setRecent] = useState<RecentPlace[]>(() => (typeof window === 'undefined' ? [] : loadRecent()));
+  const [recent, setالأخيرة] = useState<RecentPlace[]>(() => (typeof window === 'undefined' ? [] : loadالأخيرة()));
   const watchId = useRef<number | null>(null);
 
   /** Remember a place picked for the route, for the next time a field is empty. */
@@ -576,7 +576,7 @@ export default function DirectionsBar({ onRoute, onLocate, onClose, center = nul
       setFromText(label);
       setFrom(place);
       onLocate?.(lat, lng, 14);
-      if (to) runRoute(place, to, mode, stops(), avoid);
+      if (to) runالمسار(place, to, mode, stops(), avoid);
     };
 
     const browser = await new Promise<GeolocationPosition | null>((resolve) => {
@@ -706,7 +706,7 @@ export default function DirectionsBar({ onRoute, onLocate, onClose, center = nul
             <LocateFixed className="w-4 h-4" />
           </IconBtn>
         )}
-        {onClose && <IconBtn label="Close directions" onClick={onClose}><X className="w-4 h-4" /></IconBtn>}
+        {onإغلاق && <IconBtn label="Close directions" onClick={onClose}><X className="w-4 h-4" /></IconBtn>}
       </header>
 
       {/* ── start, stops, destination ── */}
@@ -725,7 +725,7 @@ export default function DirectionsBar({ onRoute, onLocate, onClose, center = nul
                 value={v.text}
                 onChange={(t) => setVias((prev) => prev.map((x, j) => (j === i ? { ...x, text: t } : x)))}
                 onPick={(p) => pickVia(i, p)}
-                placeholder={`Stop ${i + 1}`} {...bias} liveFix={live} recent={recent}
+                placeholder={`إيقاف ${i + 1}`} {...bias} liveFix={live} recent={recent}
                 trailing={(
                   <button type="button" onClick={() => removeVia(i)} aria-label={`Remove stop ${i + 1}`}
                     className="w-8 h-8 mr-0.5 rounded-md flex items-center justify-center flex-shrink-0 text-[var(--text-muted)] hover:text-[var(--alert-red)] hover:bg-[rgba(255,61,61,0.08)] transition-colors">
@@ -828,15 +828,15 @@ export default function DirectionsBar({ onRoute, onLocate, onClose, center = nul
                       {locating ? <Loader2 className="w-4 h-4 animate-spin text-[var(--gold-light)]" /> : <LocateFixed className="w-4 h-4 text-[var(--gold-light)]" />}
                     </span>
                     <span className="flex-1 min-w-0">
-                      <span className="block text-[13px] text-[var(--text-heading)]">Start from my location</span>
+                      <span className="block text-[13px] text-[var(--text-heading)]">ابدأ from my location</span>
                       <span className="block text-[11px] text-[var(--text-muted)]">{to ? `Then the route to ${to.label}` : 'Then choose where to go'}</span>
                     </span>
                   </button>
                 )}
-                {locateError && <p className="px-1 text-[11px] text-[var(--gold-light)]">{locateError}</p>}
+                {locateخطأ && <p className="px-1 text-[11px] text-[var(--gold-light)]">{locateخطأ}</p>}
                 {recent.length > 0 && (
                   <div>
-                    <span className="block px-1 pb-1 text-[9.5px] font-mono tracking-[0.14em] uppercase text-[var(--text-muted)]">Recent places</span>
+                    <span className="block px-1 pb-1 text-[9.5px] font-mono tracking-[0.14em] uppercase text-[var(--text-muted)]">الأخيرة places</span>
                     <div className="flex flex-col gap-0.5">
                       {recent.slice(0, 4).map((r, i) => (
                         <PlaceRow key={`${r.label}-${r.lat}-${i}`} place={r} on={false} onPick={() => pickRecent(r)} from={center} kindOverride="recent" />
@@ -866,7 +866,7 @@ export default function DirectionsBar({ onRoute, onLocate, onClose, center = nul
                 <div className="flex items-center gap-3">
                   <StepIcon type={guidance.step.type} on />
                   <span className="flex-1 min-w-0 text-[13px] text-[var(--text-heading)] leading-snug">{guidance.step.instruction}</span>
-                  <span className="text-[15px] font-mono text-[var(--gold-light)] tabular-nums flex-shrink-0">{formatDistance(guidance.distance)}</span>
+                  <span className="text-[15px] font-mono text-[var(--gold-light)] tabular-nums flex-shrink-0">{formatالمسافة(guidance.distance)}</span>
                 </div>
               </div>
             )}
@@ -877,12 +877,12 @@ export default function DirectionsBar({ onRoute, onLocate, onClose, center = nul
                 <div className="min-w-0">
                   <div className="flex items-baseline gap-2">
                     <span className="text-[26px] leading-none font-mono font-light tabular-nums text-[var(--text-heading)]" style={{ textShadow: '0 0 20px rgba(var(--gold-rgb),0.2)' }}>
-                      {formatDuration(route.duration)}
+                      {formatالمدة(route.duration)}
                     </span>
                     {chosen === 0 && routes.length > 1 && <span className="text-[9.5px] font-mono tracking-[0.12em] uppercase text-[var(--gold-light)]">Fastest</span>}
                   </div>
                   <div className="mt-1.5 flex items-center gap-1.5 text-[11.5px] text-[var(--text-secondary)] tabular-nums">
-                    <span>{formatDistance(route.distance)}</span>
+                    <span>{formatالمسافة(route.distance)}</span>
                     <span className="text-[var(--text-muted)]">·</span>
                     <Clock className="w-3 h-3 text-[var(--text-muted)]" />
                     <span>Arrive {arrivalTime(route.duration)}</span>
@@ -898,16 +898,16 @@ export default function DirectionsBar({ onRoute, onLocate, onClose, center = nul
                 )}
               </div>
 
-              {onStartNavigation && (
+              {onابدأNavigation && (
                 <button onClick={() => onStartNavigation(route, to?.label || 'your destination')} className="tool-btn-primary w-full mt-3">
-                  <Play className="w-4 h-4" fill="currentColor" /> Start navigation
+                  <Play className="w-4 h-4" fill="currentColor" /> ابدأ navigation
                 </button>
               )}
             </div>
 
             {routes.length > 1 && (
               <div className="px-3 pt-3">
-                <span className="block px-1 pb-1.5 text-[9.5px] font-mono tracking-[0.14em] uppercase text-[var(--text-muted)]">Routes · {routes.length}</span>
+                <span className="block px-1 pb-1.5 text-[9.5px] font-mono tracking-[0.14em] uppercase text-[var(--text-muted)]">المسارs · {routes.length}</span>
                 <div role="radiogroup" aria-label="Routes" className="flex flex-col gap-1">
                   {routes.map((r, i) => {
                     const on = i === chosen;
@@ -921,11 +921,11 @@ export default function DirectionsBar({ onRoute, onLocate, onClose, center = nul
                           {on && <span className="w-1.5 h-1.5 rounded-full bg-[var(--gold-primary)]" />}
                         </span>
                         <span className="flex-1 min-w-0">
-                          <span className={`block text-[12.5px] font-mono tabular-nums ${on ? 'text-[var(--gold-light)]' : 'text-[var(--text-heading)]'}`}>{formatDuration(r.duration)}</span>
-                          <span className="block text-[11px] text-[var(--text-muted)] truncate">{road ? `via ${road}` : formatDistance(r.distance)}</span>
+                          <span className={`block text-[12.5px] font-mono tabular-nums ${on ? 'text-[var(--gold-light)]' : 'text-[var(--text-heading)]'}`}>{formatالمدة(r.duration)}</span>
+                          <span className="block text-[11px] text-[var(--text-muted)] truncate">{road ? `via ${road}` : formatالمسافة(r.distance)}</span>
                         </span>
                         <span className="flex flex-col items-end flex-shrink-0 text-[10.5px] font-mono tabular-nums">
-                          <span className="text-[var(--text-secondary)]">{formatDistance(r.distance)}</span>
+                          <span className="text-[var(--text-secondary)]">{formatالمسافة(r.distance)}</span>
                           <span className={i === 0 ? 'text-[var(--gold-light)]' : 'text-[var(--text-muted)]'}>{i === 0 ? 'Fastest' : slower > 0 ? `+${slower} min` : 'Same time'}</span>
                         </span>
                       </button>
@@ -969,7 +969,7 @@ export default function DirectionsBar({ onRoute, onLocate, onClose, center = nul
                         <StepIcon type={s.type} on={on} />
                         <span className={`flex-1 min-w-0 text-[12.5px] leading-snug ${on ? 'text-[var(--text-heading)]' : 'text-[var(--text-primary)]'}`}>{s.instruction}</span>
                         {s.distance > 0 && (
-                          <span className="text-[11px] font-mono text-[var(--text-muted)] tabular-nums flex-shrink-0 text-right min-w-[44px]">{formatDistance(s.distance)}</span>
+                          <span className="text-[11px] font-mono text-[var(--text-muted)] tabular-nums flex-shrink-0 text-right min-w-[44px]">{formatالمسافة(s.distance)}</span>
                         )}
                       </button>
                     </li>
