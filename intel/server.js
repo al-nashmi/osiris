@@ -17,7 +17,7 @@
 
 const express = require('express');
 const app = express();
-const PORT = process.env.INTEL_PORT || 4000;
+const PORT = Number(process.env.PORT || process.env.INTEL_PORT || 4000);
 
 // ════════════════════════════════════════════════════
 // §1 — CONFIGURATION
