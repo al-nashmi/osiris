@@ -99,7 +99,7 @@ export default function CommandPalette({
       setCursor(c => Math.max(c - 1, 0));
     } else if (e.key === 'Enter') {
       e.preventDefault();
-      if (نتيجة[cursor]) go(نتيجة[cursor].id);
+      if (results[cursor]) go(results[cursor].id);
     } else if (e.key === 'Escape') {
       e.preventDefault();
       onClose();
@@ -140,7 +140,7 @@ export default function CommandPalette({
         </div>
 
         <div ref={listRef} className="max-h-[52vh] overflow-y-auto styled-scrollbar py-1.5">
-          {نتيجة.length === 0 && (
+          {results.length === 0 && (
             <div className="px-4 py-8 text-center text-[11px] font-mono text-[var(--text-muted)]">
               No matches for “{query}”
             </div>
@@ -180,12 +180,12 @@ export default function CommandPalette({
         <div className="flex items-center gap-4 px-4 h-9 border-t border-white/[0.07] text-[10px] font-mono text-[var(--text-muted)]">
           <span className="flex items-center gap-1">
             <kbd className="px-1 py-0.5 rounded border border-white/10">↑</kbd>
-            <kbd className="px-1 py-0.5 rounded border border-white/10">↓</kbd> تنقّل
+            <kbd className="px-1 py-0.5 rounded border border-white/10">↓</kbd> navigate
           </span>
           <span className="flex items-center gap-1">
-            <kbd className="px-1 py-0.5 rounded border border-white/10">↵</kbd> انتقال
+            <kbd className="px-1 py-0.5 rounded border border-white/10">↵</kbd> jump
           </span>
-          <span className="ml-auto">{نتيجة.length} نتيجة</span>
+          <span className="ml-auto">{results.length} results</span>
         </div>
       </div>
     </div>
