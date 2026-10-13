@@ -418,7 +418,7 @@ function PlaceInput({
         <div role="listbox" aria-label={empty ? 'Suggestions' : 'Places found'}
           className="absolute top-full -left-[26px] -right-[42px] mt-1.5 z-[10000] rounded-xl border border-[var(--border-primary)] p-1.5 max-h-[280px] overflow-y-auto styled-scrollbar"
           style={{ background: 'var(--oi-solid)', boxShadow: '0 18px 44px rgba(0,0,0,0.75)' }}>
-          {empty && recent.length > 0 && <span className="block px-3 pt-1 pb-1 text-[9.5px] font-mono tracking-[0.14em] uppercase text-[var(--text-muted)]">الأخيرة</span>}
+          {empty && recent.length > 0 && <span className="block px-3 pt-1 pb-1 text-[9.5px] font-mono tracking-[0.14em] uppercase text-[var(--text-muted)]">Recent</span>}
           {options.map((r, i) => (
             <PlaceRow key={`${r.kind}-${r.label}-${r.lat}-${i}`} place={r} query={empty ? '' : value} on={i === at}
               onPick={() => choose(r)} onHover={() => setIdx(i)} from={center} kindOverride={r.recent ? 'recent' : undefined} />
@@ -690,7 +690,7 @@ export default function DirectionsBar({ onRoute, onLocate, onClose, center = nul
         <span className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(var(--gold-rgb),0.12)' }}>
           <Route className="w-4 h-4 text-[var(--gold-primary)]" />
         </span>
-        <h2 className="flex-1 text-[14px] font-semibold text-[var(--text-heading)]">الاتجاهات</h2>
+        <h2 className="flex-1 text-[14px] font-semibold text-[var(--text-heading)]">Directions</h2>
         {tracking && (
           <span className="flex items-center gap-1.5 h-6 px-2 rounded-full text-[9.5px] font-mono tracking-[0.12em] uppercase text-[var(--gold-light)]"
             style={{ background: 'rgba(var(--gold-rgb),0.1)', boxShadow: 'inset 0 0 0 1px rgba(var(--gold-rgb),0.3)' }}>
