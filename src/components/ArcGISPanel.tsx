@@ -97,9 +97,9 @@ export default function ArcGISPanel({
 }: ArcGISPanelProps) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<ArcGISResult[]>([]);
-  const [searching, setبحثing] = useState(false);
+  const [searching, setSearching] = useState(false);
   const [importingId, setImportingId] = useState<string | null>(null);
-  const [error, setخطأ] = useState('');
+  const [error, setError] = useState('');
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [featureCounts, setFeatureCounts] = useState<Record<string, number>>({});
   const [expandedLayerId, setExpandedLayerId] = useState<string | null>(null);
@@ -377,7 +377,7 @@ export default function ArcGISPanel({
         </div>
       )}
 
-      {/* ── بحث Bar ────────────────────────────────────────── */}
+      {/* ── Search Bar ────────────────────────────────────────── */}
       <div className="relative shrink-0">
         <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--text-muted)]" />
         <input
@@ -417,7 +417,7 @@ export default function ArcGISPanel({
         ))}
       </div>
 
-      {/* ── خطأ ─────────────────────────────────────────────── */}
+      {/* ── Error ─────────────────────────────────────────────── */}
       <AnimatePresence>
         {error && (
           <motion.div
@@ -435,7 +435,7 @@ export default function ArcGISPanel({
         )}
       </AnimatePresence>
 
-      {/* ── بحث Results ────────────────────────────────────── */}
+      {/* ── Search Results ────────────────────────────────────── */}
       <div className="flex-1 overflow-y-auto styled-scrollbar -mx-1 px-1 space-y-1.5">
         {/* Loading skeleton */}
         {searching && (
@@ -524,7 +524,7 @@ export default function ArcGISPanel({
                         }}
                       >
                         <CheckCircle className="w-3 h-3" />
-                        مباشر
+                        LIVE
                       </span>
                     ) : (
                       <button
