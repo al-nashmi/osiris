@@ -45,7 +45,7 @@ const BUILTIN_FEEDS = [
   // ── North America ──
   { name: 'NBC News NOW', city: 'New York', country: 'US', lat: 40.759, lng: -73.980, url: 'https://www.youtube-nocookie.com/embed/live_stream?channel=UCeY0bbntWzzVIaj2z3QigXg&autoplay=1&mute=1', category: 'mainstream', region: 'americas' },
   { name: 'CBS News 24/7', city: 'New York', country: 'US', lat: 40.764, lng: -73.973, url: 'https://www.youtube-nocookie.com/embed/live_stream?channel=UC8p1vwvWtl6T73JiExfWs1g&autoplay=1&mute=1', category: 'mainstream', region: 'americas' },
-  { name: 'ABC News مباشر', city: 'New York', country: 'US', lat: 40.763, lng: -73.979, url: 'https://www.youtube-nocookie.com/embed/live_stream?channel=UCBi2mrWuNuyYy4gbM6fU18Q&autoplay=1&mute=1', category: 'mainstream', region: 'americas' },
+  { name: 'ABC News Live', city: 'New York', country: 'US', lat: 40.763, lng: -73.979, url: 'https://www.youtube-nocookie.com/embed/live_stream?channel=UCBi2mrWuNuyYy4gbM6fU18Q&autoplay=1&mute=1', category: 'mainstream', region: 'americas' },
   { name: 'Bloomberg TV', city: 'New York', country: 'US', lat: 40.756, lng: -73.988, url: 'https://www.youtube-nocookie.com/embed/live_stream?channel=UC_vQ72b7v5n2938v9d5c80w&autoplay=1&mute=1', category: 'finance', region: 'americas' },
   { name: 'C-SPAN', city: 'Washington DC', country: 'US', lat: 38.897, lng: -77.036, url: 'https://www.youtube-nocookie.com/embed/live_stream?channel=UCb--64Gl51jIEVE-GLDAVTg&autoplay=1&mute=1', category: 'government', region: 'americas' },
   { name: 'CBC News', city: 'Toronto', country: 'CA', lat: 43.644, lng: -79.387, url: 'https://www.youtube-nocookie.com/embed/live_stream?channel=UCKy1dAqELon0zgzZPOz9SVw&autoplay=1&mute=1', category: 'mainstream', region: 'americas' },
@@ -355,7 +355,7 @@ function NewsCard({ item, now, open, wide, onToggle, onLocate }: {
         </div>
 
         <h4 className={`mt-1 font-sans text-[12.5px] font-medium leading-snug text-[#F2EFE8] ${open ? '' : 'line-clamp-3'}`}>
-          {item.flag && <span className="mr-1.5 inline-block translate-y-[-1px] rounded bg-[#FF3D3D]/15 px-1 text-[8.5px] font-mono font-bold tracking-wider text-[#FF6B6B]">عاجل</span>}
+          {item.flag && <span className="mr-1.5 inline-block translate-y-[-1px] rounded bg-[#FF3D3D]/15 px-1 text-[8.5px] font-mono font-bold tracking-wider text-[#FF6B6B]">BREAKING</span>}
           {item.title}
         </h4>
         {!open && item.summary && (
@@ -450,7 +450,7 @@ function NewsCard({ item, now, open, wide, onToggle, onLocate }: {
 
           {item.carriers.length > 0 && (
             <div>
-              <div className="mb-1 text-[8.5px] font-mono tracking-widest text-[#5C5A54]">نُشر أيضًا عبر</div>
+              <div className="mb-1 text-[8.5px] font-mono tracking-widest text-[#5C5A54]">ALSO CARRIED BY</div>
               <ul className="space-y-0.5">
                 {item.carriers.map(c => (
                   <li key={c.source} className="flex items-center gap-1.5 text-[10px] font-mono">
@@ -477,7 +477,7 @@ function NewsCard({ item, now, open, wide, onToggle, onLocate }: {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 rounded border border-[var(--cyan-primary)]/30 bg-[var(--cyan-primary)]/10 px-2 py-1 text-[9.5px] font-mono tracking-wider text-[var(--cyan-primary)] hover:bg-[var(--cyan-primary)]/20"
               >
-                <ExternalLink className="w-2.5 h-2.5" /> فتح POST
+                <ExternalLink className="w-2.5 h-2.5" /> OPEN POST
               </a>
             )}
             {item.reply_to && (
@@ -553,7 +553,7 @@ function StatementCard({ speaker, items, now, open, wide, onToggle }: {
           </time>
         </div>
         <h4 className="mt-1 font-sans text-[12.5px] font-medium leading-snug text-[#F2EFE8]">
-          {items.some(i => i.flag) && <span className="mr-1.5 inline-block translate-y-[-1px] rounded bg-[#FF3D3D]/15 px-1 text-[8.5px] font-mono font-bold tracking-wider text-[#FF6B6B]">عاجل</span>}
+          {items.some(i => i.flag) && <span className="mr-1.5 inline-block translate-y-[-1px] rounded bg-[#FF3D3D]/15 px-1 text-[8.5px] font-mono font-bold tracking-wider text-[#FF6B6B]">BREAKING</span>}
           {speaker}
           <span className="ml-1.5 whitespace-nowrap text-[9px] font-mono font-normal tracking-wider text-[#8A8880]">{items.length} STATEMENTS</span>
         </h4>
@@ -682,7 +682,7 @@ function WarningCard({ item, now, onLocate }: { item: WarningAlert; now: number;
   );
 }
 
-export default function مباشرAlerts({ data, onLocate, onWatchFeed, onتحديث, pinsOn = false, onTogglePins, onPinnedChange }: مباشرAlertsProps) {
+export default function LiveAlerts({ data, onLocate, onWatchFeed, onتحديث, pinsOn = false, onTogglePins, onPinnedChange }: LiveAlertsProps) {
   const [expanded, setExpanded] = useState(true);
   const [maximized, setMaximized] = useState(false);
   const [tab, setTab] = useState<Tab>('all');
@@ -893,7 +893,7 @@ export default function مباشرAlerts({ data, onLocate, onWatchFeed, onتحد
   const nowStats: { key: string; label: string; value: string; color: string; title: string; onClick: () => void }[] = [
     { key: 'severe', label: 'SEVERE', value: String(rightNow.severe), color: SEVERITY_COLORS.high, title: 'Warnings in force that their issuer graded severe or extreme', onClick: () => { selectTab('warnings'); setQuery(''); } },
     { key: 'rocket', label: 'ROCKET', value: String(rightNow.rockets), color: ALERT_KINDS.rocket.color, title: 'Reports of rockets or missiles in the last six hours', onClick: () => { selectTab('news'); setNewsKind(newsKind === 'rocket' ? null : 'rocket'); } },
-    { key: 'breaking', label: 'عاجل', value: String(rightNow.breaking), color: ACCENT, title: 'Reports a channel flagged as breaking in the last six hours', onClick: () => { selectTab('news'); setNewsKind(newsKind === 'breaking' ? null : 'breaking'); } },
+    { key: 'breaking', label: 'BREAKING', value: String(rightNow.breaking), color: ACCENT, title: 'Reports a channel flagged as breaking in the last six hours', onClick: () => { selectTab('news'); setNewsKind(newsKind === 'breaking' ? null : 'breaking'); } },
     ...(rightNow.biggest ? [{
       key: 'quake',
       label: 'QUAKE',
@@ -949,7 +949,7 @@ export default function مباشرAlerts({ data, onLocate, onWatchFeed, onتحد
       {/* بحث and perspective */}
       <div className="flex gap-1.5">
         <label className="relative flex-1 min-w-0">
-          <span className="sr-only">البحث في التنبيهات</span>
+          <span className="sr-only">بحث alerts</span>
           <Search className="pointer-events-none absolute left-2 top-1/2 h-3 w-3 -translate-y-1/2 text-[#5C5A54]" />
           <input
             value={query}
@@ -971,7 +971,7 @@ export default function مباشرAlerts({ data, onLocate, onWatchFeed, onتحد
             className="w-[108px] flex-shrink-0 rounded border border-[#2A2A28] bg-[#0c0c10] px-1 py-1 text-[10px] font-mono text-[#C9C5BC] outline-none focus:border-[var(--cyan-primary)]/50"
             style={bloc !== 'all' ? { color: BLOCS[bloc].color, borderColor: `${BLOCS[bloc].color}66` } : undefined}
           >
-            <option value="all">جميع الأطراف</option>
+            <option value="all">All sides</option>
             {BLOC_ORDER.map(b => <option key={b} value={b}>{BLOCS[b].label}</option>)}
           </select>
         )}
@@ -1021,7 +1021,7 @@ export default function مباشرAlerts({ data, onLocate, onWatchFeed, onتحد
           <span className="truncate">
             SHOWING {list.length}{activeThread ? ` · ${activeThread.label.toUpperCase()}` : ''}{bloc !== 'all' ? ` · ${BLOCS[bloc].short}` : ''}{newsKind ? ` · ${newsKind.toUpperCase()} ONLY` : ''}
           </span>
-          <button onClick={clearFilters} className="flex-shrink-0 text-[var(--cyan-primary)] hover:underline">مسح</button>
+          <button onClick={clearFilters} className="flex-shrink-0 text-[var(--cyan-primary)] hover:underline">CLEAR</button>
         </div>
       )}
     </div>
@@ -1060,7 +1060,7 @@ export default function مباشرAlerts({ data, onLocate, onWatchFeed, onتحد
       {[0, 1, 2].map(i => (
         <div key={i} className="h-[74px] animate-pulse rounded-lg border border-[#26262A] bg-[#111111]/60" />
       ))}
-      <div className="text-center text-[10px] font-mono text-[#5C5A54]">جارٍ قراءة القنوات…</div>
+      <div className="text-center text-[10px] font-mono text-[#5C5A54]">READING CHANNELS…</div>
     </div>
   ) : list.length === 0 ? (
     filtersActive
@@ -1115,7 +1115,7 @@ export default function مباشرAlerts({ data, onLocate, onWatchFeed, onتحد
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: 0.15, duration: 0.4 }}
       role={maximized ? 'dialog' : undefined}
-      aria-label={maximized ? 'Live alerts' : undefined}
+      aria-label={maximized ? 'التنبيهات المباشرة' : undefined}
       className={`glass-panel flex flex-col overflow-hidden pointer-events-auto transition-all duration-300 ${maximized ? 'fixed inset-4 z-[9999] bg-[#0a0a09]/95 backdrop-blur-3xl' : 'shrink-0 h-[560px] max-h-[82vh] resize-y'}`}
     >
       {/* Header: title and controls, then a status line */}
@@ -1128,7 +1128,7 @@ export default function مباشرAlerts({ data, onLocate, onWatchFeed, onتحد
             className="flex min-w-0 items-center gap-2 outline-none"
           >
             <Radio className="w-3.5 h-3.5 flex-shrink-0" style={{ color: ACCENT }} />
-            <span className="hud-text whitespace-nowrap text-[11px] text-[var(--text-primary)]">تنبيهات مباشرة</span>
+            <span className="hud-text whitespace-nowrap text-[11px] text-[var(--text-primary)]">التنبيهات المباشرة</span>
             <span className="gotham-tag gotham-tag--high" style={{ fontSize: '9px', padding: '1px 5px' }}>{news.length + quakes.length}</span>
           </button>
           <div className="flex items-center gap-0.5 flex-shrink-0">
@@ -1175,7 +1175,7 @@ export default function مباشرAlerts({ data, onLocate, onWatchFeed, onتحد
               {liveالمصدرs}/{sources.length} SOURCES مباشر
             </span>
           ) : (
-            <span>جارٍ الاتصال…</span>
+            <span>CONNECTING…</span>
           )}
           {fetchedAt && <span title={`Feed fetched ${new Date(fetchedAt).toLocaleString()}`}>· UPDATED {timeAgo(fetchedAt, now).toUpperCase()}</span>}
           {breakingCount > 0 && <span className="text-[#FF6B6B]">· {breakingCount} BREAKING</span>}
@@ -1222,8 +1222,8 @@ function EmptyState({ text, onClear, onRetry }: { text: string; onClear?: () => 
   return (
     <div className="py-6 text-center">
       <div className="text-[11px] font-mono text-[var(--text-muted)]">{text}</div>
-      {onClear && <button onClick={onClear} className="mt-2 text-[10px] font-mono text-[var(--cyan-primary)] hover:underline">مسح عوامل التصفية</button>}
-      {onإعادة المحاولة && <button onClick={onRetry} className="mt-2 text-[10px] font-mono text-[var(--cyan-primary)] hover:underline">إعادة المحاولة</button>}
+      {onClear && <button onClick={onClear} className="mt-2 text-[10px] font-mono text-[var(--cyan-primary)] hover:underline">CLEAR FILTERS</button>}
+      {onإعادة المحاولة && <button onClick={onRetry} className="mt-2 text-[10px] font-mono text-[var(--cyan-primary)] hover:underline">TRY AGAIN</button>}
     </div>
   );
 }
