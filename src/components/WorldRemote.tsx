@@ -402,7 +402,7 @@ export default function WorldRemote({onClose,onPlaceOnMap}:{onClose?:()=>void,on
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-1.5 mb-0.5">
                             <span className="text-[11px] font-mono font-bold text-[var(--text-primary)] truncate">{dev.name}</span>
-                            {dev.connected&&<span className="text-[9px] font-mono px-1 py-0.5 rounded bg-[var(--alert-green)]/10 text-[var(--alert-green)] tracking-widest font-bold">مباشر</span>}
+                            {dev.connected&&<span className="text-[9px] font-mono px-1 py-0.5 rounded bg-[var(--alert-green)]/10 text-[var(--alert-green)] tracking-widest font-bold">LIVE</span>}
                           </div>
                           {dev.probing?(
                             <div className="flex items-center gap-2"><motion.div className="h-1 rounded-full flex-1" style={{background:`${dev.color}10`}}><motion.div className="h-full rounded-full" style={{background:dev.color}} animate={{width:['0%','60%','100%']}} transition={{duration:3}}/></motion.div><span className="text-[9px] font-mono animate-pulse" style={{color:dev.color}}>VACUUMING</span></div>
@@ -518,7 +518,7 @@ export default function WorldRemote({onClose,onPlaceOnMap}:{onClose?:()=>void,on
                 <div className="flex items-center justify-between px-3 py-1 shrink-0" style={{background:'rgba(0,0,0,0.3)',borderBottom:'1px solid rgba(255,255,255,0.03)'}}>
                   <span className="text-[9px] font-mono text-[var(--text-muted)] tracking-wider">{pkts.length} pkts · {bytes>1024?`${(bytes/1024).toFixed(1)}KB`:`${bytes}B`}</span>
                   <div className="flex items-center gap-1.5">
-                    <button onClick={()=>setPaused(!paused)} className={`text-[9px] font-mono tracking-wider px-1 py-0.5 rounded flex items-center gap-0.5 ${paused?'text-[#FFB800]':'text-[var(--text-muted)]'}`}>{paused?<><Pause className="w-2 h-2"/>PAUSE</>:<><Play className="w-2 h-2"/>مباشر</>}</button>
+                    <button onClick={()=>setPaused(!paused)} className={`text-[9px] font-mono tracking-wider px-1 py-0.5 rounded flex items-center gap-0.5 ${paused?'text-[#FFB800]':'text-[var(--text-muted)]'}`}>{paused?<><Pause className="w-2 h-2"/>PAUSE</>:<><Play className="w-2 h-2"/>LIVE</>}</button>
                     <button onClick={()=>{setPkts([]);setBytes(0);pid.current=0;}} className="text-[9px] font-mono text-[var(--text-muted)] tracking-wider px-1 py-0.5 rounded hover:bg-white/5 flex items-center gap-0.5"><Trash2 className="w-2 h-2"/>CLR</button>
                   </div>
                 </div>
