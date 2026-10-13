@@ -9,16 +9,16 @@ import { loadCameraCatalog, mergeCameraCatalog } from '@/lib/camera-catalog';
 import IntelFeed from '@/components/IntelFeed';
 import MarketsPanel from '@/components/MarketsPanel';
 import ScmPanel from '@/components/ScmPanel';
-import SearchBar from '@/components/SearchBar';
+import SearchBar from '@/components/بحثBar';
 import DirectionsBar, { type RouteResult, type LiveLocation } from '@/components/DirectionsBar';
 import NavigationView from '@/components/NavigationView';
 import FlightWatchPanel, { type WatchedFlight, type FlightTelemetry, type AircraftDetail, type Airport } from '@/components/FlightWatchPanel';
 import type { NavProgress } from '@/lib/navigation';
 import type { LiveDetection } from '@/lib/malware-intel';
 import ScaleBar from '@/components/ScaleBar';
-import خطأBoundary from '@/components/خطأBoundary';
-import { applyالإعدادات, loadحفظdالإعدادات } from '@/lib/style-tokens';
-import مشاركةPanel from '@/components/مشاركةPanel';
+import ErrorBoundary from '@/components/خطأBoundary';
+import { applySettings, loadSavedSettings } from '@/lib/style-tokens';
+import SharePanel from '@/components/مشاركةPanel';
 import ViewPresets from '@/components/ViewPresets';
 import KeyboardShortcuts from '@/components/KeyboardShortcuts';
 import GlobalStatusBar from '@/components/GlobalStatusBar';
@@ -162,7 +162,7 @@ const APP_VERSION = 'V5.0';
 
 /* The splash reports what has actually happened. The last stage waits for
    the map's first finished frame instead of a fixed timer. */
-const SPLASH_STAGES = ['جارٍ إنشاء اتصال آمن...', 'جارٍ تهيئة مصادر البيانات...', 'جارٍ معايرة المستشعرات...', 'النظام جاهز'];
+const SPLASH_STAGES = ['ESTABLISHING SECURE CONNECTION...', 'INITIALIZING FEEDS...', 'CALIBRATING SENSORS...', 'SYSTEM READY'];
 const SPLASH_PROGRESS = ['25%', '50%', '78%', '100%'];
 
 /* The HUD enters as one sequence when the splash lifts. Each piece used to
@@ -200,8 +200,8 @@ export default function Dashboard() {
   const autoLocateإلغاءled = useRef(false);
 
   const [activeCamera, setActiveCamera] = useState<any>(null);
-  const [spaceالطقس, setSpaceالطقس] = useState<any>(null);
-  const [showالطبقات, setShowالطبقات] = useState(true);
+  const [spaceWeather, setSpaceWeather] = useState<any>(null);
+  const [showLayers, setShowLayers] = useState(true);
   const [showMarkets, setShowMarkets] = useState(false);
   /* The Markets panel is pinned just below the header rather than centred on
      its rail button. Centred, a tall panel (a chart open, a long list) rose
@@ -252,20 +252,20 @@ export default function Dashboard() {
     { route: RouteResult; label: string; key: number } | null
   >(null);
   const [navProgress, setNavProgress] = useState<NavProgress | null>(null);
-  const [watchedالرحلات الجوية, setWatchedالرحلات الجوية] = useState<WatchedFlight[]>([]);
+  const [watchedFlights, setWatchedFlights] = useState<WatchedFlight[]>([]);
   const [aircraftAirports, setAircraftAirports] = useState<Record<string, Airport[]>>({});
 
   // The popup lives in raw map HTML, so it hands aircraft over through a global.
   useEffect(() => {
     (window as unknown as { osirisWatchFlight?: (f: WatchedFlight) => void }).osirisWatchFlight = (f) => {
       if (!f?.icao24) return;
-      setWatchedالرحلات الجوية((prev) =>
+      setWatchedFlights((prev) =>
         prev.some((w) => w.icao24 === f.icao24) ? prev : [...prev, f].slice(-6));
     };
   }, []);
 
   const removeWatched = useCallback((icao24: string) => {
-    setWatchedالرحلات الجوية((prev) => prev.filter((w) => w.icao24 !== icao24));
+    setWatchedFlights((prev) => prev.filter((w) => w.icao24 !== icao24));
     setAircraftAirports((prev) => {
       const next = { ...prev };
       delete next[icao24];
@@ -282,12 +282,12 @@ export default function Dashboard() {
   // Telemetry for watched aircraft, refreshed from whatever the feed last gave us.
   const watchTelemetry = useMemo(() => {
     const out: Record<string, FlightTelemetry> = {};
-    if (!watchedالرحلات الجوية.length) return out;
+    if (!watchedFlights.length) return out;
     const buckets = [
       data?.commercial_flights, data?.private_flights,
       data?.private_jets, data?.military_flights,
     ];
-    const wanted = new Set(watchedالرحلات الجوية.map((w) => w.icao24));
+    const wanted = new Set(watchedFlights.map((w) => w.icao24));
     for (const bucket of buckets) {
       for (const f of bucket || []) {
         if (f?.icao24 && wanted.has(f.icao24)) {
@@ -300,7 +300,7 @@ export default function Dashboard() {
       }
     }
     return out;
-  }, [watchedالرحلات الجوية, data]);
+  }, [watchedFlights, data]);
 
   // A navigation session owns its own position watch. The planner's watch dies
   // with the planner when guidance takes over the panel, so guidance cannot
@@ -322,7 +322,7 @@ export default function Dashboard() {
   }, [navSession]);
   const [showRemote, setShowRemote] = useState(false);
   const [showArcGIS, setShowArcGIS] = useState(false);
-  const [arcgisالطبقات, setArcgisالطبقات] = useState<Array<{ id: string; title: string; url: string; geojson: any; color: string; visible: boolean; opacity: number }>>([]);
+  const [arcgisLayers, setArcgisLayers] = useState<Array<{ id: string; title: string; url: string; geojson: any; color: string; visible: boolean; opacity: number }>>([]);
   const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number; bounds?: { west: number; south: number; east: number; north: number } } | null>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [mobilePanel, setMobilePanel] = useState<'layers'|'markets'|'intel'|'search'|'recon'|'remote'|'oi'|null>(null);
@@ -418,7 +418,7 @@ export default function Dashboard() {
   useEffect(() => {
     const id = new URLSearchParams(window.location.search).get('oi');
     if (!id) return;
-    autoLocateإلغاءled.current = true;
+    autoLocateCancelled.current = true;
     setOiMode('forecast');
     if (window.matchMedia('(max-width: 767px)').matches) setMobilePanel('oi');
     else setShowOi(true);
@@ -446,8 +446,8 @@ export default function Dashboard() {
   /* Style Studio overrides are inline on <body>, so they survive the theme
      swap above and only need reapplying once per load. */
   useEffect(() => {
-    const saved = loadحفظdالإعدادات();
-    if (saved) applyالإعدادات(saved);
+    const saved = loadحفظdSettings();
+    if (saved) applySettings(saved);
   }, []);
 
   const isMobile = useIsMobile();
@@ -457,7 +457,7 @@ export default function Dashboard() {
   const lastGeocodedPos = useRef<{ lat: number; lng: number } | null>(null);
 
   // ── DEFAULT: Most layers OFF — fast initial load ──
-  const [activeالطبقات, setActiveالطبقات] = useState({
+  const [activeLayers, setActiveLayers] = useState({
     flights: false,
     private: false,
     jets: false,
@@ -514,10 +514,10 @@ export default function Dashboard() {
     if (!on && typeof window !== 'undefined') window.speechSynthesis?.cancel();
   }, []);
   const assistView = useRef<ReturnType<Site['view']>>({ lat: 20, lng: 0, zoom: 2.5, projection: 'globe', style: 'dark' });
-  const assistالطبقات = useRef<Record<string, boolean>>(activeالطبقات);
+  const assistLayers = useRef<Record<string, boolean>>(activeLayers);
   const assistVoice = useRef(oiVoice);
   const assistOi = useRef(oi);
-  useEffect(() => { assistالطبقات.current = activeالطبقات; }, [activeالطبقات]);
+  useEffect(() => { assistLayers.current = activeLayers; }, [activeLayers]);
   useEffect(() => { assistVoice.current = oiVoice; }, [oiVoice]);
   useEffect(() => { assistOi.current = oi; });
   useEffect(() => {
@@ -530,7 +530,7 @@ export default function Dashboard() {
     if (panel === 'markets') { if (phone) setMobilePanel('markets'); else right(() => setShowMarkets(true)); }
     else if (panel === 'alerts') right(() => setShowAlerts(true));
     else if (panel === 'intel') { if (phone) setMobilePanel('recon'); else right(() => setShowIntel(true)); }
-    else if (panel === 'layers') { if (phone) setMobilePanel('layers'); else setShowالطبقات(true); }
+    else if (panel === 'layers') { if (phone) setMobilePanel('layers'); else setShowLayers(true); }
     else if (panel === 'directions') setShowDirections(true);
     else if (panel === 'forecast' || panel === 'workspace') {
       setOiMode('forecast');
@@ -545,9 +545,9 @@ export default function Dashboard() {
   const assistSite = useMemo<Omit<Site, 'forecast'>>(() => ({
     data: () => dataRef.current,
     view: () => assistView.current,
-    layers: () => assistالطبقات.current,
+    layers: () => assistLayers.current,
     flyTo: (lat, lng, zoom) => { oiGlobe.current?.follow(false); setFlyToLocation({ lat, lng, zoom, ts: Date.now() }); },
-    setالطبقات: (on, off) => setActiveالطبقات(prev => {
+    setLayers: (on, off) => setActiveLayers(prev => {
       const next = { ...prev } as Record<string, boolean>;
       for (const k of on) if (k in next) next[k] = true;
       for (const k of off) if (k in next) next[k] = false;
@@ -557,7 +557,7 @@ export default function Dashboard() {
     openPanel: openFromAssist,
     setView: ({ projection, style }) => {
       if (projection) {
-        if (projection === 'mercator') setActiveالطبقات(prev => ({ ...prev, terrain_elevation: false, terrain_3d: false }));
+        if (projection === 'mercator') setActiveLayers(prev => ({ ...prev, terrain_elevation: false, terrain_3d: false }));
         setMapProjection(projection);
       }
       if (style) setMapStyle(style);
@@ -566,7 +566,7 @@ export default function Dashboard() {
       if (window.matchMedia('(max-width: 767px)').matches) return { ok: false, error: 'The full-screen workspace is for larger screens' };
       const run = assistOi.current.state;
       if (view && view !== 'globe' && !run) return { ok: false, error: `The ${view} needs a forecast: start one first` };
-      if (open === false) { setOiTheater(false); return { ok: true, summary: 'إغلاقd the workspace' }; }
+      if (open === false) { setOiTheater(false); return { ok: true, summary: 'Closed the workspace' }; }
       setShowOi(true);
       setOiTheater(true);
       if (view) setOiStage(view);
@@ -619,13 +619,13 @@ export default function Dashboard() {
 
   // Server-side capability flags — gate layers that need credentials.
   const selectFlatMap = () => {
-    setActiveالطبقات(prev => ({ ...prev, terrain_elevation: false, terrain_3d: false }));
+    setActiveLayers(prev => ({ ...prev, terrain_elevation: false, terrain_3d: false }));
     setMapProjection('mercator');
   };
   const terrainPanelProps = {
     terrainStatus,
     on3DModeSelected: () => setMapProjection('globe'),
-    onTerrainإعادة المحاولة: () => setTerrainإعادة المحاولة(value => value + 1),
+    onTerrainRetry: () => setTerrainRetry(value => value + 1),
     onTerrainFocus: () => setTerrainFocus(value => value + 1),
   };
   const [capabilities, setCapabilities] = useState<Record<string, boolean>>({});
@@ -651,7 +651,7 @@ export default function Dashboard() {
   }, [mapReady, splashStage]);
   useEffect(() => {
     if (splashStage !== 3) return;
-    // Long enough to read النظام جاهز before the splash goes.
+    // Long enough to read SYSTEM READY before the splash goes.
     const t = setTimeout(() => setShowSplash(false), 550);
     return () => clearTimeout(t);
   }, [splashStage]);
@@ -670,11 +670,11 @@ export default function Dashboard() {
     if (typeof window === 'undefined') return;
 
     // Restore active layers from URL if present
-    const p = new URLSearchParams(window.location.search);
+    const p = new URLبحثParams(window.location.search);
     const layers = p.get('layers');
     if (layers) {
       const active = layers.split(',');
-      setActiveالطبقات(prev => {
+      setActiveLayers(prev => {
         const next = { ...prev };
         Object.keys(next).forEach(k => { (next as any)[k] = active.includes(k); });
         return next;
@@ -735,28 +735,28 @@ export default function Dashboard() {
     if (typeof window === 'undefined') return;
     if (urlTimer.current) clearTimeout(urlTimer.current);
     urlTimer.current = setTimeout(() => {
-      const active = Object.entries(activeالطبقات).filter(([,v]) => v).map(([k]) => k).join(',');
+      const active = Object.entries(activeLayers).filter(([,v]) => v).map(([k]) => k).join(',');
       // A forecast being watched keeps its place in the address, so the address bar stays shareable.
-      const oiRun = new URLSearchParams(window.location.search).get('oi');
+      const oiRun = new URLبحثParams(window.location.search).get('oi');
       const url = `${window.location.pathname}?layers=${active}${oiRun ? `&oi=${encodeURIComponent(oiRun)}` : ''}`;
       window.history.replaceState(null, '', url);
     }, 1500);
-  }, [activeالطبقات]);
+  }, [activeLayers]);
 
   // OI focus: clear the globe of the other layers while a forecast draws,
   // and put back exactly what was on when focus ends.
   const [oiFocus, setOiFocus] = useState(false);
-  const focusحفظd = useRef<typeof activeالطبقات | null>(null);
+  const focusحفظd = useRef<typeof activeLayers | null>(null);
   const toggleOiFocus = useCallback(() => {
     const saved = focusحفظd.current;
     if (saved) {
       focusحفظd.current = null;
-      setActiveالطبقات(saved);
+      setActiveLayers(saved);
       setOiFocus(false);
       return;
     }
     const KEEP = new Set(['day_night', 'live_clouds', 'terrain_3d', 'terrain_elevation']);
-    setActiveالطبقات(prev => {
+    setActiveLayers(prev => {
       focusحفظd.current = prev;
       return Object.fromEntries(Object.entries(prev).map(([k, v]) => [k, KEEP.has(k) ? v : false])) as typeof prev;
     });
@@ -786,7 +786,7 @@ export default function Dashboard() {
   // Keyboard shortcuts
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (['INPUT', 'TEXTالمساحة'].includes((e.target as Element)?.tagName)) return;
+      if (['INPUT', 'TEXTAREA'].includes((e.target as Element)?.tagName)) return;
       if (e.key === 'f' && !e.ctrlKey) {
         if (document.fullscreenElement) document.exitFullscreen();
         else document.documentElement.requestFullscreen();
@@ -797,14 +797,14 @@ export default function Dashboard() {
         if (window.matchMedia('(max-width: 767px)').matches) setMobilePanel('oi');
         else { setShowOi(true); setShowIntel(false); setShowMarkets(false); setShowAlerts(false); setShowSpaceCam(false); }
       }
-      if (e.key === 'l') setShowالطبقات(p => !p);
+      if (e.key === 'l') setShowLayers(p => !p);
       if (e.key === 'm') setShowMarkets(p => !p);
       if (e.key === 'c') setShowScmPanel(p => !p);
       if (e.key === 'i') setShowIntel(p => !p);
       if (e.key === 's') { setShowDesktopبحث(p => !p); setShowIntel(false); setShowMarkets(false); setShowAlerts(false); setShowSpaceCam(false); }
       if (e.key === 'r' && !e.ctrlKey && !e.metaKey) setFlyToLocation({ lat: 20, lng: 0, zoom: 2.5, ts: Date.now() });
       if (e.key === 'g') {
-        setActiveالطبقات(prev => ({ ...prev, terrain_elevation: false, terrain_3d: false }));
+        setActiveLayers(prev => ({ ...prev, terrain_elevation: false, terrain_3d: false }));
         setMapProjection(p => p === 'globe' ? 'mercator' : 'globe');
       }
       if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
@@ -845,7 +845,7 @@ export default function Dashboard() {
           setLocationLabel(label);
           lastGeocodedPos.current = coords;
         }
-      } catch (e) { console.warn('[OSIRIS] Suppressed error:', e instanceof خطأ ? e.message : e); }
+      } catch (e) { console.warn('[OSIRIS] Suppressed error:', e instanceof Error ? e.message : e); }
     }, 3000); // 3s debounce (was 1.5s)
   }, []);
 
@@ -855,7 +855,7 @@ export default function Dashboard() {
     try {
       const res = await fetch(`/api/region-dossier?lat=${coords.lat}&lng=${coords.lng}`);
       if (res.ok) setRegionDossier(await res.json());
-    } catch (e) { console.warn('[OSIRIS] Suppressed error:', e instanceof خطأ ? e.message : e); } finally { setDossierLoading(false); }
+    } catch (e) { console.warn('[OSIRIS] Suppressed error:', e instanceof Error ? e.message : e); } finally { setDossierLoading(false); }
   }, []);
   // Entity click handler (hoisted from JSX to comply with Rules of Hooks - Fixes #113)
   const handleEntityClick = useCallback((entity: any) => {
@@ -927,7 +927,7 @@ export default function Dashboard() {
     setDrawProgress(null);
   }, []);
 
-  const handleتصديرGeoJSON = useCallback(() => {
+  const handleExportGeoJSON = useCallback(() => {
     downloadFile(
       `osiris-aoi-${new Date().toISOString().slice(0, 10)}.geojson`,
       JSON.stringify(shapesToGeoJSON(drawnPolygons), null, 2),
@@ -955,13 +955,13 @@ export default function Dashboard() {
         const d = transform ? transform(json) : json;
         dataRef.current = { ...dataRef.current, ...d };
         setDataVersion(v => v + 1);
-        setرجوعendStatus('connected');
+        setBackendStatus('connected');
         return true;
       }
       return false;
     } catch (e) {
-      console.warn('[OSIRIS] Suppressed error:', e instanceof خطأ ? e.message : e);
-      setرجوعendStatus('error');
+      console.warn('[OSIRIS] Suppressed error:', e instanceof Error ? e.message : e);
+      setBackendStatus('error');
       return false;
     }
   }, []);
@@ -990,12 +990,12 @@ export default function Dashboard() {
     };
     const marketTimer = setTimeout(() => loadMarkets(), 800);
 
-    // Priority 2: Space الطقس (needed for MarketsPanel)
+    // Priority 2: Space Weather (needed for MarketsPanel)
     const spaceTimer = setTimeout(async () => {
       try {
         const r = await fetch('/api/space-weather');
-        if (r.ok) setSpaceالطقس(await r.json());
-      } catch (e) { console.warn('[OSIRIS] Suppressed error:', e instanceof خطأ ? e.message : e); }
+        if (r.ok) setSpaceWeather(await r.json());
+      } catch (e) { console.warn('[OSIRIS] Suppressed error:', e instanceof Error ? e.message : e); }
     }, 5000);
 
     // Polling — OPTIMIZED intervals to minimize edge requests
@@ -1018,28 +1018,28 @@ export default function Dashboard() {
   // ── LAYER-AWARE DATA LOADING — only fetch when layer is toggled ON ──
   const layerFetchedRef = useRef<Set<string>>(new Set());
   useEffect(() => {
-    if (!activeالطبقات.cctv) return;
+    if (!activeLayers.cctv) return;
     return loadCameraCatalog(cameras => {
       dataRef.current = {
         ...dataRef.current,
         cameras: mergeCameraCatalog(dataRef.current.cameras ?? [], cameras),
       };
       setDataVersion(value => value + 1);
-      setرجوعendStatus('connected');
+      setBackendStatus('connected');
     }, () => console.warn('[OSIRIS] Camera catalogue load failed; bounded retry scheduled'));
-  }, [activeالطبقات.cctv]);
+  }, [activeLayers.cctv]);
 
   useEffect(() => {
 
-    // الرحلات الجوية
-    if (activeالطبقات.flights || activeالطبقات.military || activeالطبقات.jets || activeالطبقات.private) {
+    // Flights
+    if (activeLayers.flights || activeLayers.military || activeLayers.jets || activeLayers.private) {
       if (!layerFetchedRef.current.has('flights')) {
         fetchEndpoint('/api/flights');
         layerFetchedRef.current.add('flights');
       }
     }
-    // الأقمار الصناعية (any satellite sub-layer triggers fetch)
-    const anySatLayer = activeالطبقات.satellites || activeالطبقات.sat_comms || activeالطبقات.sat_military || activeالطبقات.sat_navigation || activeالطبقات.sat_earth || activeالطبقات.sat_science;
+    // Satellites (any satellite sub-layer triggers fetch)
+    const anySatLayer = activeLayers.satellites || activeLayers.sat_comms || activeLayers.sat_military || activeLayers.sat_navigation || activeLayers.sat_earth || activeLayers.sat_science;
     if (anySatLayer && !layerFetchedRef.current.has('satellites')) {
       // Keep the moment the positions were propagated for. The catalogue is
       // fetched once and never re-polled, so by the time an orbit is requested
@@ -1048,49 +1048,49 @@ export default function Dashboard() {
       fetchEndpoint('/api/satellites', d => ({ ...d, satellites_at: d.timestamp }));
       layerFetchedRef.current.add('satellites');
     }
-    // الحرائق
-    if (activeالطبقات.fires && !layerFetchedRef.current.has('fires')) {
+    // Fires
+    if (activeLayers.fires && !layerFetchedRef.current.has('fires')) {
       fetchEndpoint('/api/fires');
       layerFetchedRef.current.add('fires');
     }
     // Maritime
-    if (activeالطبقات.maritime && !layerFetchedRef.current.has('maritime')) {
+    if (activeLayers.maritime && !layerFetchedRef.current.has('maritime')) {
       fetchEndpoint('/api/maritime', d => ({ maritime_ports: d.ports, maritime_chokepoints: d.chokepoints, maritime_ships: d.ships }));
       layerFetchedRef.current.add('maritime');
     }
     // Balloons
-    if (activeالطبقات.balloons && !layerFetchedRef.current.has('balloons')) {
+    if (activeLayers.balloons && !layerFetchedRef.current.has('balloons')) {
       fetchEndpoint('/api/balloons', d => ({ balloons: d.balloons }));
       layerFetchedRef.current.add('balloons');
     }
     // Radiation
-    if (activeالطبقات.radiation && !layerFetchedRef.current.has('radiation')) {
+    if (activeLayers.radiation && !layerFetchedRef.current.has('radiation')) {
       fetchEndpoint('/api/radiation', d => ({ radiation: d.stations }));
       layerFetchedRef.current.add('radiation');
     }
     // Live News
-    if (activeالطبقات.live_news && !layerFetchedRef.current.has('live_news')) {
+    if (activeLayers.live_news && !layerFetchedRef.current.has('live_news')) {
       fetchEndpoint('/api/live-news', d => ({ live_feeds: d.feeds }));
       layerFetchedRef.current.add('live_news');
     }
-    // الطقس
-    if (activeالطبقات.weather && !layerFetchedRef.current.has('weather')) {
+    // Weather
+    if (activeLayers.weather && !layerFetchedRef.current.has('weather')) {
       fetchEndpoint('/api/weather', d => ({ weather_events: d.events }));
       layerFetchedRef.current.add('weather');
     }
     // Infrastructure
-    if (activeالطبقات.infrastructure && !layerFetchedRef.current.has('infrastructure')) {
+    if (activeLayers.infrastructure && !layerFetchedRef.current.has('infrastructure')) {
       fetchEndpoint('/api/infrastructure', d => ({ infrastructure: d.infrastructure }));
       layerFetchedRef.current.add('infrastructure');
     }
     // Global Incidents (GDELT)
-    if (activeالطبقات.global_incidents && !layerFetchedRef.current.has('gdelt')) {
+    if (activeLayers.global_incidents && !layerFetchedRef.current.has('gdelt')) {
       fetchEndpoint('/api/gdelt', d => ({ gdelt: d.events }));
       layerFetchedRef.current.add('gdelt');
     }
 
     // Submarine Cables
-    if (activeالطبقات.cables && !layerFetchedRef.current.has('cables')) {
+    if (activeLayers.cables && !layerFetchedRef.current.has('cables')) {
       (async () => {
         try {
           const ts = Date.now();
@@ -1109,7 +1109,7 @@ export default function Dashboard() {
     // Live Malware (abuse.ch) is pushed, not fetched — see the SSE subscription below.
 
     // Botnet C2 infrastructure (abuse.ch Feodo Tracker blocklist)
-    if ((activeالطبقات as any).cyber_attacks && !layerFetchedRef.current.has('cyber_attacks')) {
+    if ((activeLayers as any).cyber_attacks && !layerFetchedRef.current.has('cyber_attacks')) {
       fetchEndpoint('/api/cyber-attacks', d => ({ cyber_attacks: d.indicators }));
       layerFetchedRef.current.add('cyber_attacks');
     }
@@ -1126,12 +1126,12 @@ export default function Dashboard() {
     };
 
     // GDELT 2.0 geocoded events
-    if ((activeالطبقات as any).gdelt_events) {
+    if ((activeLayers as any).gdelt_events) {
       loadLayerOnce('gdelt_events', '/api/gdelt-events?limit=600', d => ({ gdelt_events: d.events }));
     }
 
     // Cloudflare Radar — one request backs both layers
-    if ((activeالطبقات as any).cf_outages || (activeالطبقات as any).cf_attacks) {
+    if ((activeLayers as any).cf_outages || (activeLayers as any).cf_attacks) {
       loadLayerOnce('cloudflare_radar', '/api/cloudflare-radar', d => ({
         cf_outages: d.outages ?? [],
         cf_attack_origins: d.attack_origins ?? [],
@@ -1139,23 +1139,23 @@ export default function Dashboard() {
     }
 
 
-  }, [activeالطبقات]);
+  }, [activeLayers]);
 
   // ── LAYER-AWARE POLLING — only poll data for active layers ──
   useEffect(() => {
     const intervals: ReturnType<typeof setInterval>[] = [];
     const stopFns: (() => void)[] = [];
-    if (activeالطبقات.flights || activeالطبقات.military || activeالطبقات.jets || activeالطبقات.private) {
+    if (activeLayers.flights || activeLayers.military || activeLayers.jets || activeLayers.private) {
       intervals.push(setInterval(() => fetchEndpoint('/api/flights'), 300000)); // 5 min (was 2 min)
     }
 
-    if (activeالطبقات.balloons) {
+    if (activeLayers.balloons) {
       intervals.push(setInterval(() => fetchEndpoint('/api/balloons', d => ({ balloons: d.balloons })), 300000)); // 5m
     }
-    if (activeالطبقات.radiation) {
+    if (activeLayers.radiation) {
       intervals.push(setInterval(() => fetchEndpoint('/api/radiation', d => ({ radiation: d.stations })), 300000)); // 5m
     }
-    if (activeالطبقات.maritime) {
+    if (activeLayers.maritime) {
       /* Ten seconds is the cadence a moving vessel needs. The other two thirds
          of this payload — 52 ports and 10 chokepoints — are constants in the
          route, and their congestion is derived from those vessels, so with no
@@ -1175,7 +1175,7 @@ export default function Dashboard() {
       vesselTimer = setTimeout(pollMaritime, vesselGapMs());
       stopFns.push(() => { stopped = true; clearTimeout(vesselTimer); });
     }
-    if ((activeالطبقات as any).cyber_attacks) {
+    if ((activeLayers as any).cyber_attacks) {
       intervals.push(setInterval(() => {
         layerFetchedRef.current.delete('cyber_attacks');
         fetchEndpoint('/api/cyber-attacks', d => ({ cyber_attacks: d.indicators }));
@@ -1183,7 +1183,7 @@ export default function Dashboard() {
       }, 300000)); // 5m — a blocklist turns over in hours, not seconds
     }
     return () => { intervals.forEach(clearInterval); stopFns.forEach(stop => stop()); };
-  }, [activeالطبقات, fetchEndpoint]);
+  }, [activeLayers, fetchEndpoint]);
 
   /* ── مباشر MALWARE — pushed over SSE while the layer is on ──
      Detections arrive when URLhaus reports them rather than on a timer, so
@@ -1192,7 +1192,7 @@ export default function Dashboard() {
      progressive geolocation fill, which is why a cold server paints the map in
      batches instead of staying empty and then snapping to full. */
   useEffect(() => {
-    if (!activeالطبقات.malware) return;
+    if (!activeLayers.malware) return;
 
     const source = new EventSource('/api/malware/stream');
     // Keyed by address: a host re-reported with a new payload updates its node
@@ -1249,7 +1249,7 @@ export default function Dashboard() {
     };
 
     return () => source.close();
-  }, [activeالطبقات.malware]);
+  }, [activeLayers.malware]);
 
   // CCTV: loaded once on layer toggle via layerFetchedRef (no viewport polling)
 
@@ -1258,9 +1258,9 @@ export default function Dashboard() {
   // ── OSIRIS SDK — Intelligence Fusion Layer ──
   // Produces node coordinates for the SDK network mesh visualization.
   // Does NOT duplicate existing layer visuals — SDK layer is LINES ONLY.
-  // الكاميرات are excluded — they have their own dedicated layer.
+  // Cameras are excluded — they have their own dedicated layer.
   useEffect(() => {
-    const anyActive = activeالطبقات.sdk_sea || activeالطبقات.sdk_air || activeالطبقات.sdk_naval;
+    const anyActive = activeLayers.sdk_sea || activeLayers.sdk_air || activeLayers.sdk_naval;
     if (!anyActive) {
       dataRef.current = { ...dataRef.current, sdk_entities: [] };
       return;
@@ -1269,16 +1269,16 @@ export default function Dashboard() {
     const sdkEntities: any[] = [];
 
     // Air domain (nodes only — no visual duplication)
-    const allالرحلات الجوية = [
+    const allFlights = [
       ...(data.commercial_flights || []),
       ...(data.private_flights || []),
       ...(data.private_jets || []),
       ...(data.military_flights || []),
     ];
     // Sample flights to keep it clean (every Nth)
-    const flightStep = Math.max(1, Math.floor(allالرحلات الجوية.length / 60));
-    for (let i = 0; i < allالرحلات الجوية.length; i += flightStep) {
-      const f = allالرحلات الجوية[i];
+    const flightStep = Math.max(1, Math.floor(allFlights.length / 60));
+    for (let i = 0; i < allFlights.length; i += flightStep) {
+      const f = allFlights[i];
       if (!f.lat || !f.lng) continue;
       sdkEntities.push({
         type: 'Feature', geometry: { type: 'Point', coordinates: [f.lng, f.lat] },
@@ -1298,7 +1298,7 @@ export default function Dashboard() {
       });
     }
 
-    // Events — الزلازل
+    // Events — Earthquakes
     if (data.earthquakes?.length) {
       for (const eq of data.earthquakes) {
         if (!eq.lat || !eq.lng) continue;
@@ -1332,9 +1332,9 @@ export default function Dashboard() {
     }
 
     dataRef.current = { ...dataRef.current, sdk_entities: sdkEntities };
-  }, [dataVersion, activeالطبقات.sdk_sea, activeالطبقات.sdk_air, activeالطبقات.sdk_naval]);
+  }, [dataVersion, activeLayers.sdk_sea, activeLayers.sdk_air, activeLayers.sdk_naval]);
 
-  const totalالرحلات الجوية = useMemo(() => (
+  const totalFlights = useMemo(() => (
     (data.commercial_flights?.length||0)+(data.private_flights?.length||0)+(data.private_jets?.length||0)+(data.military_flights?.length||0)
   ), [data.commercial_flights, data.private_flights, data.private_jets, data.military_flights]);
 
@@ -1535,15 +1535,15 @@ export default function Dashboard() {
 
 
       {/* ── MAP ── */}
-      <خطأBoundary name="Map">
+      <ErrorBoundary name="Map">
         <OsirisMap 
           key={osirisTheme}
           data={data} 
-          activeالطبقات={activeالطبقات} 
+          activeLayers={activeLayers} 
           projection={mapProjection === 'mercator' ? 'mercator' : 'globe'}
-          terrainEnabled={activeالطبقات.terrain_elevation && mapProjection === 'globe'}
+          terrainEnabled={activeLayers.terrain_elevation && mapProjection === 'globe'}
           terrainFocus={terrainFocus}
-          terrainإعادة المحاولة={terrainإعادة المحاولة}
+          terrainRetry={terrainRetry}
           onTerrainStatusChange={setTerrainStatus}
           mapStyle={mapStyle === 'satellite' ? 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}' : 'dark'} 
           onEntityClick={handleEntityClick} 
@@ -1557,7 +1557,7 @@ export default function Dashboard() {
           scanTargets={scanTargets}
           demoMode={demoMode}
           theme={osirisTheme}
-          arcgisالطبقات={arcgisالطبقات.filter(l => l.visible).map(l => ({ id: l.id, title: l.title, geojson: l.geojson, color: l.color, opacity: l.opacity }))}
+          arcgisLayers={arcgisLayers.filter(l => l.visible).map(l => ({ id: l.id, title: l.title, geojson: l.geojson, color: l.color, opacity: l.opacity }))}
           onMapCenter={setMapCenter}
           route={activeRoute}
           userLocation={
@@ -1571,7 +1571,7 @@ export default function Dashboard() {
           drawMode={drawMode}
           onDrawProgress={setDrawProgress}
           drawCommand={drawCommand}
-          onDrawإلغاء={() => { setDrawMode(null); setDrawProgress(null); }}
+          onDrawCancel={() => { setDrawMode(null); setDrawProgress(null); }}
           onDrawComplete={handleDrawComplete}
           drawnPolygons={drawnPolygons}
           aircraftAirports={aircraftAirports}
@@ -1581,7 +1581,7 @@ export default function Dashboard() {
           onOiFollow={setOiFollowing}
           oiHighlight={oiHighlight}
         />
-      </خطأBoundary>
+      </ErrorBoundary>
 
       {/* ── OI: what the pointer is over on the globe ── */}
       {oiHover && !isMobile && (
@@ -1652,7 +1652,7 @@ export default function Dashboard() {
                 setFollowUser(true);
               }}
               onLocate={(lat, lng, zoom) => setFlyToLocation({ lat, lng, zoom, ts: Date.now() })}
-              onإغلاق={() => { setShowDirections(false); setActiveRoute(null); setRouteTarget(null); }}
+              onClose={() => { setShowDirections(false); setActiveRoute(null); setRouteTarget(null); }}
             />
           </motion.div>
         )}
@@ -1663,7 +1663,7 @@ export default function Dashboard() {
         {showDesktopبحث && !isMobile && (
           <div data-hud className="absolute top-[92px] left-1/2 -translate-x-1/2 z-[450] w-[min(560px,calc(100vw-180px))] pointer-events-auto">
             <motion.div initial={{ opacity: 0, y: -8, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -8, scale: 0.98 }} transition={{ duration: 0.16 }}>
-              <بحثBar center={mapCenter} onإغلاق={() => setShowDesktopبحث(false)} onDirections={openDirectionsTo}
+              <SearchBar center={mapCenter} onClose={() => setShowDesktopSearch(false)} onDirections={openDirectionsTo}
                 onLocate={(lat, lng, zoom) => setFlyToLocation({ lat, lng, zoom, ts: Date.now() })} />
             </motion.div>
           </div>
@@ -1672,7 +1672,7 @@ export default function Dashboard() {
 
 
       {/* ── FLIGHT WATCH ── */}
-      {watchedالرحلات الجوية.length > 0 && (
+      {watchedFlights.length > 0 && (
         <motion.div
           initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }}
           className="absolute top-3 z-[380] w-[min(92vw,290px)] pointer-events-auto
@@ -1680,7 +1680,7 @@ export default function Dashboard() {
           style={{ left: isMobile ? '12px' : '120px' }}
         >
           <FlightWatchPanel
-            watched={watchedالرحلات الجوية}
+            watched={watchedFlights}
             telemetry={watchTelemetry}
             onRemove={removeWatched}
             onLocate={(lat, lng) => setFlyToLocation({ lat, lng, zoom: 8, ts: Date.now() })}
@@ -1745,7 +1745,7 @@ export default function Dashboard() {
         <span className="flex items-center gap-1" title="رجوعend connection status">الحالة: <span className={backendStatus === 'connected' ? 'text-[var(--alert-green)]' : 'text-[var(--alert-red)]'}>{backendStatus === 'connected' ? 'مباشر' : backendStatus.toUpperCase()}</span></span>
 
         <span className="hidden lg:inline-flex items-center gap-1" title="Number of active data layers">
-          <span className="text-[var(--cyan-primary)] font-bold">{Object.values(activeالطبقات).filter(Boolean).length}</span>
+          <span className="text-[var(--cyan-primary)] font-bold">{Object.values(activeLayers).filter(Boolean).length}</span>
           <span className="opacity-60">الطبقات</span>
         </span>
 
@@ -1754,7 +1754,7 @@ export default function Dashboard() {
           <span className="opacity-60">الكيانات</span>
         </span>
 
-        {spaceالطقس && <span className="hidden lg:inline" title={spaceالطقس.kp_index == null ? 'Geomagnetic Storm Index — no reading from NOAA' : `Geomagnetic Storm Index — Kp${spaceالطقس.kp_index}`}>النشاط الشمسي: <span style={{ color: spaceالطقس.storm_color, fontWeight: 700 }}>{spaceالطقس.kp_index == null ? 'N/A' : `Kp${spaceالطقس.kp_index}`}</span></span>}
+        {spaceWeather && <span className="hidden lg:inline" title={spaceWeather.kp_index == null ? 'Geomagnetic Storm Index — no reading from NOAA' : `Geomagnetic Storm Index — Kp${spaceWeather.kp_index}`}>النشاط الشمسي: <span style={{ color: spaceWeather.storm_color, fontWeight: 700 }}>{spaceWeather.kp_index == null ? 'N/A' : `Kp${spaceWeather.kp_index}`}</span></span>}
 
         <span className="text-[11px] font-bold tracking-[0.2em] text-[var(--text-muted)] opacity-50">{APP_VERSION}</span>
         
@@ -1778,7 +1778,7 @@ export default function Dashboard() {
 
 
       {/* ── NEW SIDEBAR (Root Level) ── */}
-      {showالطبقات && !isMobile && <div data-hud><LayerPanel {...terrainPanelProps} revealed={revealed} data={data} activeالطبقات={activeالطبقات} setActiveالطبقات={setActiveالطبقات} theme={osirisTheme} setTheme={setOsirisTheme} capabilities={capabilities} /></div>}
+      {showLayers && !isMobile && <div data-hud><LayerPanel {...terrainPanelProps} revealed={revealed} data={data} activeLayers={activeLayers} setActiveLayers={setActiveLayers} theme={osirisTheme} setTheme={setOsirisTheme} capabilities={capabilities} /></div>}
 
 
 
@@ -1844,7 +1844,7 @@ export default function Dashboard() {
           <AnimatePresence>
             {showMarkets && (
               <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="absolute right-12 w-[380px]" style={{ top: marketsTop }}>
-                <MarketsPanel data={data} spaceالطقس={spaceالطقس} />
+                <MarketsPanel data={data} spaceWeather={spaceWeather} />
               </motion.div>
             )}
           </AnimatePresence>
@@ -1864,7 +1864,7 @@ export default function Dashboard() {
           <AnimatePresence>
             {showAlerts && (
               <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="absolute right-12 top-1/2 -translate-y-1/2 w-80">
-                <LiveAlerts data={data} onLocate={(lat, lng, options) => setFlyToLocation({ lat, lng, zoom: options?.zoom, alertId: options?.alertId, ts: Date.now() })} pinsOn={activeالطبقات.alert_pins} onTogglePins={on => setActiveالطبقات(prev => ({ ...prev, alert_pins: on }))} onPinnedChange={setPinnedAlertIds} onWatchFeed={(url, name) => { setLiveFeedUrl(url); setLiveFeedName(name); }} onتحديث={() => fetchEndpoint('/api/news', newsTransform)} />
+                <LiveAlerts data={data} onLocate={(lat, lng, options) => setFlyToLocation({ lat, lng, zoom: options?.zoom, alertId: options?.alertId, ts: Date.now() })} pinsOn={activeLayers.alert_pins} onTogglePins={on => setActiveLayers(prev => ({ ...prev, alert_pins: on }))} onPinnedChange={setPinnedAlertIds} onWatchFeed={(url, name) => { setLiveFeedUrl(url); setLiveFeedName(name); }} onRefresh={() => fetchEndpoint('/api/news', newsTransform)} />
               </motion.div>
             )}
           </AnimatePresence>
@@ -1903,7 +1903,7 @@ export default function Dashboard() {
           <AnimatePresence>
             {showOi && (
               <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="absolute right-[60px] w-[412px]" style={{ top: oiTop }}>
-                <OiPanel oi={oi} selected={oiSelected} onSelect={setOiSelected} onإغلاق={() => { setShowOi(false); setOiTheater(false); setOiAutoFocus(false); }}
+                <OiPanel oi={oi} selected={oiSelected} onSelect={setOiSelected} onClose={() => { setShowOi(false); setOiTheater(false); setOiAutoFocus(false); }}
                   focus={oiFocus} onFocus={toggleOiFocus} onLocate={handleOiLocate}
                   theater={oiTheater} onTheater={setOiTheater} following={oiFollowing} onFollow={followOi}
                   assist={assist} mode={oiMode} onMode={setOiMode} speakOn={oiVoice} onSpeak={setOiVoicePersist} autoFocus={oiAutoFocus}
@@ -1914,7 +1914,7 @@ export default function Dashboard() {
         </div>
 
         <div className="relative group">
-          <button onClick={() => { setShowDirections(!showDirections); setRouteTarget(null); if (showDirections) { setActiveRoute(null); } setShowDesktopبحث(false); setShowIntel(false); setShowMarkets(false); setShowAlerts(false); setShowSpaceCam(false); setShowDrawing(false); }} className={`relative w-8 h-8 rounded-full flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-white/50 ${showDirections ? 'bg-[var(--gold-primary)]/20' : 'hover:bg-white/10'}`} title="Directions — turn-by-turn routing" aria-label="Directions" aria-expanded={showDirections}>
+          <button onClick={() => { setShowDirections(!showDirections); setRouteTarget(null); if (showDirections) { setActiveRoute(null); } setShowDesktopSearch(false); setShowIntel(false); setShowMarkets(false); setShowAlerts(false); setShowSpaceCam(false); setShowDrawing(false); }} className={`relative w-8 h-8 rounded-full flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-white/50 ${showDirections ? 'bg-[var(--gold-primary)]/20' : 'hover:bg-white/10'}`} title="Directions — turn-by-turn routing" aria-label="Directions" aria-expanded={showDirections}>
             <Route className={`w-4 h-4 ${showDirections ? 'text-[var(--gold-primary)]' : 'text-white/60'}`} />
             {showDirections && (
               <span
@@ -1927,8 +1927,8 @@ export default function Dashboard() {
         </div>
 
         <div className="relative group">
-          <button data-search-toggle onClick={() => { setShowDesktopبحث(!showDesktopبحث); setShowIntel(false); setShowMarkets(false); setShowAlerts(false); setShowSpaceCam(false); setShowDrawing(false); }} className={`relative w-8 h-8 rounded-full flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-white/50 ${showDesktopبحث ? 'bg-[var(--gold-primary)]/20' : 'hover:bg-white/10'}`} title="بحث — find locations, cities, coordinates" aria-label="بحث" aria-expanded={showDesktopبحث}>
-            <بحث className={`w-4 h-4 ${showDesktopبحث ? 'text-[var(--gold-primary)]' : 'text-white/60'}`} />
+          <button data-search-toggle onClick={() => { setShowDesktopSearch(!showDesktopSearch); setShowIntel(false); setShowMarkets(false); setShowAlerts(false); setShowSpaceCam(false); setShowDrawing(false); }} className={`relative w-8 h-8 rounded-full flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-white/50 ${showDesktopSearch ? 'bg-[var(--gold-primary)]/20' : 'hover:bg-white/10'}`} title="بحث — find locations, cities, coordinates" aria-label="بحث" aria-expanded={showDesktopSearch}>
+            <Search className={`w-4 h-4 ${showDesktopSearch ? 'text-[var(--gold-primary)]' : 'text-white/60'}`} />
             {showDesktopبحث && (
               <span
                 aria-hidden="true"
@@ -1952,7 +1952,7 @@ export default function Dashboard() {
                 className="absolute -right-1 top-1/2 -translate-y-1/2 h-4 w-[2px] rounded-full bg-current text-[var(--gold-primary)]"
               />
             )}
-            {arcgisالطبقات.length > 0 && <span className="absolute -top-0.5 -right-0.5 min-w-[14px] h-[14px] flex items-center justify-center rounded-full bg-[var(--gold-primary)] text-black text-[9px] font-mono font-bold leading-none px-0.5">{arcgisالطبقات.length}</span>}
+            {arcgisLayers.length > 0 && <span className="absolute -top-0.5 -right-0.5 min-w-[14px] h-[14px] flex items-center justify-center rounded-full bg-[var(--gold-primary)] text-black text-[9px] font-mono font-bold leading-none px-0.5">{arcgisLayers.length}</span>}
           </button>
           <span className="absolute right-11 top-1/2 -translate-y-1/2 px-2 py-1 text-[9px] font-mono tracking-wider text-white/80 bg-black/80 backdrop-blur-sm rounded whitespace-nowrap opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity pointer-events-none">خرائط ArcGIS</span>
           <AnimatePresence>
@@ -1960,10 +1960,10 @@ export default function Dashboard() {
               <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="absolute right-12 top-1/2 -translate-y-1/2 w-[340px]">
                 <div className="glass-panel p-3 max-h-[70vh] overflow-y-auto styled-scrollbar">
                   <ArcGISPanel
-                    onImportLayer={(layer) => setArcgisالطبقات(prev => [...prev.filter(l => l.id !== layer.id), { ...layer, color: layer.color || '#D4AF37', visible: true, opacity: layer.opacity ?? 0.8 }])}
-                    onRemoveLayer={(id) => setArcgisالطبقات(prev => prev.filter(l => l.id !== id))}
-                    onUpdateLayer={(id, updates) => setArcgisالطبقات(prev => prev.map(l => l.id === id ? { ...l, ...updates } : l))}
-                    importedالطبقات={arcgisالطبقات}
+                    onImportLayer={(layer) => setArcgisLayers(prev => [...prev.filter(l => l.id !== layer.id), { ...layer, color: layer.color || '#D4AF37', visible: true, opacity: layer.opacity ?? 0.8 }])}
+                    onRemoveLayer={(id) => setArcgisLayers(prev => prev.filter(l => l.id !== id))}
+                    onUpdateLayer={(id, updates) => setArcgisLayers(prev => prev.map(l => l.id === id ? { ...l, ...updates } : l))}
+                    importedLayers={arcgisLayers}
                     mapBounds={mapCenter?.bounds || null}
                   />
                 </div>
@@ -1978,7 +1978,7 @@ export default function Dashboard() {
 
         {/* ── WORLD التحكم عن بُعد ── */}
         <div className="relative group">
-          <button onClick={() => { setShowRemote(!showRemote); setShowArcGIS(false); setShowIntel(false); setShowMarkets(false); setShowAlerts(false); setShowSpaceCam(false); setShowDrawing(false); setShowDesktopبحث(false); }} className={`relative w-8 h-8 rounded-full flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-white/50 ${showRemote ? 'bg-[var(--cyan-primary)]/20' : 'hover:bg-white/10'}`} title="World Remote — control nearby Bluetooth devices (TVs, speakers, AC)" aria-label="World Remote" aria-expanded={showRemote}>
+          <button onClick={() => { setShowRemote(!showRemote); setShowArcGIS(false); setShowIntel(false); setShowMarkets(false); setShowAlerts(false); setShowSpaceCam(false); setShowDrawing(false); setShowDesktopSearch(false); }} className={`relative w-8 h-8 rounded-full flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-white/50 ${showRemote ? 'bg-[var(--cyan-primary)]/20' : 'hover:bg-white/10'}`} title="World Remote — control nearby Bluetooth devices (TVs, speakers, AC)" aria-label="World Remote" aria-expanded={showRemote}>
             <Bluetooth className={`w-4 h-4 ${showRemote ? 'text-[var(--cyan-primary)]' : 'text-white/60'}`} />
             {showRemote && (
               <span
@@ -1991,7 +1991,7 @@ export default function Dashboard() {
           <AnimatePresence>
             {showRemote && (
               <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} className="absolute right-12 top-1/2 -translate-y-1/2 w-80">
-                <WorldRemote onإغلاق={() => setShowRemote(false)} onPlaceOnMap={(devs) => {
+                <WorldRemote onClose={() => setShowRemote(false)} onPlaceOnMap={(devs) => {
                   setScanTargets(prev => {
                     const ids = new Set(prev.map((t: any) => t.id));
                     const next = [...prev];
@@ -2104,12 +2104,12 @@ export default function Dashboard() {
           <div className="mobile-nav">
             <div className="glass-panel mobile-nav-inner">
               {[
-                { id: 'layers' as const, icon: الطبقات, label: 'الطبقات' },
+                { id: 'layers' as const, icon: Layers, label: 'الطبقات' },
                 { id: 'markets' as const, icon: BarChart3, label: 'الأسواق' },
                 { id: 'intel' as const, icon: Newspaper, label: 'INTEL' },
                 { id: 'recon' as const, icon: Radar, label: 'الاستطلاع' },
                 { id: 'oi' as const, icon: Orbit, label: 'OI' },
-                { id: 'search' as const, icon: بحث, label: 'بحث' },
+                { id: 'search' as const, icon: Search, label: 'بحث' },
                 // Routing was reachable only from the desktop tool rail, so a
                 // phone could not open it at all. It sits next to بحث
                 // because both answer "take me somewhere".
@@ -2165,7 +2165,7 @@ export default function Dashboard() {
                 <div className="px-3 pb-3">
                   <div className="flex items-center justify-between mb-2">
                     <span className="hud-text text-[10px] text-[var(--text-primary)]">
-                      {mobilePanel === 'layers' ? 'الطبقات & STATS' : mobilePanel === 'markets' ? 'الأسواق & INTEL' : mobilePanel === 'intel' ? 'موجز الاستخبارات' : mobilePanel === 'recon' ? 'OSIRIS الاستطلاع' : mobilePanel === 'remote' ? 'WORLD التحكم عن بُعد' : mobilePanel === 'oi' ? 'OSIRIS OI' : 'بحث'}
+                      {mobilePanel === 'layers' ? 'الطبقات & STATS' : mobilePanel === 'markets' ? 'الأسواق & INTEL' : mobilePanel === 'intel' ? 'INTEL FEED' : mobilePanel === 'recon' ? 'OSIRIS الاستطلاع' : mobilePanel === 'remote' ? 'WORLD التحكم عن بُعد' : mobilePanel === 'oi' ? 'OSIRIS OI' : 'بحث'}
                     </span>
                     <button onClick={() => setMobilePanel(null)} className="text-[var(--text-muted)] p-1"><X className="w-4 h-4" /></button>
                   </div>
@@ -2173,20 +2173,20 @@ export default function Dashboard() {
                     <>
                       <div className="glass-panel-sm p-2 mb-2">
                         <div className="grid grid-cols-5 gap-1 text-center">
-                          <div><div className="hud-label" style={{fontSize:'9px'}}>طيران</div><div className="hud-value text-[10px]">{totalالرحلات الجوية.toLocaleString()}</div></div>
+                          <div><div className="hud-label" style={{fontSize:'9px'}}>طيران</div><div className="hud-value text-[10px]">{totalFlights.toLocaleString()}</div></div>
                           <div><div className="hud-label" style={{fontSize:'9px'}}>أقمار</div><div className="hud-value text-[10px]">{(data.satellites?.length||0)}</div></div>
                           <div><div className="hud-label" style={{fontSize:'9px'}}>كاميرات</div><div className="hud-value text-[10px]">{(data.cameras?.length||0)}</div></div>
                           <div><div className="hud-label" style={{fontSize:'9px'}}>الطقس</div><div className="hud-value text-[10px]" style={{color:'var(--accent-weather)'}}>{(data.weather_events?.length||0)}</div></div>
                           <div><div className="hud-label" style={{fontSize:'9px'}}>نووي</div><div className="hud-value text-[10px]" style={{color:'var(--accent-nuclear)'}}>{(data.infrastructure?.length||0)}</div></div>
                         </div>
                       </div>
-                      <LayerPanel {...terrainPanelProps} data={data} activeالطبقات={activeالطبقات} setActiveالطبقات={setActiveالطبقات} isMobile={true} theme={osirisTheme} setTheme={setOsirisTheme} capabilities={capabilities} />
+                      <LayerPanel {...terrainPanelProps} data={data} activeLayers={activeLayers} setActiveLayers={setActiveLayers} isMobile={true} theme={osirisTheme} setTheme={setOsirisTheme} capabilities={capabilities} />
                       <div className="mt-8">
                         <ViewPresets onNavigate={(lat, lng, zoom) => { setFlyToLocation({ lat, lng, zoom, ts: Date.now() }); setMobilePanel(null); }} />
                       </div>
                     </>
                   )}
-                  {mobilePanel === 'markets' && <MarketsPanel data={data} spaceالطقس={spaceالطقس} />}
+                  {mobilePanel === 'markets' && <MarketsPanel data={data} spaceWeather={spaceWeather} />}
                   {mobilePanel === 'oi' && (
                     <OiPanel oi={oi} selected={oiSelected} onSelect={setOiSelected} embedded focus={oiFocus} onFocus={toggleOiFocus}
                       onLocate={handleOiLocate} following={oiFollowing} onFollow={followOi}
@@ -2196,17 +2196,17 @@ export default function Dashboard() {
                   {mobilePanel === 'intel' && <IntelFeed data={data} onLocate={(lat, lng) => { setFlyToLocation({ lat, lng, ts: Date.now() }); setMobilePanel(null); }} />}
                   {mobilePanel === 'search' && (
                     <div className="space-y-2">
-                      <بحثBar embedded center={mapCenter} onDirections={openDirectionsTo} onLocate={(lat, lng, zoom) => { setFlyToLocation({ lat, lng, zoom, ts: Date.now() }); setMobilePanel(null); }} />
-                      <مشاركةPanel mapView={mapView} activeالطبقات={activeالطبقات} mouseCoords={null} />
+                      <SearchBar embedded center={mapCenter} onDirections={openDirectionsTo} onLocate={(lat, lng, zoom) => { setFlyToLocation({ lat, lng, zoom, ts: Date.now() }); setMobilePanel(null); }} />
+                      <SharePanel mapView={mapView} activeLayers={activeLayers} mouseCoords={null} />
                     </div>
                   )}
                   {mobilePanel === 'recon' && (
                     <div className="space-y-2">
-                      <OsintPanel isOpen={true} onإغلاق={() => setMobilePanel(null)} isMobile={true} onSweepVisualize={setSweepData} />
+                      <OsintPanel isOpen={true} onClose={() => setMobilePanel(null)} isMobile={true} onSweepVisualize={setSweepData} />
                     </div>
                   )}
                   {mobilePanel === 'remote' && (
-                    <WorldRemote onإغلاق={() => setMobilePanel(null)} onPlaceOnMap={(devs) => {
+                    <WorldRemote onClose={() => setMobilePanel(null)} onPlaceOnMap={(devs) => {
                       setScanTargets(prev => {
                         const ids = new Set(prev.map((t: any) => t.id));
                         const next = [...prev];
@@ -2282,7 +2282,7 @@ export default function Dashboard() {
       {/* ── Camera Viewer ── */}
       <CameraViewer
         camera={activeCamera}
-        onإغلاق={() => setActiveCamera(null)}
+        onClose={() => setActiveCamera(null)}
         onLocate={(lat, lng) => setFlyToLocation({ lat, lng, ts: Date.now() })}
         besideOi={showOi && !oiTheater}
       />
@@ -2295,7 +2295,7 @@ export default function Dashboard() {
           progress={drawProgress}
           onUndo={() => sendDraw('undo')}
           onFinish={() => sendDraw('finish')}
-          onإلغاء={() => { sendDraw('cancel'); setDrawMode(null); setDrawProgress(null); }}
+          onCancel={() => { sendDraw('cancel'); setDrawMode(null); setDrawProgress(null); }}
         />
       )}
 
@@ -2307,8 +2307,8 @@ export default function Dashboard() {
             progress={drawProgress}
             polygons={drawnPolygons}
             onDeletePolygon={(id) => setDrawnPolygons(p => p.filter(x => x.id !== id))}
-            onمسحAll={() => { setDrawnPolygons([]); setSelectedPolygon(null); }}
-            onتصديرGeoJSON={handleتصديرGeoJSON}
+            onClearAll={() => { setDrawnPolygons([]); setSelectedPolygon(null); }}
+            onExportGeoJSON={handleExportGeoJSON}
             selectedPolygon={selectedPolygon}
             onSelectPolygon={setSelectedPolygon}
             onRenamePolygon={(id, name) => setDrawnPolygons(p => p.map(x => x.id === id ? { ...x, name } : x))}
