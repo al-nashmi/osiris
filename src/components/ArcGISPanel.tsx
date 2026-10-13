@@ -4,16 +4,16 @@ import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Database,
-  Download,
+  تنزيل,
   X,
-  Search,
+  بحث,
   Loader2,
   CheckCircle,
   AlertTriangle,
   Eye,
   EyeOff,
   MapPin,
-  Share2,
+  مشاركة2,
   Hexagon,
   Globe,
   Radio,
@@ -25,7 +25,7 @@ import {
 } from 'lucide-react';
 
 /* ═══════════════════════════════════════════════════════════════
-   ArcGIS Search & Import Panel — OSIRIS OSINT Dashboard
+   ArcGIS بحث & Import Panel — OSIRIS OSINT Dashboard
    Premium dark-ops glassmorphism aesthetic
    ═══════════════════════════════════════════════════════════════ */
 
@@ -35,7 +35,7 @@ interface ArcGISResult {
   url: string;
   snippet: string;
   owner: string;
-  numViews: number;
+  numعرضs: number;
   extent: number[][];
   tags: string[];
 }
@@ -83,7 +83,7 @@ const LAYER_COLORS = [
 function getGeometryIcon(title: string, tags: string[] = []) {
   const t = (title + ' ' + tags.join(' ')).toLowerCase();
   if (t.includes('point') || t.includes('location') || t.includes('shelter')) return <MapPin className="w-3 h-3" />;
-  if (t.includes('line') || t.includes('route') || t.includes('pipe') || t.includes('grid')) return <Share2 className="w-3 h-3" />;
+  if (t.includes('line') || t.includes('route') || t.includes('pipe') || t.includes('grid')) return <مشاركة2 className="w-3 h-3" />;
   if (t.includes('poly') || t.includes('boundary') || t.includes('zone') || t.includes('area')) return <Hexagon className="w-3 h-3" />;
   return <Database className="w-3 h-3" />;
 }
@@ -97,9 +97,9 @@ export default function ArcGISPanel({
 }: ArcGISPanelProps) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<ArcGISResult[]>([]);
-  const [searching, setSearching] = useState(false);
+  const [searching, setبحثing] = useState(false);
   const [importingId, setImportingId] = useState<string | null>(null);
-  const [error, setError] = useState('');
+  const [error, setخطأ] = useState('');
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [featureCounts, setFeatureCounts] = useState<Record<string, number>>({});
   const [expandedLayerId, setExpandedLayerId] = useState<string | null>(null);
@@ -113,30 +113,30 @@ export default function ArcGISPanel({
     ? `${mapBounds.west},${mapBounds.south},${mapBounds.east},${mapBounds.north}`
     : '';
 
-  const runSearch = useCallback(
+  const runبحث = useCallback(
     async (searchQuery: string) => {
       if (!searchQuery.trim()) return;
-      setSearching(true);
-      setError('');
+      setبحثing(true);
+      setخطأ('');
       setResults([]);
 
       try {
-        const params = new URLSearchParams({ q: searchQuery });
+        const params = new URLبحثParams({ q: searchQuery });
         if (bboxParam) params.set('bbox', bboxParam);
 
         const res = await fetch(`/api/arcgis?${params.toString()}`);
         if (!res.ok) {
           const err = await res.json().catch(() => ({}));
-          throw new Error(err.error || `Search failed (${res.status})`);
+          throw new خطأ(err.error || `بحث failed (${res.status})`);
         }
 
         const data = await res.json();
         setResults(data.results || []);
         setResultsFor(searchQuery);
       } catch (err: any) {
-        setError(err.message || 'Search failed');
+        setخطأ(err.message || 'بحث failed');
       } finally {
-        setSearching(false);
+        setبحثing(false);
       }
     },
     [bboxParam],
@@ -146,16 +146,16 @@ export default function ArcGISPanel({
     async (result: ArcGISResult) => {
       if (!result.url) return;
       setImportingId(result.id);
-      setError('');
+      setخطأ('');
 
       try {
-        const params = new URLSearchParams({ service: result.url });
+        const params = new URLبحثParams({ service: result.url });
         if (bboxParam) params.set('bbox', bboxParam);
 
         const res = await fetch(`/api/arcgis?${params.toString()}`);
         if (!res.ok) {
           const err = await res.json().catch(() => ({}));
-          throw new Error(err.error || `Import failed (${res.status})`);
+          throw new خطأ(err.error || `Import failed (${res.status})`);
         }
 
         const geojson = await res.json();
@@ -169,7 +169,7 @@ export default function ArcGISPanel({
         const availableColor = LAYER_COLORS.find(c => !usedColors.includes(c)) || LAYER_COLORS[importedLayers.length % LAYER_COLORS.length];
         onImportLayer({ id: result.id, title: result.title, url: result.url, geojson, color: availableColor, opacity: 0.8 });
       } catch (err: any) {
-        setError(err.message || 'Import failed');
+        setخطأ(err.message || 'Import failed');
       } finally {
         setImportingId(null);
       }
@@ -182,7 +182,7 @@ export default function ArcGISPanel({
     setActiveCategory(isActive ? null : cat.label);
     if (!isActive) {
       setQuery(cat.query);
-      runSearch(cat.query);
+      runبحث(cat.query);
     }
   };
 
@@ -377,9 +377,9 @@ export default function ArcGISPanel({
         </div>
       )}
 
-      {/* ── Search Bar ────────────────────────────────────────── */}
+      {/* ── بحث Bar ────────────────────────────────────────── */}
       <div className="relative shrink-0">
-        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--text-muted)]" />
+        <بحث className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--text-muted)]" />
         <input
           type="text"
           value={query}
@@ -387,12 +387,12 @@ export default function ArcGISPanel({
             setQuery(e.target.value);
             setActiveCategory(null);
           }}
-          onKeyDown={(e) => e.key === 'Enter' && runSearch(query)}
-          placeholder="Search ArcGIS layers..."
+          onKeyDown={(e) => e.key === 'Enter' && runبحث(query)}
+          placeholder="بحث ArcGIS layers..."
           className="w-full bg-black/60 border border-white/10 rounded-lg pl-8 pr-16 py-2.5 text-[10px] font-mono text-white placeholder:text-[var(--text-muted)]/40 focus:outline-none focus:border-[#D4AF37]/50 transition-colors"
         />
         <button
-          onClick={() => runSearch(query)}
+          onClick={() => runبحث(query)}
           disabled={searching || !query.trim()}
           className="absolute right-1 top-1/2 -translate-y-1/2 px-3 py-1.5 rounded-md text-[10px] font-mono font-bold tracking-widest uppercase disabled:opacity-30 transition-all bg-[#D4AF37]/10 border border-[#D4AF37]/30 text-[#D4AF37] hover:bg-[#D4AF37]/20"
         >
@@ -417,7 +417,7 @@ export default function ArcGISPanel({
         ))}
       </div>
 
-      {/* ── Error ─────────────────────────────────────────────── */}
+      {/* ── خطأ ─────────────────────────────────────────────── */}
       <AnimatePresence>
         {error && (
           <motion.div
@@ -428,14 +428,14 @@ export default function ArcGISPanel({
           >
             <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0" />
             <span className="truncate flex-1">{error}</span>
-            <button onClick={() => setError('')} className="p-1 rounded hover:bg-red-500/20 opacity-80 hover:opacity-100">
+            <button onClick={() => setخطأ('')} className="p-1 rounded hover:bg-red-500/20 opacity-80 hover:opacity-100">
               <X className="w-3 h-3" />
             </button>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* ── Search Results ────────────────────────────────────── */}
+      {/* ── بحث Results ────────────────────────────────────── */}
       <div className="flex-1 overflow-y-auto styled-scrollbar -mx-1 px-1 space-y-1.5">
         {/* Loading skeleton */}
         {searching && (
@@ -506,7 +506,7 @@ export default function ArcGISPanel({
                           </span>
                           <span className="text-[9px] font-mono text-[#D4AF37]/70 tabular-nums flex items-center gap-0.5">
                             <Eye className="w-2.5 h-2.5" />
-                            {result.numViews?.toLocaleString() ?? 0}
+                            {result.numعرضs?.toLocaleString() ?? 0}
                           </span>
                         </div>
                       </div>
@@ -524,7 +524,7 @@ export default function ArcGISPanel({
                         }}
                       >
                         <CheckCircle className="w-3 h-3" />
-                        LIVE
+                        مباشر
                       </span>
                     ) : (
                       <button
@@ -539,7 +539,7 @@ export default function ArcGISPanel({
                           </>
                         ) : (
                           <>
-                            <Download className="w-3 h-3" />
+                            <تنزيل className="w-3 h-3" />
                             IMPORT
                           </>
                         )}
@@ -582,7 +582,7 @@ export default function ArcGISPanel({
           <div className="flex flex-col items-center justify-center py-12 gap-3 opacity-60">
             <div className="relative">
               <Database className="w-8 h-8 text-[var(--text-muted)] opacity-50" />
-              <Search className="w-4 h-4 text-[#D4AF37] absolute -bottom-1 -right-1" />
+              <بحث className="w-4 h-4 text-[#D4AF37] absolute -bottom-1 -right-1" />
             </div>
             <div className="flex flex-col items-center gap-1.5 text-center">
               <span className="text-[10px] font-mono font-bold text-white tracking-wide">
