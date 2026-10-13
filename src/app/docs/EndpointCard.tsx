@@ -53,7 +53,7 @@ function buildWithHeaders(method: string, url: string, body: string, headers: [s
    Request snippet generation
    ───────────────────────────────────────────────────────────── */
 
-function buildTabs(ep: Apiنقطة نهاية, url: string): CodeTab[] {
+function buildTabs(ep: ApiEndpoint, url: string): CodeTab[] {
   const method = Array.isArray(ep.method) ? ep.method[0] : ep.method;
   const isPost = method === 'POST';
   const body = ep.bodyExample || '{}';
@@ -96,10 +96,10 @@ data = r.json()`;
 }
 
 /* ─────────────────────────────────────────────────────────────
-   نقطة نهاية card
+   Endpoint card
    ───────────────────────────────────────────────────────────── */
 
-export default function نقطة نهايةCard({ ep, origin }: { ep: Apiنقطة نهاية; origin: string }) {
+export default function EndpointCard({ ep, origin }: { ep: ApiEndpoint; origin: string }) {
   const methods = Array.isArray(ep.method) ? ep.method : [ep.method];
   const primary = methods[0];
   const id = endpointId(ep);
@@ -276,7 +276,7 @@ export default function نقطة نهايةCard({ ep, origin }: { ep: Apiنقط�
                 </button>
                 {missingRequired.length > 0 && (
                   <span className="text-[11px] font-mono text-[var(--text-muted)]">
-                    Fill {missingRequired.map(p => p.name).join(', ')} أولاً
+                    Fill {missingRequired.map(p => p.name).join(', ')} first
                   </span>
                 )}
                 <CopyButton value={`${origin}${liveUrl}`} />
