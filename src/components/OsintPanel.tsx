@@ -477,7 +477,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
                   <div key={i} className="p-2 rounded-lg border border-orange-500/30 bg-orange-500/10 flex flex-col">
                     <div className="flex items-center justify-between">
                       <span className="text-[11px] font-mono font-bold text-orange-400">{e.id}</span>
-                      <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-orange-500/20 text-orange-400">EXPLOIT</span>
+                      <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-orange-500/20 text-orange-400">استغلال الثغرات</span>
                     </div>
                     <div className="text-[10px] font-mono text-[var(--text-muted)] mt-1 flex justify-between">
                       <span>Source: {e.type?.toUpperCase() || 'UNKNOWN'}</span>
@@ -538,8 +538,8 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
         <div>
           <SectionHeader title="SHODAN IOT INTELLIGENCE" icon={Network} color="#FF3D3D" />
           <ResultRow label="Target IP" value={r.ip || query} color="#FF3D3D" />
-          {r.hostnames?.length > 0 && <ResultRow label="Hostnames" value={r.hostnames.join(', ')} />}
-          {r.ports?.length > 0 && <ResultRow label="Open Ports" value={r.ports.join(', ')} color="#00E5FF" />}
+          {r.hostnames?.length > 0 && <ResultRow label="أسماء المضيفين" value={r.hostnames.join(', ')} />}
+          {r.ports?.length > 0 && <ResultRow label="المنافذ المفتوحة" value={r.ports.join(', ')} color="#00E5FF" />}
           {r.tags?.length > 0 && <ResultRow label="Tags" value={r.tags.join(', ')} color="#FF9500" />}
           {r.vulns?.length > 0 && (
             <div className="mt-2 p-2 border border-red-500/30 bg-red-500/10 rounded">
@@ -641,7 +641,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
           <ResultRow label="Bio" value={r.bio} />
           {r.recent_repos?.length > 0 && (
             <div className="mt-2 p-2 border border-[#87CEEB]/20 bg-[#87CEEB]/5 rounded">
-              <span className="text-[10px] font-mono text-[#87CEEB] block mb-1">RECENT REPOS</span>
+              <span className="text-[10px] font-mono text-[#87CEEB] block mb-1">مستودعات حديثة</span>
               {r.recent_repos.map((repo: any, i: number) => (
                 <div key={i} className="flex justify-between text-[10px] font-mono mb-0.5">
                   <span className="text-[#E8E6E0]">{repo.name}</span>
@@ -916,7 +916,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
                   </span>
                   <span className="text-[var(--text-muted)] w-[64px] flex-shrink-0">{t.time ? String(t.time).slice(0, 10) : 'pending'}</span>
                   <span className="flex-1 break-all text-[var(--text-primary)]">{short(t.hash)}</span>
-                  {t.failed && <span className="text-[#FF3D3D]">FAIL</span>}
+                  {t.failed && <span className="text-[#FF3D3D]">فشل</span>}
                   {t.value > 0 && <span className="text-[var(--text-secondary)]">{fmt(t.value)}</span>}
                 </div>
               ))}
@@ -926,7 +926,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
           {/* Honesty rail: what this report could not establish. */}
           {r.partial?.length > 0 && (
             <div className="mt-3 px-2 py-1.5 rounded border border-white/10 bg-white/[0.03]">
-              <span className="text-[10px] font-mono text-[var(--text-muted)] block mb-0.5">COVERAGE LIMITS</span>
+              <span className="text-[10px] font-mono text-[var(--text-muted)] block mb-0.5">حدود التغطية</span>
               {r.partial.map((p: string, i: number) => (
                 <div key={i} className="text-[10px] font-mono text-[var(--text-secondary)] leading-snug">↳ {p}</div>
               ))}
@@ -951,7 +951,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
           
           {r.breached && r.data_exposed?.length > 0 && (
             <div className="mt-2 p-2 border border-[#E040FB]/30 bg-[#E040FB]/10 rounded">
-              <span className="text-[11px] font-mono text-[#E040FB] font-bold mb-1 block">EXPOSED DATA POINTS</span>
+              <span className="text-[11px] font-mono text-[#E040FB] font-bold mb-1 block">نقاط بيانات مكشوفة</span>
               <div className="flex flex-wrap gap-1">
                 {r.data_exposed.map((dc: string) => (
                   <span key={dc} className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-[#1A1A18] text-[#E8E6E0] border border-[#E040FB]/20">{dc}</span>
@@ -1172,7 +1172,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
               >
                 <div className="flex items-center gap-3">
                   <tab.icon className="w-5 h-5" style={{ color: tab.color }} />
-                  <span className="font-mono font-bold tracking-[0.1em] text-[10px]" style={{ color: tab.color }}>GLOBAL SWEEP</span>
+                  <span className="font-mono font-bold tracking-[0.1em] text-[10px]" style={{ color: tab.color }}>مسح عالمي</span>
                 </div>
             </button>
           ))}
@@ -1285,12 +1285,12 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
         {activeTab === 'scanner' && (
           <select value={scanType} onChange={e => setScanType(e.target.value)}
             className="bg-[var(--bg-primary)]/60 border border-[var(--border-primary)] rounded-lg px-2 py-1.5 text-[11px] font-mono text-[var(--text-muted)] outline-none w-full">
-            <option value="quick">QUICK SCAN</option><option value="deep">DEEP SCAN</option><option value="ports">TOP 1000 PORTS</option>
+            <option value="quick">فحص سريع</option><option value="deep">فحص معمّق</option><option value="ports">أهم 1000 منفذ</option>
           </select>
         )}
         {activeTab === 'sweep' && (
           <div className="flex items-center justify-between bg-[var(--bg-primary)]/60 border border-[var(--border-primary)] rounded-lg p-1">
-            <span className="text-[10px] font-mono text-[var(--text-muted)] pl-2">SUBNET MASK:</span>
+            <span className="text-[10px] font-mono text-[var(--text-muted)] pl-2">قناع الشبكة الفرعية:</span>
             <div className="flex items-center gap-0.5">
               {[24, 25, 26, 27, 28].map(c => (
                 <button key={c} onClick={() => setSweepCidr(c)}
@@ -1315,7 +1315,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
       {sweepProgress && loading && (
         <div className="p-3 rounded-lg border border-[#FF3D3D]/30 bg-[#FF3D3D]/5">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-mono tracking-wider text-[#FF3D3D]">SWEEPING SUBNET...</span>
+            <span className="text-[11px] font-mono tracking-wider text-[#FF3D3D]">جارٍ فحص الشبكة الفرعية...</span>
             <span className="text-[11px] font-mono text-[#E8E6E0]">{sweepProgress.total} hosts</span>
           </div>
           <div className="w-full h-1.5 bg-[#1A1A18] rounded-full overflow-hidden">
@@ -1336,7 +1336,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
               </div>
               <div className="text-right">
                 <div className="text-[18px] font-mono font-bold text-[#FF3D3D]">{sweepResult.summary.total_responsive}</div>
-                <div className="text-[9px] font-mono text-[#5C5A54] tracking-wider">DEVICES FOUND</div>
+                <div className="text-[9px] font-mono text-[#5C5A54] tracking-wider">الأجهزة المكتشفة</div>
               </div>
             </div>
             {/* Breakdown Bar */}
@@ -1421,7 +1421,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
                             <AlertTriangle className="w-2.5 h-2.5" /> {device.vulns.length} CVEs
                           </span>
                           <div className="absolute bottom-full left-0 mb-1 hidden group-hover:block z-50 p-2 bg-[#1A1A18] border border-[#FF3D3D50] rounded-md shadow-xl min-w-[140px] max-w-[220px] max-h-[150px] overflow-y-auto styled-scrollbar">
-                            <div className="text-[9px] font-mono text-[#FF3D3D] mb-1 tracking-wider uppercase border-b border-[#FF3D3D30] pb-1">Identified Vulnerabilities</div>
+                            <div className="text-[9px] font-mono text-[#FF3D3D] mb-1 tracking-wider uppercase border-b border-[#FF3D3D30] pb-1">الثغرات المحددة</div>
                             <div className="flex flex-col gap-0.5">
                               {device.vulns.map((cve: string) => (
                                 <a key={cve} href={`https://nvd.nist.gov/vuln/detail/${cve}`} target="_blank" rel="noreferrer" className="text-[10px] font-mono text-[#E8E6E0] hover:text-[#FF3D3D] transition-colors truncate">
@@ -1443,7 +1443,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
                     {/* Ports + Hostnames Row */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-[#2A2A28]">
                       <div className="bg-[#0D0D0C] p-4">
-                        <div className="text-[11px] font-mono text-[#5C5A54] tracking-widest uppercase mb-2">Open Ports</div>
+                        <div className="text-[11px] font-mono text-[#5C5A54] tracking-widest uppercase mb-2">المنافذ المفتوحة</div>
                         <div className="flex flex-wrap gap-1.5">
                           {device.ports.map((port: number) => (
                             <span key={port} className="px-2 py-1 bg-[#1A1A18] border border-[#2A2A28] rounded text-[10px] font-mono text-[var(--cyan-primary)]">{port}</span>
@@ -1451,7 +1451,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
                         </div>
                       </div>
                       <div className="bg-[#0D0D0C] p-4">
-                        <div className="text-[11px] font-mono text-[#5C5A54] tracking-widest uppercase mb-2">Hostnames</div>
+                        <div className="text-[11px] font-mono text-[#5C5A54] tracking-widest uppercase mb-2">أسماء المضيفين</div>
                         {device.hostnames.length > 0 ? (
                           <div className="flex flex-col gap-1">
                             {device.hostnames.map((h: string) => (
@@ -1459,7 +1459,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
                             ))}
                           </div>
                         ) : (
-                          <span className="text-[10px] font-mono text-[#3A3A38]">No reverse DNS</span>
+                          <span className="text-[10px] font-mono text-[#3A3A38]">لا يوجد DNS عكسي</span>
                         )}
                       </div>
                     </div>
@@ -1498,7 +1498,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
                                 {isLoading ? (
                                   <div className="flex items-center gap-2 py-1">
                                     <Loader2 className="w-3 h-3 animate-spin text-[#5C5A54]" />
-                                    <span className="text-[11px] font-mono text-[#5C5A54]">Fetching vulnerability intelligence...</span>
+                                    <span className="text-[11px] font-mono text-[#5C5A54]">جارٍ جلب معلومات الثغرات...</span>
                                   </div>
                                 ) : (
                                   <>
@@ -1545,7 +1545,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
 
       {history.length > 0 && !results && activeTab !== 'fingerprint' && activeTab !== 'donbot' && (
         <div className="space-y-1">
-          <span className="text-[10px] font-mono tracking-widest text-[var(--text-muted)]">RECENT SCANS</span>
+          <span className="text-[10px] font-mono tracking-widest text-[var(--text-muted)]">الفحوصات الأخيرة</span>
           {history.slice(0, 5).map((h, i) => (
             <button key={i} onClick={() => { setActiveTab(h.tab); setQuery(h.query); }}
               className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg hover:bg-[var(--hover-accent)] transition-colors text-left">
@@ -1573,7 +1573,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
           <div className="flex items-center justify-between px-6 py-3.5 border-b border-[var(--border-secondary)] bg-[#111] flex-shrink-0">
             <div className="flex items-center gap-3 min-w-0">
               <Radar className="w-5 h-5 text-[var(--cyan-primary)] flex-shrink-0" />
-              <span className="hud-text text-[16px] text-[var(--text-primary)]">OSIRIS RECON TOOLKIT</span>
+              <span className="hud-text text-[16px] text-[var(--text-primary)]">مجموعة أدوات الاستطلاع OSIRIS</span>
               <span className="gotham-tag gotham-tag--classified" style={{ fontSize: '9px' }}>{TABS.length} MODULES</span>
               {currentTab && (
                 <>
@@ -1625,7 +1625,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
       <div className="flex-shrink-0 flex items-center justify-between px-4 py-3 border-b border-[rgba(255,255,255,0.05)] bg-[rgba(0,0,0,0.3)] hover:bg-[var(--hover-accent)] transition-colors">
         <button onClick={() => setExpanded(!expanded)} className="flex items-center gap-2 flex-1">
           <Radar className="w-3.5 h-3.5 text-[var(--cyan-primary)]" />
-          <span className="hud-text text-[11px] text-[var(--text-primary)]">RECON TOOLKIT</span>
+          <span className="hud-text text-[11px] text-[var(--text-primary)]">أدوات الاستطلاع</span>
           <span className="gotham-tag gotham-tag--info" style={{ fontSize: '9px', padding: '1px 5px' }}>{TABS.length} TOOLS</span>
         </button>
         <div className="flex items-center gap-3">
