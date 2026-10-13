@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { endpointId, type Apiنقطة نهاية } from './apiCatalog';
+import { endpointId, type ApiEndpoint } from './apiCatalog';
 import { CodeBlock, CopyButton, type CodeTab } from './docsPrimitives';
 
 const METHOD_STYLES: Record<string, string> = {
@@ -276,7 +276,7 @@ export default function نقطة نهايةCard({ ep, origin }: { ep: Apiنقط�
                 </button>
                 {missingRequired.length > 0 && (
                   <span className="text-[11px] font-mono text-[var(--text-muted)]">
-                    أكمل {missingRequired.map(p => p.name).join(', ')} أولاً
+                    Fill {missingRequired.map(p => p.name).join(', ')} أولاً
                   </span>
                 )}
                 <CopyButton value={`${origin}${liveUrl}`} />
