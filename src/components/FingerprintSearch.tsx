@@ -47,7 +47,7 @@ const CATEGORY_COLOR: Record<Category, string> = {
 };
 
 const MODES: { id: SearchType; label: string; icon: typeof AtSign; placeholder: string; covers: string }[] = [
-  { id: 'username', label: 'Username', icon: AtSign, placeholder: 'Enter a username…', covers: 'Every public site in the Sherlock database, checked in parallel' },
+  { id: 'username', label: 'اسم المستخدم', icon: AtSign, placeholder: 'Enter a username…', covers: 'Every public site in the Sherlock database, checked in parallel' },
   { id: 'email', label: 'Email', icon: Mail, placeholder: 'Enter an email address…', covers: 'Known breach corpora and the address’s mail domain' },
   { id: 'phone', label: 'Phone', icon: Phone, placeholder: 'Enter a phone number (+1 …)', covers: 'Numbering plan: validity, region, format and line type' },
 ];
@@ -118,19 +118,19 @@ const bareUrl = (u: string) => u.replace(/^https?:\/\/(www\.)?/, '').replace(/\/
  * a portal, so the view remounts on every toggle and would otherwise drop a
  * sweep that is still streaming.
  */
-export function useFingerprintSearch() {
+export function useFingerprintبحث() {
   const [mode, setMode] = useState<SearchType>('username');
   const [query, setQuery] = useState('');
   const [phase, setPhase] = useState<Phase>('idle');
-  const [error, setError] = useState('');
-  const [searched, setSearched] = useState<{ type: SearchType; query: string } | null>(null);
+  const [error, setخطأ] = useState('');
+  const [searched, setبحثed] = useState<{ type: SearchType; query: string } | null>(null);
   const [rows, setRows] = useState<Record<string, Row>>({});
   const [progress, setProgress] = useState({ checked: 0, total: 0, ruledOut: 0 });
-  const [startedAt, setStartedAt] = useState(0);
-  const [finishedAt, setFinishedAt] = useState(0);
+  const [startedAt, setابدأedAt] = useState(0);
+  const [finishedAt, setإنهاءedAt] = useState(0);
   const [now, setNow] = useState(0);
-  const [sources, setSources] = useState<Source[]>([]);
-  const [view, setView] = useState<'cards' | 'table'>('cards');
+  const [sources, setالمصدرs] = useState<Source[]>([]);
+  const [view, setعرض] = useState<'cards' | 'table'>('cards');
   const [categories, setCategories] = useState<Category[]>([]);
   const [showUnsure, setShowUnsure] = useState(false);
   const [showBlocked, setShowBlocked] = useState(false);
@@ -210,7 +210,7 @@ export function useFingerprintSearch() {
     const getJson = async (url: string) => {
       const res = await fetch(url, { signal: ctrl.signal });
       const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+      if (!res.ok) throw new خطأ(data.error || `HTTP ${res.status}`);
       return data;
     };
     const settle = (id: string, patch: Partial<Source>) =>
@@ -227,7 +227,7 @@ export function useFingerprintSearch() {
         });
         if (!res.ok || !res.body) {
           const body = await res.json().catch(() => ({}));
-          throw new Error(body.error || `Search failed (${res.status})`);
+          throw new خطأ(body.error || `بحث failed (${res.status})`);
         }
         const reader = res.body.getReader();
         const decoder = new TextDecoder();
@@ -308,14 +308,14 @@ export function useFingerprintSearch() {
       if (ctrl.signal.aborted) return finish('stopped', 0);
       const breaches = outcomes[0].status === 'fulfilled' ? outcomes[0].value : 0;
       if (outcomes.every(o => o.status === 'rejected')) {
-        setError('Every source failed to answer.');
+        setخطأ('Every source failed to answer.');
         return finish('fail', 0);
       }
       return finish('done', breaches);
     }
 
     /* ── phone: numbering-plan intelligence ── */
-    setSources([{ id: 'number', label: 'Number intelligence', via: 'libphonenumber', state: 'pending' }]);
+    setالمصدرs([{ id: 'number', label: 'Number intelligence', via: 'libphonenumber', state: 'pending' }]);
     try {
       const d = await getJson(`/api/osint/phone?number=${encodeURIComponent(q)}`);
       settle('number', { state: 'done', data: d });
@@ -323,15 +323,15 @@ export function useFingerprintSearch() {
     } catch (e) {
       if (ctrl.signal.aborted) return finish('stopped', 0);
       settle('number', { state: 'error', error: message(e) });
-      setError(message(e));
+      setخطأ(message(e));
       finish('fail', 0);
     }
   }, [record]);
 
   return {
-    mode, setMode, query, setQuery, phase, error, setError, searched, rows, progress,
+    mode, setMode, query, setQuery, phase, error, setخطأ, searched, rows, progress,
     elapsedMs: startedAt ? (phase === 'running' ? now : finishedAt) - startedAt : 0,
-    sources, view, setView, categories, setCategories, showUnsure, setShowUnsure,
+    sources, view, setعرض, categories, setCategories, showUnsure, setShowUnsure,
     showBlocked, setShowBlocked, history, clearHistory, run, stop,
   };
 }
@@ -343,7 +343,7 @@ export type FingerprintState = ReturnType<typeof useFingerprintSearch>;
 /** `live` is false once a search has ended — a hit still awaiting
  *  calibration then never got it, and must not look like work in progress. */
 function StatusPill({ status, live }: { status: RowStatus; live: boolean }) {
-  const m = STATUS_META[status];
+  const m = STATUS_Mالوقت المتوقع للوصول[status];
   const pending = status === 'verifying';
   return (
     <span
@@ -438,7 +438,7 @@ export default function FingerprintSearch({ fp, isFullScreen }: { fp: Fingerprin
     } else {
       download(`${base}.csv`, toCsv(
         ['platform', 'category', 'status', 'url', 'http_status', 'response_ms'],
-        rows.map(r => [r.site, r.category, STATUS_META[r.status].label.toLowerCase(), r.url, r.http_status ?? '', r.ms]),
+        rows.map(r => [r.site, r.category, STATUS_Mالوقت المتوقع للوصول[r.status].label.toLowerCase(), r.url, r.http_status ?? '', r.ms]),
       ), 'text/csv');
     }
   };
@@ -791,7 +791,7 @@ export default function FingerprintSearch({ fp, isFullScreen }: { fp: Fingerprin
         <div className="text-[9px] font-mono text-[var(--text-muted)] leading-relaxed">
           Hits show as VERIFYING while the sweep runs, then each is re-tested against two random control handles — sites that
           also “find” those move to UNSURE. Blocked sites refused the request, so nothing was learned either way.
-          Source: Sherlock Project site database (MIT).
+          المصدر: Sherlock Project site database (MIT).
         </div>
       </>
     );
@@ -888,7 +888,7 @@ export default function FingerprintSearch({ fp, isFullScreen }: { fp: Fingerprin
                   ['International', s.data?.international],
                   ['National', s.data?.national],
                   ['Country code', s.data?.country_code],
-                  ['Region', s.data?.region_code && s.data.region_code !== 'Unknown' ? `${s.data.region} (${s.data.region_code})` : s.data?.region],
+                  ['Region', s.data?.region_code && s.data.region_code !== 'غير معروف' ? `${s.data.region} (${s.data.region_code})` : s.data?.region],
                   ['Line type', s.data?.line_type?.replace(/_/g, ' ')],
                 ].filter(([, v]) => v).map(([k, v, c]) => (
                   <div key={k} className="min-w-0">
