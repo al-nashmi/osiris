@@ -272,7 +272,7 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
 
         {!typing && (
           <div className={`mt-3 mb-1 flex flex-wrap items-center gap-1.5 ${embedded ? '' : 'px-3'}`}>
-            <span className="text-[10px] font-mono tracking-[0.14em] uppercase text-[var(--text-muted)] mr-1">Try</span>
+            <span className="text-[10px] font-mono tracking-[0.14em] uppercase text-[var(--text-muted)] mr-1">جرّب</span>
             {TRY.map(t => (
               <button key={t} onClick={() => { search(t); inputRef.current?.focus(); }}
                 className="h-7 px-2.5 rounded-full border border-[var(--border-secondary)] bg-white/[0.02] text-[11px] text-[var(--text-secondary)] hover:text-[var(--text-heading)] hover:border-[var(--border-primary)] transition-colors">
