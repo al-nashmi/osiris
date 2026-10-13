@@ -25,7 +25,7 @@ const API_SECTIONS = [
 const ALL_SECTIONS = [...GUIDE_SECTIONS, ...API_SECTIONS];
 const FALLBACK_ORIGIN = 'https://osirisai.live';
 
-export default function مستندsClient() {
+export default function DocsClient() {
   const [active, setActive] = useState('overview');
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
@@ -156,7 +156,7 @@ export default function مستندsClient() {
                 OSIRIS
               </span>
               <span className="text-[9px] font-mono tracking-[0.22em] text-[var(--text-muted)] uppercase mt-[3px]">
-                مستندs
+                Docs
               </span>
             </span>
           </Link>
@@ -237,7 +237,7 @@ export default function مستندsClient() {
           } fixed lg:sticky top-14 left-0 bottom-0 lg:bottom-auto z-[260] lg:z-auto w-64 lg:w-56 shrink-0 lg:h-[calc(100vh-3.5rem)] overflow-y-auto styled-scrollbar bg-[var(--bg-void)] lg:bg-transparent border-r lg:border-r-0 border-white/[0.06] py-6 pr-2 pl-2 lg:pl-0 transition-all duration-200`}
         >
           <div className="text-[10px] font-mono tracking-[0.3em] uppercase text-[var(--text-muted)]/70 pl-4 mb-2">
-            دليل
+            Guide
           </div>
           {GUIDE_SECTIONS.map(navLink)}
 
@@ -248,7 +248,7 @@ export default function مستندsClient() {
 
           <div className="mt-8 mx-2 rounded-lg border border-white/[0.07] bg-white/[0.02] p-3">
             <div className="text-[11px] font-mono text-[var(--text-secondary)] leading-relaxed">
-              <span className="text-[var(--gold-primary)] font-bold">{ENDPOINT_COUNT}</span> نقطة نهاية، دون مفتاح
+              <span className="text-[var(--gold-primary)] font-bold">{ENDPOINT_COUNT}</span> endpoints, no key
               required.
             </div>
           </div>
@@ -284,7 +284,7 @@ export default function مستندsClient() {
                 href="#quickstart"
                 className="inline-flex items-center gap-2 px-4 h-10 rounded-lg text-[11px] font-mono tracking-wider uppercase border border-[var(--gold-primary)]/40 bg-[var(--gold-primary)]/10 text-[var(--gold-primary)] hover:bg-[var(--gold-primary)]/20 transition-colors"
               >
-                البدء السريع
+                Quick Start
                 <svg viewBox="0 0 24 24" className="w-3.5 h-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M5 12h14M13 6l6 6-6 6" />
                 </svg>
@@ -379,13 +379,13 @@ print(len(data["commercial_flights"]), "commercial")`,
 cd osiris
 npm install
 npm run dev        # http://localhost:3000`}</Pre>
-            <p>لإنشاء نسخة إنتاج أو تشغيل الفحوصات:</p>
+            <p>For a production build, or to run the checks:</p>
             <Pre label="البناء والاختبار" lang="bash">{`npm run build && npm start
 npm run lint
 npm test           # vitest
 npm run test:live  # includes tests that hit live upstream feeds`}</Pre>
             <p>
-              A <Code>دوكرfile</Code> and <Code>docker-compose.yml</Code> ship with the repository. The container
+              A <Code>Dockerfile</Code> and <Code>docker-compose.yml</Code> ship with the repository. The container
               always listens on port 3000 internally; <Code>OSIRIS_PORT</Code> controls the host port it is published
               on.
             </p>
