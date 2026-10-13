@@ -81,7 +81,7 @@ function initialEngine(): Engine {
 
 export default function OiPanel(props: OiPanelProps) {
   const { oi, selected, onSelect, embedded = false, theater = false } = props;
-  // الإعدادات come from this browser's storage. The panel only renders once opened, on the client.
+  // Settings come from this browser's storage. The panel only renders once opened, on the client.
   const [engine, setEngine] = useState<Engine>(initialEngine);
   const [key, setKey] = useState(() => loadKey(initialEngine().provider));
   // The engine sheet opens when asked: a first visit sees what OI does, and the Run and Send buttons ask for a key.
@@ -120,7 +120,7 @@ export default function OiPanel(props: OiPanelProps) {
     />
   ) : null;
 
-  const assistعرض = (
+  const assistView = (
     <AssistView assist={props.assist} oi={oi} ready={ready} providerName={info.name} onKey={() => setEngineOpen(true)}
       onSend={(text, m) => void props.assist.send(text, m, { engine, key })}
       onLocate={props.onLocate} onOpenForecast={() => props.onMode('forecast')}
@@ -152,7 +152,7 @@ export default function OiPanel(props: OiPanelProps) {
         </AnimatePresence>
       </div>
     );
-    const askعرض = connecting ? <Connecting onCancel={reset} /> : (
+    const askView = connecting ? <Connecting onCancel={reset} /> : (
       <>
         {askForm}
         {oi.history.length > 0 && <div className="border-t border-[var(--border-secondary)]"><HistoryList oi={oi} onPick={id => { setTab(null); onSelect(null); void oi.watch(id); }} /></div>}
@@ -180,7 +180,7 @@ export default function OiPanel(props: OiPanelProps) {
         {!assisting && <IconButton title={showHistory ? 'رجوع' : 'Your predictions'} onClick={() => setShowHistory(v => !v)} active={showHistory}><History className="w-3.5 h-3.5" /></IconButton>}
         {!assisting && s && <IconButton title="New prediction" onClick={reset}><Plus className="w-3.5 h-3.5" /></IconButton>}
         {!embedded && props.onTheater && <IconButton title="Full screen: the OI workspace" onClick={() => props.onTheater?.(true)}><Maximize2 className="w-3.5 h-3.5" /></IconButton>}
-        {props.onإغلاق && !embedded && <IconButton title="Close (the run keeps going)" onClick={props.onClose}><X className="w-3.5 h-3.5" /></IconButton>}
+        {props.onClose && !embedded && <IconButton title="Close (the run keeps going)" onClick={props.onClose}><X className="w-3.5 h-3.5" /></IconButton>}
       </div>
     </header>
   );
@@ -200,7 +200,7 @@ export default function OiPanel(props: OiPanelProps) {
           </motion.div>
         )}
       </AnimatePresence>
-      {assistعرض}
+      {assistView}
     </>
   ) : (
     <>
@@ -226,7 +226,7 @@ export default function OiPanel(props: OiPanelProps) {
                 className="group -mt-1 flex items-center gap-3 w-full rounded-lg border border-[var(--border-secondary)] bg-white/[0.015] px-3 py-2.5 text-left transition-colors hover:border-[var(--border-active)] hover:bg-[var(--hover-accent)]">
                 <Maximize2 className="w-4 h-4 flex-shrink-0 text-[var(--gold-primary)]" />
                 <span className="flex-1 min-w-0">
-                  <span className="block text-[12px] font-medium text-[var(--text-heading)]">فتح مساحة العمل</span>
+                  <span className="block text-[12px] font-medium text-[var(--text-heading)]">Open the workspace</span>
                   <span className="block text-[10.5px] text-[var(--text-muted)] truncate">The research graph, every world on a timeline, every object in tables</span>
                 </span>
                 <ArrowRight className="w-3.5 h-3.5 flex-shrink-0 text-[var(--text-muted)] transition-transform group-hover:translate-x-0.5 group-hover:text-[var(--gold-light)]" />
