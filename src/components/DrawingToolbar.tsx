@@ -105,15 +105,15 @@ const KEY_HINT: Record<DrawMode, string> = {
   line: 'Double-click or Enter to end · Backspace undoes · Esc cancels',
 };
 
-export default function DrawingToolbar({
-  drawMode, onSetDrawMode, progress, polygons, onDeletePolygon,
-  onClearAll, onExportGeoJSON, selectedPolygon, onSelectPolygon,
+export default function رسمingToolbar({
+  drawMode, onSetرسمMode, progress, polygons, onحذفPolygon,
+  onClearAll, onتصديرGeoJSON, selectedPolygon, onSelectPolygon,
   data, onLocateEntity, watched, onToggleWatch, watchEvents = [],
   onRenamePolygon,
-}: DrawingToolbarProps) {
+}: رسمingToolbarProps) {
   const [editingName, setEditingName] = useState<string | null>(null);
   const [nameValue, setNameValue] = useState('');
-  const [copied, setCopied] = useState<string | null>(null);
+  const [copied, setتم النسخ] = useState<string | null>(null);
   const [openGroup, setOpenGroup] = useState<string | null>(null);
   
   const [flash, setFlash] = useState(false);
@@ -171,7 +171,7 @@ export default function DrawingToolbar({
         <div className="px-4 py-3 border-b border-white/[0.06]">
           <div className="flex items-center gap-2 mb-2">
             <Pentagon className="w-3.5 h-3.5 text-[var(--cyan-primary)]" />
-            <span className="text-[12px] font-mono tracking-[0.2em] text-white/90 font-bold">DRAWING TOOLS</span>
+            <span className="text-[12px] font-mono tracking-[0.2em] text-white/90 font-bold">جارٍ الرسم TOOLS</span>
           </div>
           
           <div className="flex items-center justify-between text-[10px] font-mono text-white/50 bg-white/5 rounded px-2 py-1.5 border border-white/[0.04]">
@@ -236,13 +236,13 @@ export default function DrawingToolbar({
                     : MODE_HINT[drawMode]}
                 </span>
                 {progress && progress.radiusKm != null && progress.radiusKm > 0 && (
-                  <span className="text-[10px] font-mono text-white tabular-nums">r {formatDistance(progress.radiusKm)}</span>
+                  <span className="text-[10px] font-mono text-white tabular-nums">r {formatالمسافة(progress.radiusKm)}</span>
                 )}
                 {progress && progress.areaKm2 > 0 && (
                   <span className="text-[10px] font-mono text-white tabular-nums">{formatArea(progress.areaKm2)}</span>
                 )}
                 {progress && progress.areaKm2 === 0 && progress.lengthKm > 0 && (
-                  <span className="text-[10px] font-mono text-white tabular-nums">{formatDistance(progress.lengthKm)}</span>
+                  <span className="text-[10px] font-mono text-white tabular-nums">{formatالمسافة(progress.lengthKm)}</span>
                 )}
               </div>
               <p className="text-[10px] font-mono text-white/40 mt-1 leading-relaxed">
@@ -335,7 +335,7 @@ export default function DrawingToolbar({
                       <button onClick={(e) => { e.stopPropagation(); handleCopy(polygon); }} className="p-1.5 rounded bg-white/5 hover:bg-white/10 text-white/50 hover:text-white transition" title="Copy GeoJSON">
                         {copied === polygon.id ? <Check className="w-3 h-3 text-[var(--alert-green)]" /> : <Copy className="w-3 h-3" />}
                       </button>
-                      <button onClick={(e) => { e.stopPropagation(); onDeletePolygon(polygon.id); }} className="p-1.5 rounded bg-[#FF3D57]/10 hover:bg-[#FF3D57]/20 text-[#FF3D57]/60 hover:text-[#FF3D57] transition" title="Delete">
+                      <button onClick={(e) => { e.stopPropagation(); onDeletePolygon(polygon.id); }} className="p-1.5 rounded bg-[#FF3D57]/10 hover:bg-[#FF3D57]/20 text-[#FF3D57]/60 hover:text-[#FF3D57] transition" title="حذف">
                         <Trash2 className="w-3 h-3" />
                       </button>
                     </div>
