@@ -9,16 +9,16 @@ import { loadCameraCatalog, mergeCameraCatalog } from '@/lib/camera-catalog';
 import IntelFeed from '@/components/IntelFeed';
 import MarketsPanel from '@/components/MarketsPanel';
 import ScmPanel from '@/components/ScmPanel';
-import SearchBar from '@/components/بحثBar';
+import SearchBar from '@/components/SearchBar';
 import DirectionsBar, { type RouteResult, type LiveLocation } from '@/components/DirectionsBar';
 import NavigationView from '@/components/NavigationView';
 import FlightWatchPanel, { type WatchedFlight, type FlightTelemetry, type AircraftDetail, type Airport } from '@/components/FlightWatchPanel';
 import type { NavProgress } from '@/lib/navigation';
 import type { LiveDetection } from '@/lib/malware-intel';
 import ScaleBar from '@/components/ScaleBar';
-import ErrorBoundary from '@/components/خطأBoundary';
+import ErrorBoundary from '@/components/ErrorBoundary';
 import { applySettings, loadSavedSettings } from '@/lib/style-tokens';
-import SharePanel from '@/components/مشاركةPanel';
+import SharePanel from '@/components/SharePanel';
 import ViewPresets from '@/components/ViewPresets';
 import KeyboardShortcuts from '@/components/KeyboardShortcuts';
 import GlobalStatusBar from '@/components/GlobalStatusBar';
@@ -661,7 +661,7 @@ export default function Dashboard() {
      catalogue is ~19k objects) could hold the fade until the camera was
      nearly at street level, and the globe was never seen. */
   useEffect(() => {
-    if (!splashGone || !homeLocation || autoLocateإلغاءled.current) return;
+    if (!splashGone || !homeLocation || autoLocateCancelled.current) return;
     setFlyToLocation({ ...homeLocation, zoom: 8, duration: 3500, ts: Date.now() });
   }, [splashGone, homeLocation]);
 
@@ -670,7 +670,7 @@ export default function Dashboard() {
     if (typeof window === 'undefined') return;
 
     // Restore active layers from URL if present
-    const p = new URLبحثParams(window.location.search);
+    const p = new URLSearchParams(window.location.search);
     const layers = p.get('layers');
     if (layers) {
       const active = layers.split(',');
@@ -691,7 +691,7 @@ export default function Dashboard() {
     // Once the user interacts, a late IP-location response must not steal the
     // camera back. The request is also cancelled when this page unmounts.
     const geoController = new AbortController();
-    const cancelAutoLocate = () => { autoLocateإلغاءled.current = true; };
+    const cancelAutoLocate = () => { autoLocateCancelled.current = true; };
     window.addEventListener('pointerdown', cancelAutoLocate, { once: true });
     window.addEventListener('keydown', cancelAutoLocate, { once: true });
     /* Asked for at once rather than after a fixed 3 s wait, so the answer is
@@ -748,16 +748,16 @@ export default function Dashboard() {
   const [oiFocus, setOiFocus] = useState(false);
   const focusحفظd = useRef<typeof activeLayers | null>(null);
   const toggleOiFocus = useCallback(() => {
-    const saved = focusحفظd.current;
+    const saved = focusSaved.current;
     if (saved) {
-      focusحفظd.current = null;
+      focusSaved.current = null;
       setActiveLayers(saved);
       setOiFocus(false);
       return;
     }
     const KEEP = new Set(['day_night', 'live_clouds', 'terrain_3d', 'terrain_elevation']);
     setActiveLayers(prev => {
-      focusحفظd.current = prev;
+      focusSaved.current = prev;
       return Object.fromEntries(Object.entries(prev).map(([k, v]) => [k, KEEP.has(k) ? v : false])) as typeof prev;
     });
     setOiFocus(true);
@@ -773,11 +773,11 @@ export default function Dashboard() {
       .catch(console.error);
   }, []);
 
-  /** From بحث: open Directions with this place as the destination, and show where it is. */
+  /** From Search: open Directions with this place as the destination, and show where it is. */
   const openDirectionsTo = useCallback((p: { label: string; context?: string; lat: number; lng: number; kind?: string }) => {
     setRouteTarget({ ...p, ts: Date.now() });
     setActiveRoute(null);
-    setShowDesktopبحث(false);
+    setShowDesktopSearch(false);
     setMobilePanel(null);
     setShowDirections(true);
     setFlyToLocation({ lat: p.lat, lng: p.lng, zoom: 14, ts: Date.now() });
@@ -801,7 +801,7 @@ export default function Dashboard() {
       if (e.key === 'm') setShowMarkets(p => !p);
       if (e.key === 'c') setShowScmPanel(p => !p);
       if (e.key === 'i') setShowIntel(p => !p);
-      if (e.key === 's') { setShowDesktopبحث(p => !p); setShowIntel(false); setShowMarkets(false); setShowAlerts(false); setShowSpaceCam(false); }
+      if (e.key === 's') { setShowDesktopSearch(p => !p); setShowIntel(false); setShowMarkets(false); setShowAlerts(false); setShowSpaceCam(false); }
       if (e.key === 'r' && !e.ctrlKey && !e.metaKey) setFlyToLocation({ lat: 20, lng: 0, zoom: 2.5, ts: Date.now() });
       if (e.key === 'g') {
         setActiveLayers(prev => ({ ...prev, terrain_elevation: false, terrain_3d: false }));
@@ -809,7 +809,7 @@ export default function Dashboard() {
       }
       if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
         e.preventDefault();
-        setShowDesktopبحث(true); setShowIntel(false); setShowMarkets(false); setShowAlerts(false); setShowSpaceCam(false);
+        setShowDesktopSearch(true); setShowIntel(false); setShowMarkets(false); setShowAlerts(false); setShowSpaceCam(false);
       }
     };
     const fsHandler = () => setIsFullscreen(!!document.fullscreenElement);
@@ -1185,7 +1185,7 @@ export default function Dashboard() {
     return () => { intervals.forEach(clearInterval); stopFns.forEach(stop => stop()); };
   }, [activeLayers, fetchEndpoint]);
 
-  /* ── مباشر MALWARE — pushed over SSE while the layer is on ──
+  /* ── LIVE MALWARE — pushed over SSE while the layer is on ──
      Detections arrive when URLhaus reports them rather than on a timer, so
      there is no poll interval to tune and no request that re-downloads the
      same rows to discover nothing changed. The connection also carries the
@@ -1233,7 +1233,7 @@ export default function Dashboard() {
             commit();
           }
         }
-        setرجوعendStatus('connected');
+        setBackendStatus('connected');
       } catch {
         // One malformed frame must not tear down the subscription.
       }
@@ -1243,9 +1243,9 @@ export default function Dashboard() {
        the store replays a snapshot on connect so a drop self-heals. Only a
        readyState of CLOSED means it has given up — reporting the transient
        ones would flag the backend as down every time a connection recycles. */
-    source.onopen = () => setرجوعendStatus('connected');
+    source.onopen = () => setBackendStatus('connected');
     source.onerror = () => {
-      if (source.readyState === EventSource.CLOSED) setرجوعendStatus('error');
+      if (source.readyState === EventSource.CLOSED) setBackendStatus('error');
     };
 
     return () => source.close();
@@ -1742,7 +1742,7 @@ export default function Dashboard() {
           <ZuluClock />
         </span>
 
-        <span className="flex items-center gap-1" title="رجوعend connection status">الحالة: <span className={backendStatus === 'connected' ? 'text-[var(--alert-green)]' : 'text-[var(--alert-red)]'}>{backendStatus === 'connected' ? 'مباشر' : backendStatus.toUpperCase()}</span></span>
+        <span className="flex items-center gap-1" title="Backend connection status">الحالة: <span className={backendStatus === 'connected' ? 'text-[var(--alert-green)]' : 'text-[var(--alert-red)]'}>{backendStatus === 'connected' ? 'مباشر' : backendStatus.toUpperCase()}</span></span>
 
         <span className="hidden lg:inline-flex items-center gap-1" title="Number of active data layers">
           <span className="text-[var(--cyan-primary)] font-bold">{Object.values(activeLayers).filter(Boolean).length}</span>
@@ -1927,7 +1927,7 @@ export default function Dashboard() {
         </div>
 
         <div className="relative group">
-          <button data-search-toggle onClick={() => { setShowDesktopSearch(!showDesktopSearch); setShowIntel(false); setShowMarkets(false); setShowAlerts(false); setShowSpaceCam(false); setShowDrawing(false); }} className={`relative w-8 h-8 rounded-full flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-white/50 ${showDesktopSearch ? 'bg-[var(--gold-primary)]/20' : 'hover:bg-white/10'}`} title="بحث — find locations, cities, coordinates" aria-label="بحث" aria-expanded={showDesktopSearch}>
+          <button data-search-toggle onClick={() => { setShowDesktopSearch(!showDesktopSearch); setShowIntel(false); setShowMarkets(false); setShowAlerts(false); setShowSpaceCam(false); setShowDrawing(false); }} className={`relative w-8 h-8 rounded-full flex items-center justify-center transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-white/50 ${showDesktopSearch ? 'bg-[var(--gold-primary)]/20' : 'hover:bg-white/10'}`} title="Search — find locations, cities, coordinates" aria-label="بحث" aria-expanded={showDesktopSearch}>
             <Search className={`w-4 h-4 ${showDesktopSearch ? 'text-[var(--gold-primary)]' : 'text-white/60'}`} />
             {showDesktopبحث && (
               <span
