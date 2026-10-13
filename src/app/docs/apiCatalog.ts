@@ -61,8 +61,8 @@ export interface ApiGroup {
 export const API_GROUPS: ApiGroup[] = [
   {
     id: 'system',
-    title: 'System',
-    blurb: 'Liveness and aggregate counters. Safe to poll from monitoring.',
+    title: 'النظام',
+    blurb: 'فحوصات سلامة الخدمة والعدادات المجمعة، آمنة للاستعلام الدوري من أنظمة المراقبة.',
     endpoints: [
       {
         path: '/api/health',
@@ -84,13 +84,13 @@ export const API_GROUPS: ApiGroup[] = [
   },
   {
     id: 'aviation-space',
-    title: 'Aviation & Space',
-    blurb: 'Aircraft, orbital objects, and heliophysics.',
+    title: 'الطيران والفضاء',
+    blurb: 'الطائرات والأجسام المدارية وفيزياء الشمس.',
     endpoints: [
       {
         path: '/api/flights',
         method: 'GET',
-        summary: 'Live ADS-B aircraft, bucketed by class.',
+        summary: 'بيانات الطائرات المباشرة عبر ADS-B مصنفة حسب الفئة.',
         returns: ['commercial_flights', 'private_flights', 'private_jets', 'military_flights', 'source'],
         notes:
           'Keyless via adsb.lol. Each bucket is an array; sum them for a total. `OPENSKY_CLIENT_ID` / `OPENSKY_CLIENT_SECRET` are reserved for higher rate limits and are not required.',
@@ -98,14 +98,14 @@ export const API_GROUPS: ApiGroup[] = [
       {
         path: '/api/satellites',
         method: 'GET',
-        summary: 'Tracked orbital objects with TLE-derived positions.',
+        summary: 'أجسام مدارية متعقبة مع مواقع محسوبة من بيانات TLE.',
         returns: ['satellites', 'total', 'category_counts', 'raw_count', 'timestamp'],
         notes: 'Sourced from celestrak.org. `category_counts` breaks the set down by mission type.',
       },
       {
         path: '/api/space-weather',
         method: 'GET',
-        summary: 'Geomagnetic conditions and solar flare activity from NOAA SWPC.',
+        summary: 'الظروف المغناطيسية الأرضية ونشاط التوهجات الشمسية من NOAA SWPC.',
         returns: [
           'kp_index',
           'kp_available',
@@ -345,8 +345,8 @@ export const API_GROUPS: ApiGroup[] = [
   },
   {
     id: 'cyber',
-    title: 'Cyber Threat',
-    blurb: 'Vulnerability, attack, and malware telemetry.',
+    title: 'التهديدات السيبرانية',
+    blurb: 'بيانات الثغرات والهجمات والبرمجيات الخبيثة.',
     endpoints: [
       {
         path: '/api/cyber-threats',
@@ -377,9 +377,9 @@ export const API_GROUPS: ApiGroup[] = [
   },
   {
     id: 'osint',
-    title: 'OSINT Toolkit',
+    title: 'أدوات OSINT',
     blurb:
-      'The lookup tools behind the RECON panel. Every route takes a single subject and returns a normalised result, so they compose well in scripts.',
+      'أدوات البحث خلف لوحة الاستطلاع. يستقبل كل مسار موضوعاً واحداً ويعيد نتيجة موحدة، مما يسهل دمجها في السكربتات.',
     endpoints: [
       {
         path: '/api/osint/dns',
