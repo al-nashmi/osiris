@@ -64,7 +64,7 @@ function specs(s: RunState) {
     columns: [
       { id: 'name', label: 'Actor', width: 'minmax(170px,2fr)', sort: a => a.name, cell: a => <NameCell k={`a:${a.id}`} subtype={a.kind} title={a.name} sub={a.persona?.goal || a.role} /> },
       { id: 'kind', label: 'النوع', width: '96px', sort: a => a.kind, cell: a => <span className={`${LABEL} text-[var(--text-secondary)]`}>{a.kind}</span> },
-      { id: 'plays', label: 'Plays', width: '56px', sort: a => (a.persona ? 1 : 0), cell: a => a.persona ? <span className={`${LABEL} text-[var(--gold-primary)]`}>نعم</span> : <span className="text-[var(--text-muted)]">—</span> },
+      { id: 'plays', label: 'Plays', width: '56px', sort: a => (a.persona ? 1 : 0), cell: a => a.persona ? <span className={`${LABEL} text-[var(--gold-primary)]`}>Yes</span> : <span className="text-[var(--text-muted)]">—</span> },
       {
         id: 'lean', label: 'Lean', width: '64px', align: 'right', sort: a => a.lean,
         cell: a => s.frame?.kind === 'choice' ? num('—') : <span className="font-mono tabular-nums" style={{ color: a.lean > 0.15 ? T.gold : a.lean < -0.15 ? T.heading : T.body }}>{a.lean > 0 ? '+' : ''}{a.lean.toFixed(2)}</span>,
@@ -197,7 +197,7 @@ export function TableView({ s, selected, onSelect }: { s: RunState; selected: st
     <div className="h-full flex flex-col">
       <div ref={head} className="flex items-center gap-3 px-4 pt-3 pb-3 border-b border-[var(--border-secondary)]">
         <div className={narrow ? 'hidden' : ''}>
-          <div className="hud-text text-[10px] text-[var(--gold-primary)]">العناصر</div>
+          <div className="hud-text text-[10px] text-[var(--gold-primary)]">Objects</div>
           <div className="mt-0.5 text-[10px] font-mono tracking-[0.1em] text-[var(--text-muted)]">{counts[kind]} {kind.toUpperCase()}</div>
         </div>
         <div className="flex-1 min-w-0 max-w-[560px]">
