@@ -221,7 +221,7 @@ export function TimelineView({ s, selected, onSelect }: { s: RunState; selected:
     <div className="h-full flex flex-col">
       <div className="flex items-center gap-3 px-4 pt-3.5 pb-2.5 border-b border-[var(--border-secondary)]">
         <div>
-          <div className="hud-text text-[10px] text-[var(--gold-primary)]">الخط الزمني</div>
+          <div className="hud-text text-[10px] text-[var(--gold-primary)]">Timeline</div>
           <div className="mt-0.5 text-[10px] font-mono tracking-[0.1em] text-[var(--text-muted)]">
             {tl.rounds.length} PERIODS · {tl.lanes.length} WORLDS · {s.events.length} EVENTS{tl.injects.length ? ` · ${tl.injects.length} INJECTED` : ''}
           </div>
