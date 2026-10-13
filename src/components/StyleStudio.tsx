@@ -293,7 +293,7 @@ function StyleStudio({ onClose, isMobile }: { onClose: () => void; isMobile?: bo
     >
       <div className="flex items-center justify-between px-3 py-2.5 border-b border-white/[0.07] shrink-0">
         <div className="flex flex-col">
-          <span className="text-[11px] font-mono tracking-[0.22em] uppercase text-[var(--gold-light)]">استوديو المظهر</span>
+          <span className="text-[11px] font-mono tracking-[0.22em] uppercase text-[var(--gold-light)]">Style Studio</span>
           <span className="text-[9px] font-mono tracking-[0.1em] uppercase text-white/25">Live UI tokens</span>
         </div>
         <div className="flex items-center gap-1">
