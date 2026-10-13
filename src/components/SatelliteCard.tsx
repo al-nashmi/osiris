@@ -103,7 +103,7 @@ export default function SatelliteCard({ sat, onClose }: { sat: SatelliteDetail; 
             {sat.name}
           </div>
           <div className="truncate text-[9px] font-mono tracking-[0.12em] text-[var(--text-secondary)]">
-            {sat.mission || 'غير معروف mission'}
+            {sat.mission || 'Unknown mission'}
           </div>
         </div>
         <button
@@ -117,8 +117,8 @@ export default function SatelliteCard({ sat, onClose }: { sat: SatelliteDetail; 
       </div>
 
       <div className="grid grid-cols-2 gap-x-2.5 gap-y-2 px-2.5 py-2.5">
-        <Field label="الارتفاع" value={`${Math.round(sat.alt).toLocaleString()} km`} color="var(--cyan-primary)" />
-        <Field label="المدار" value={shell.label} color={accent} />
+        <Field label="ALTITUDE" value={`${Math.round(sat.alt).toLocaleString()} km`} color="var(--cyan-primary)" />
+        <Field label="ORBIT" value={shell.label} color={accent} />
         <Field
           label="PERIOD"
           value={sat.periodMinutes ? period(sat.periodMinutes) : '—'}
