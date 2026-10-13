@@ -114,8 +114,8 @@ export default function PrivacyPage() {
         </Link>
 
         <header className="mt-8">
-          <p className="font-mono text-[11px] tracking-[0.25em] text-[var(--gold-primary)]">الخصوصية</p>
-          <h1 className="mt-2 text-3xl font-bold tracking-wide sm:text-4xl">الخصوصية بكلمات واضحة</h1>
+          <p className="font-mono text-[11px] tracking-[0.25em] text-[var(--gold-primary)]">PRIVACY</p>
+          <h1 className="mt-2 text-3xl font-bold tracking-wide sm:text-4xl">Privacy, in plain words</h1>
           <p className="mt-4 text-[15px] leading-relaxed text-[var(--text-muted)]">
             OSIRIS is a window onto public information: flights, ships, cameras, news, markets and more, gathered onto
             one map. We built it so you can use it without telling us who you are. This page says what that means in
@@ -250,10 +250,10 @@ export default function PrivacyPage() {
 
         <Section id="choices" title="خياراتك">
           <ul className="flex flex-col gap-2.5 text-sm leading-relaxed text-[var(--text-muted)]">
-            <li><span className="text-[var(--text-primary)]">مسح كل شيء</span> by clearing this site’s data in your browser settings.</li>
-            <li><span className="text-[var(--text-primary)]">استخدام مفتاح الذكاء الاصطناعي لجلسة واحدة</span> by leaving “Remember on this device” unticked; it is then forgotten when the tab closes.</li>
-            <li><span className="text-[var(--text-primary)]">استخدم ما تحتاج إليه فقط</span>: map layers, cameras and AI features reach out only when you switch them on or use them.</li>
-            <li><span className="text-[var(--text-primary)]">شغّل نسختك الخاصة</span>: OSIRIS is open source, so you can host it yourself and decide who operates it.</li>
+            <li><span className="text-[var(--text-primary)]">Clear everything</span> by clearing this site’s data in your browser settings.</li>
+            <li><span className="text-[var(--text-primary)]">Keep your AI key to one session</span> by leaving “Remember on this device” unticked; it is then forgotten when the tab closes.</li>
+            <li><span className="text-[var(--text-primary)]">Use only what you need</span>: map layers, cameras and AI features reach out only when you switch them on or use them.</li>
+            <li><span className="text-[var(--text-primary)]">Run your own copy</span>: OSIRIS is open source, so you can host it yourself and decide who operates it.</li>
           </ul>
         </Section>
 
