@@ -55,11 +55,11 @@ const parseCoords = (s: string): { lat: number; lng: number } | null => {
 export default function SearchBar({ onLocate, center = null, onClose, onDirections, embedded = false }: SearchBarProps) {
   const [value, setValue] = useState('');
   const [results, setResults] = useState<Hit[]>([]);
-  const [loading, setجارٍ التحميل] = useState(false);
+  const [loading, setLoading] = useState(false);
   // The query the current results answer, so "no results" is never shown for a search still on its way.
   const [answered, setAnswered] = useState('');
   const [selected, setSelected] = useState(0);
-  const [recent, setالأخيرة] = useState<RecentPlace[]>(() => (typeof window === 'undefined' ? [] : loadالأخيرة()));
+  const [recent, setRecent] = useState<RecentPlace[]>(() => (typeof window === 'undefined' ? [] : loadRecent()));
   const [locating, setLocating] = useState(false);
   const [locateNote, setLocateNote] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
@@ -109,7 +109,7 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
     const coords = parseCoords(q);
     if (coords) {
       abortRef.current?.abort();
-      setجارٍ التحميل(false);
+      setLoading(false);
       setResults([{ label: `${coords.lat.toFixed(5)}, ${coords.lng.toFixed(5)}`, context: 'Coordinates', ...coords, kind: 'coordinate', zoom: 15 }]);
       setAnswered(q);
       return;
@@ -218,7 +218,7 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
           onChange={e => search(e.target.value)}
           onKeyDown={onKeyDown}
           placeholder="Search places, addresses or coordinates"
-          aria-label="Search places"
+          aria-label="البحث عن الأماكن"
           role="combobox"
           aria-expanded={items.length > 0}
           aria-controls={listId}
@@ -244,7 +244,7 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
       <div className={`min-h-0 overflow-y-auto styled-scrollbar ${embedded ? 'pt-3' : 'p-2'}`}>
         {!typing && (
           <span className={`block px-3 pt-1 pb-1.5 text-[10px] font-mono tracking-[0.14em] uppercase text-[var(--text-muted)] ${embedded ? 'px-1' : ''}`}>
-            {recent.length ? 'Jump to' : 'ابدأ here'}
+            {recent.length ? 'Jump to' : 'Start here'}
           </span>
         )}
         <div id={listId} role="listbox" aria-label={typing ? 'Places found' : 'Suggestions'} className="flex flex-col gap-0.5">
@@ -254,7 +254,7 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
               kindOverride={!typing && h.kind !== 'current' ? 'recent' : undefined}
               trailing={h.kind === 'current'
                 ? (locating ? <Loader2 className="w-4 h-4 mr-2 animate-spin text-[var(--gold-primary)]" /> : undefined)
-                : onالاتجاهات && (
+                : onDirections && (
                   <button onClick={() => directions(h)} aria-label={`Directions to ${h.label}`} title="Directions (Shift+Enter)"
                     className={`w-8 h-8 rounded-full flex items-center justify-center border transition-all ${i === active ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 focus:opacity-100'} border-[rgba(var(--gold-rgb),0.35)] text-[var(--gold-light)] bg-[rgba(var(--gold-rgb),0.06)] hover:bg-[rgba(var(--gold-rgb),0.16)]`}>
                     <Route className="w-4 h-4" />
@@ -266,13 +266,13 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
         {!typing && recent.length > 0 && (
           <button onClick={() => { forgetRecent(); setRecent([]); setSelected(0); }}
             className="mt-1 ml-3 text-[10.5px] text-[var(--text-muted)] hover:text-[var(--text-heading)] transition-colors">
-            Clear recent places
+            مسح recent places
           </button>
         )}
 
         {!typing && (
           <div className={`mt-3 mb-1 flex flex-wrap items-center gap-1.5 ${embedded ? '' : 'px-3'}`}>
-            <span className="text-[10px] font-mono tracking-[0.14em] uppercase text-[var(--text-muted)] mr-1">جرّب</span>
+            <span className="text-[10px] font-mono tracking-[0.14em] uppercase text-[var(--text-muted)] mr-1">Try</span>
             {TRY.map(t => (
               <button key={t} onClick={() => { search(t); inputRef.current?.focus(); }}
                 className="h-7 px-2.5 rounded-full border border-[var(--border-secondary)] bg-white/[0.02] text-[11px] text-[var(--text-secondary)] hover:text-[var(--text-heading)] hover:border-[var(--border-primary)] transition-colors">
@@ -315,12 +315,12 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
           <span className="hidden md:flex items-center gap-2.5">
             <span className="flex items-center gap-1"><Key>↑</Key><Key>↓</Key> move</span>
             <span className="flex items-center gap-1"><Key>↵</Key> go</span>
-            {onالاتجاهات && <span className="flex items-center gap-1"><Key>⇧</Key><Key>↵</Key><Navigation className="w-3 h-3" /> route</span>}
+            {onDirections && <span className="flex items-center gap-1"><Key>⇧</Key><Key>↵</Key><Navigation className="w-3 h-3" /> route</span>}
             <span className="flex items-center gap-1"><Key>Esc</Key> close</span>
           </span>
         )}
         <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" className="ml-auto hover:text-[var(--gold-light)] transition-colors">
-          © OpenStreetMap
+          © فتحStreetMap
         </a>
       </div>
     </div>
