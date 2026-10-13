@@ -46,9 +46,9 @@ interface ToolDef {
 const TABS: ToolDef[] = [
   { id: 'scanner', label: 'PORT SCAN', icon: Radar, placeholder: 'IP or hostname', color: '#00E5FF', group: 'network', blurb: 'Open ports and running services' },
   { id: 'vuln', label: 'VULN SWEEP', icon: Bug, placeholder: 'IP or hostname', color: '#FF3D3D', group: 'network', blurb: 'Known CVEs affecting the host' },
-  { id: 'shodan', label: 'SHODAN IOT', icon: Network, placeholder: 'IP address', color: '#FF3D3D', group: 'network', blurb: 'Internet-exposed device record' },
+  { id: 'shodan', label: 'SHODAN IOT', icon: Network, placeholder: 'عنوان IP', color: '#FF3D3D', group: 'network', blurb: 'Internet-exposed device record' },
   { id: 'bgp', label: 'BGP ROUTE', icon: Globe, placeholder: 'IP or ASN', color: '#00E5FF', group: 'network', blurb: 'Autonomous system and prefixes' },
-  { id: 'mac', label: 'MAC ADDR', icon: Fingerprint, placeholder: 'MAC address', color: '#FFD700', group: 'network', blurb: 'Hardware vendor lookup' },
+  { id: 'mac', label: 'MAC ADDR', icon: Fingerprint, placeholder: 'عنوان MAC', color: '#FFD700', group: 'network', blurb: 'Hardware vendor lookup' },
   { id: 'sweep', label: 'IP SWEEP', icon: Crosshair, placeholder: 'Enter IP address (e.g. 8.8.8.8)', color: '#FF3D3D', group: 'network', blurb: 'Scan an entire subnet' },
 
   { id: 'dns', label: 'DNS', icon: Server, placeholder: 'Domain name', color: '#448AFF', group: 'domain', blurb: 'All record types' },
@@ -80,7 +80,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<any>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setخطأ] = useState('');
+  const [error, setError] = useState('');
   const [scanType, setScanType] = useState('quick');
   const [expanded, setExpanded] = useState(true);
   const [history, setHistory] = useState<{tab:string;query:string;time:string}[]>([]);
@@ -94,7 +94,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
   /** Free-text filter over the toolkit — 19 modules is too many to scan. */
   const [toolFilter, setToolFilter] = useState('');
   // Owned here, not by the view: toggling the expanded view remounts it.
-  const fingerprint = useFingerprintبحث();
+  const fingerprint = useFingerprintSearch();
   /** DonBot's open token, kept for the same reason; its frame reloads on the remount, on the same token. */
   const [donbotQuery, setDonbotQuery] = useState<string | null>(null);
 
@@ -195,7 +195,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
       try {
         const t0 = Date.now();
         const res = await fetch(`/api/osint/sweep?ip=${encodeURIComponent(query)}&cidr=${cidr}`);
-        if (!res.ok) { const e = await res.json().catch(() => ({})); throw new خطأ(e.error || `Sweep failed (${res.status})`); }
+        if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error || `Sweep failed (${res.status})`); }
         const initData = await res.json();
 
         const ipParts = initData.target_ip.split('.').map(Number) as [number, number, number, number];
@@ -480,7 +480,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
                       <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-orange-500/20 text-orange-400">EXPLOIT</span>
                     </div>
                     <div className="text-[10px] font-mono text-[var(--text-muted)] mt-1 flex justify-between">
-                      <span>المصدر: {e.type?.toUpperCase() || 'UNKNOWN'}</span>
+                      <span>Source: {e.type?.toUpperCase() || 'UNKNOWN'}</span>
                       {e.cvss && <span>CVSS: {e.cvss}</span>}
                     </div>
                   </div>
@@ -501,7 +501,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
       return (
         <div>
           <SectionHeader title="DNS RECORDS" icon={Server} color="#448AFF" />
-          <ResultRow label="Domain" value={r.domain || query} color="#448AFF" />
+          <ResultRow label="النطاق" value={r.domain || query} color="#448AFF" />
           {r.A && <ResultRow label="A Records" value={Array.isArray(r.A) ? r.A.join(', ') : r.A} />}
           {r.AAAA && <ResultRow label="AAAA" value={Array.isArray(r.AAAA) ? r.AAAA.join(', ') : r.AAAA} />}
           {r.MX && <ResultRow label="MX" value={Array.isArray(r.MX) ? r.MX.map((m:any) => m.exchange || m).join(', ') : r.MX} />}
@@ -520,7 +520,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
         <div>
           <SectionHeader title="WHOIS INTELLIGENCE" icon={FileText} color="#FFD700" />
           <SanctionsBadge match={r.sanctions_match} />
-          <ResultRow label="Domain" value={r.domain_name || r.domainName || query} color="#FFD700" />
+          <ResultRow label="النطاق" value={r.domain_name || r.domainName || query} color="#FFD700" />
           <ResultRow label="Registrar" value={r.registrar} />
           <ResultRow label="Created" value={r.creation_date || r.createdDate} />
           <ResultRow label="Expires" value={r.expiration_date || r.expiresDate} />
@@ -767,7 +767,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
             {r.verified
               ? 'Every positive re-tested against a random control handle; sites that accepted it are listed as unverifiable. Calibration catches most soft 404s but is not exhaustive — confirm before acting.'
               : 'Calibration disabled — positives are unfiltered and include soft 404s.'}
-            <br />المصدر: {r.source}
+            <br />Source: {r.source}
           </div>
         </div>
       );
@@ -934,7 +934,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
           )}
 
           <div className="mt-2 text-[9px] font-mono text-[var(--text-muted)]">
-            المصدرs: {(r.sources || []).join(' · ')}
+            Sources: {(r.sources || []).join(' · ')}
             {r.activity && ` · sampled ${r.activity.sample_size} tx${r.activity.history_complete ? ' (full history)' : ' of a longer history'}`}
           </div>
         </div>
@@ -983,7 +983,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
       return (
         <div>
           <SectionHeader title="CERTIFICATE TRANSPARENCY" icon={Lock} color="#E040FB" />
-          <ResultRow label="Domain" value={query} color="#E040FB" />
+          <ResultRow label="النطاق" value={query} color="#E040FB" />
           <ResultRow label="Certificates" value={Array.isArray(certs) ? certs.length : 0} />
           {Array.isArray(certs) && certs.slice(0, 15).map((c: any, i: number) => (
             <div key={i} className="mt-1.5 p-2 rounded border border-[var(--border-secondary)]/30 bg-[var(--bg-tertiary)]/30">
@@ -1443,7 +1443,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
                     {/* Ports + Hostnames Row */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-[#2A2A28]">
                       <div className="bg-[#0D0D0C] p-4">
-                        <div className="text-[11px] font-mono text-[#5C5A54] tracking-widest uppercase mb-2">فتح Ports</div>
+                        <div className="text-[11px] font-mono text-[#5C5A54] tracking-widest uppercase mb-2">Open Ports</div>
                         <div className="flex flex-wrap gap-1.5">
                           {device.ports.map((port: number) => (
                             <span key={port} className="px-2 py-1 bg-[#1A1A18] border border-[#2A2A28] rounded text-[10px] font-mono text-[var(--cyan-primary)]">{port}</span>
