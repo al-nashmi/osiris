@@ -31,7 +31,7 @@ const KIND: Record<string, { icon: LucideIcon; label: string }> = {
   country: { icon: Globe2, label: 'Country' },
   coordinate: { icon: MapPin, label: 'Coordinates' },
   current: { icon: LocateFixed, label: 'You' },
-  recent: { icon: Clock, label: 'Recent' },
+  recent: { icon: Clock, label: 'الأخيرة' },
 };
 
 export const kindIcon = (kind?: string): LucideIcon => KIND[kind ?? '']?.icon ?? MapPin;
