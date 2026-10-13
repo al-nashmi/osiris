@@ -121,7 +121,7 @@ function AlertsBrief({ result, accent, activeThreadId, onThreadSelect }: {
           <span className="flex-1 min-w-0 truncate text-[var(--text-secondary)]">
             Strongest quake <b className="text-[var(--text-primary)]">M{quake.magnitude.toFixed(1)}</b> {quake.place}
           </span>
-          {quake.tsunami && <span className="text-[8.5px] font-mono text-[#448AFF]">تحذير تسونامي</span>}
+          {quake.tsunami && <span className="text-[8.5px] font-mono text-[#448AFF]">TSUNAMI FLAG</span>}
           <span className="font-mono text-[9px] text-[var(--text-muted)] flex-shrink-0">{brief.seismic!.count} total</span>
         </div>
       )}
@@ -149,10 +149,10 @@ export default function AiOverview({
 }: AiOverviewProps) {
   const [open, setOpenState] = useState(false);
   const setOpen = useCallback((next: boolean) => {
-    setOpenState(next);
-    onOpenChange?.(next);
-  }, [onOpenChange]);
-  const [loading, setجارٍ التحميل] = useState(false);
+    setفتحState(next);
+    onفتحChange?.(next);
+  }, [onفتحChange]);
+  const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<OverviewResult | null>(null);
   const [resultSignature, setResultSignature] = useState<string | undefined>(undefined);
   const [error, setخطأ] = useState<string | null>(null);
@@ -179,9 +179,9 @@ export default function AiOverview({
 
   const handleClick = useCallback(() => {
     const next = !open;
-    setOpen(next);
+    setفتح(next);
     if (next && !result && !loading) generate();
-  }, [open, result, loading, generate, setOpen]);
+  }, [open, result, loading, generate, setفتح]);
 
   const stale = Boolean(result && signature && resultSignature && signature !== resultSignature);
   const brief = result?.brief;
