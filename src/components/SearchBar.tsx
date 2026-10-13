@@ -218,7 +218,7 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
           onChange={e => search(e.target.value)}
           onKeyDown={onKeyDown}
           placeholder="Search places, addresses or coordinates"
-          aria-label="البحث عن الأماكن"
+          aria-label="Search places"
           role="combobox"
           aria-expanded={items.length > 0}
           aria-controls={listId}
@@ -266,7 +266,7 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
         {!typing && recent.length > 0 && (
           <button onClick={() => { forgetRecent(); setRecent([]); setSelected(0); }}
             className="mt-1 ml-3 text-[10.5px] text-[var(--text-muted)] hover:text-[var(--text-heading)] transition-colors">
-            مسح recent places
+            Clear recent places
           </button>
         )}
 
@@ -320,7 +320,7 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
           </span>
         )}
         <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" className="ml-auto hover:text-[var(--gold-light)] transition-colors">
-          © فتحStreetMap
+          © OpenStreetMap
         </a>
       </div>
     </div>
