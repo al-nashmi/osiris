@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useId, useRef, useState, type CSSProperties } from 'react';
-import { CarFront, Eye, Loader2, ScanSearch, Timer, X } from 'lucide-react';
+import { CarFront, Eye, Loader2, Scanبحث, Timer, X } from 'lucide-react';
 import { VEHICLES, type Detection, type Label } from '@/lib/vision/detect';
 import { countWords, describeWatch, labelWord, type FrameAnalysis } from '@/lib/vision/analysis';
 import type { Colour } from '@/lib/vision/colour';
@@ -292,12 +292,12 @@ export default function CameraVision({ camera, fit, ready }: { camera: VisionCam
       {/* The controls, until there is something to show. */}
       {ready && !a && !busy && state?.status !== 'error' && (
         <div className="absolute bottom-3 left-3 z-30 flex items-center gap-1">
-          <button onClick={() => start(0)} onPointerEnter={warm} onFocus={warm} onTouchStart={warm} aria-label="AI analyze this frame"
+          <button onClick={() => start(0)} onPointerEnter={warm} onFocus={warm} onTouchابدأ={warm} aria-label="AI analyze this frame"
             className="flex items-center gap-1.5 px-2.5 py-1.5 bg-black/80 border text-[9px] font-mono font-bold tracking-[0.2em] transition-all hover:bg-[var(--gold-primary)] hover:text-black hover:shadow-[0_0_18px_var(--gold-primary)]"
             style={{ borderColor: 'var(--gold-primary)', color: 'var(--gold-primary)' }} title="Count what is in view and read the vehicles' colours: free, on this device">
-            <ScanSearch className="w-3 h-3" /> AI ANALYZE
+            <Scanبحث className="w-3 h-3" /> AI ANALYZE
           </button>
-          <button onClick={() => start(WATCH_SECONDS)} onPointerEnter={warm} onFocus={warm} onTouchStart={warm} aria-label={`Watch for ${WATCH_SECONDS} seconds`}
+          <button onClick={() => start(WATCH_SECONDS)} onPointerEnter={warm} onFocus={warm} onTouchابدأ={warm} aria-label={`Watch for ${WATCH_SECONDS} seconds`}
             className="flex items-center gap-1.5 px-2.5 py-1.5 bg-black/75 border border-white/15 text-[9px] font-mono tracking-[0.2em] text-[var(--text-secondary)] transition-colors hover:text-white hover:border-white/40"
             title={`Follow the feed for ${WATCH_SECONDS} seconds and see how it changes`}>
             <Timer className="w-3 h-3" /> WATCH {WATCH_SECONDS}S
@@ -311,7 +311,7 @@ export default function CameraVision({ camera, fit, ready }: { camera: VisionCam
           style={{ borderColor: `color-mix(in srgb, ${accent} 60%, transparent)` }}>
           <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: accent, boxShadow: `0 0 8px ${accent}` }} />
           <span>{oi && <span style={{ color: accent }}>OI IS LOOKING · </span>}{doing(state)}</span>
-          <button onClick={() => clearLook(camera.id)} aria-label="Stop" className="ml-1 text-[var(--text-muted)] hover:text-white"><X className="w-3 h-3" /></button>
+          <button onClick={() => clearLook(camera.id)} aria-label="إيقاف" className="ml-1 text-[var(--text-muted)] hover:text-white"><X className="w-3 h-3" /></button>
         </div>
       )}
       {busy && state.mode === 'watch' && state.watch && (
@@ -376,7 +376,7 @@ function Report({ camera, state, a }: { camera: VisionCamera; state: Look; a: Fr
         {!busy && (
           <button onClick={() => clearLook(camera.id)} aria-label="Back to the live feed"
             className={`${canIdentify ? '' : 'ml-auto '}flex-shrink-0 flex items-center gap-1 px-1.5 py-0.5 border border-white/15 text-white hover:border-white/40`}>
-            <X className="w-2.5 h-2.5" /> LIVE
+            <X className="w-2.5 h-2.5" /> مباشر
           </button>
         )}
       </div>
@@ -387,7 +387,7 @@ function Report({ camera, state, a }: { camera: VisionCamera; state: Look; a: Fr
         <div className="ml-auto pb-0.5 text-right text-[9px] font-mono tracking-wide text-[var(--text-secondary)] leading-relaxed">
           <div>{kinds.length ? kinds.map(([l, n]) => `${n} ${labelWord(l, n)}`).join(' · ').toUpperCase() : vehicles + people ? '' : 'NOTHING IN VIEW IT CAN COUNT'}</div>
           <div className="text-white/45" title="Read by a detector running in this browser: nothing is sent anywhere">
-            {a.passes > 1 ? `${a.passes} PASSES · ` : ''}<span style={{ color: accent }}>{a.ms < 1000 ? `${a.ms} MS` : `${(a.ms / 1000).toFixed(1)} S`}</span> · ON THIS DEVICE
+            {a.passes > 1 ? `${a.passes} PASSES · ` : ''}<span style={{ color: accent }}>{a.ms < 1000 ? `${a.ms} MS` : `${(a.ms / 1000).toFixed(1)} S`}</span> · على هذا الجهاز
           </div>
         </div>
       </div>
