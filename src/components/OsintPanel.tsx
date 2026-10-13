@@ -5,7 +5,7 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   LocateFixed,
-  Search, Radar, Globe, Shield, FileText, Radio,
+  بحث, Radar, Globe, Shield, FileText, Radio,
   ChevronDown, ChevronUp, Loader2, AlertTriangle, Server,
   Wifi, Lock, MapPin, Bug, Code, Layers, Network, Fingerprint,
   CheckCircle, XCircle, Clock, ExternalLink, Crosshair,
@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 import { ipToNumber, numberToIp, calculateSubnetStart, classifyDevice, assessRisk, batchFetch, ShodanInternetDBResponse, SweepDevice } from '@/lib/osint-utils';
 import ChainBrief from '@/components/ChainBrief';
-import FingerprintSearch, { useFingerprintSearch } from '@/components/FingerprintSearch';
+import Fingerprintبحث, { useFingerprintبحث } from '@/components/Fingerprintبحث';
 import DonBotScan from '@/components/DonBotScan';
 import DigitalDonMark from '@/components/DigitalDonMark';
 
@@ -44,25 +44,25 @@ interface ToolDef {
 }
 
 const TABS: ToolDef[] = [
-  { id: 'scanner', label: 'PORT SCAN', icon: Radar, placeholder: 'IP or hostname', color: '#00E5FF', group: 'network', blurb: 'Open ports and running services' },
+  { id: 'scanner', label: 'PORT SCAN', icon: Radar, placeholder: 'IP or hostname', color: '#00E5FF', group: 'network', blurb: 'فتح ports and running services' },
   { id: 'vuln', label: 'VULN SWEEP', icon: Bug, placeholder: 'IP or hostname', color: '#FF3D3D', group: 'network', blurb: 'Known CVEs affecting the host' },
-  { id: 'shodan', label: 'SHODAN IOT', icon: Network, placeholder: 'IP address', color: '#FF3D3D', group: 'network', blurb: 'Internet-exposed device record' },
+  { id: 'shodan', label: 'SHODAN IOT', icon: Network, placeholder: 'عنوان IP', color: '#FF3D3D', group: 'network', blurb: 'Internet-exposed device record' },
   { id: 'bgp', label: 'BGP ROUTE', icon: Globe, placeholder: 'IP or ASN', color: '#00E5FF', group: 'network', blurb: 'Autonomous system and prefixes' },
-  { id: 'mac', label: 'MAC ADDR', icon: Fingerprint, placeholder: 'MAC address', color: '#FFD700', group: 'network', blurb: 'Hardware vendor lookup' },
-  { id: 'sweep', label: 'IP SWEEP', icon: Crosshair, placeholder: 'Enter IP address (e.g. 8.8.8.8)', color: '#FF3D3D', group: 'network', blurb: 'Scan an entire subnet' },
+  { id: 'mac', label: 'MAC ADDR', icon: Fingerprint, placeholder: 'عنوان MAC', color: '#FFD700', group: 'network', blurb: 'Hardware vendor lookup' },
+  { id: 'sweep', label: 'IP SWEEP', icon: Crosshair, placeholder: 'Enter عنوان IP (e.g. 8.8.8.8)', color: '#FF3D3D', group: 'network', blurb: 'Scan an entire subnet' },
 
-  { id: 'dns', label: 'DNS', icon: Server, placeholder: 'Domain name', color: '#448AFF', group: 'domain', blurb: 'All record types' },
-  { id: 'whois', label: 'WHOIS', icon: FileText, placeholder: 'Domain name', color: '#FFD700', group: 'domain', blurb: 'Registrar and ownership' },
-  { id: 'certs', label: 'CERTS', icon: Lock, placeholder: 'Domain name', color: '#E040FB', group: 'domain', blurb: 'Certificate transparency log' },
-  { id: 'ssl', label: 'SSL/TLS', icon: Shield, placeholder: 'Domain name', color: '#76FF03', group: 'domain', blurb: 'Cipher and certificate health' },
-  { id: 'subdomains', label: 'SUBDOMAINS', icon: Layers, placeholder: 'Domain to enumerate', color: '#00BCD4', group: 'domain', blurb: 'Enumerate attack surface' },
+  { id: 'dns', label: 'DNS', icon: Server, placeholder: 'النطاق name', color: '#448AFF', group: 'domain', blurb: 'All record types' },
+  { id: 'whois', label: 'WHOIS', icon: FileText, placeholder: 'النطاق name', color: '#FFD700', group: 'domain', blurb: 'Registrar and ownership' },
+  { id: 'certs', label: 'CERTS', icon: Lock, placeholder: 'النطاق name', color: '#E040FB', group: 'domain', blurb: 'الشهادة transparency log' },
+  { id: 'ssl', label: 'SSL/TLS', icon: Shield, placeholder: 'النطاق name', color: '#76FF03', group: 'domain', blurb: 'Cipher and certificate health' },
+  { id: 'subdomains', label: 'SUBDOMAINS', icon: Layers, placeholder: 'النطاق to enumerate', color: '#00BCD4', group: 'domain', blurb: 'Enumerate attack surface' },
   { id: 'headers', label: 'HEADERS', icon: Code, placeholder: 'URL to inspect', color: '#87CEEB', group: 'domain', blurb: 'Security headers audit' },
   { id: 'tech', label: 'TECH DETECT', icon: Code, placeholder: 'URL to fingerprint', color: '#9C27B0', group: 'domain', blurb: 'Frameworks and stack' },
 
-  { id: 'username', label: 'USERNAME', icon: User, placeholder: 'Username / handle to hunt', color: '#00E676', group: 'identity', blurb: 'Hunt a handle across platforms' },
+  { id: 'username', label: 'USERNAME', icon: User, placeholder: 'اسم المستخدم / handle to hunt', color: '#00E676', group: 'identity', blurb: 'Hunt a handle across platforms' },
   { id: 'github', label: 'GITHUB RECON', icon: Terminal, placeholder: 'GitHub username', color: '#87CEEB', group: 'identity', blurb: 'Profile, repos and contacts' },
-  { id: 'phone', label: 'PHONE INTEL', icon: Phone, placeholder: 'Phone number (e.g. +1...)', color: '#FF9500', group: 'identity', blurb: 'Carrier, region and line type' },
-  { id: 'fingerprint', label: 'FINGERPRINT', icon: Fingerprint, placeholder: 'Username, email or phone', color: '#3B82F6', group: 'identity', blurb: 'Public profile search, streamed live' },
+  { id: 'phone', label: 'PHONE INTEL', icon: Phone, placeholder: 'رقم الهاتف (e.g. +1...)', color: '#FF9500', group: 'identity', blurb: 'Carrier, region and line type' },
+  { id: 'fingerprint', label: 'FINGERPRINT', icon: Fingerprint, placeholder: 'اسم المستخدم, email or phone', color: '#3B82F6', group: 'identity', blurb: 'Public profile search, streamed live' },
 
   { id: 'threats', label: 'THREATS', icon: AlertTriangle, placeholder: 'IP, domain, or hash', color: '#FF9500', group: 'threat', blurb: 'Reputation across feeds' },
   { id: 'leaks', label: 'DATA LEAKS', icon: ShieldAlert, placeholder: 'Email address', color: '#E040FB', group: 'threat', blurb: 'Breach exposure for an address' },
@@ -72,7 +72,7 @@ const TABS: ToolDef[] = [
   { id: 'donbot', label: 'DONBOT', icon: DigitalDonMark, placeholder: 'Ticker, name or contract address', color: '#E8E6E0', group: 'chain', blurb: 'Token signal and holder clusters' },
 ];
 
-interface OsintPanelProps { isOpen?: boolean; onClose?: () => void; isMobile?: boolean; onSweepVisualize?: (data: any) => void; onScanGeolocate?: (target: string, data: any) => void; }
+interface OsintPanelProps { isفتح?: boolean; onإغلاق?: () => void; isMobile?: boolean; onSweepVisualize?: (data: any) => void; onScanGeolocate?: (target: string, data: any) => void; }
 
 function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintPanelProps) {
   const [activeTab, setActiveTab] = useState('scanner');
@@ -80,7 +80,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<any>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setخطأ] = useState('');
   const [scanType, setScanType] = useState('quick');
   const [expanded, setExpanded] = useState(true);
   const [history, setHistory] = useState<{tab:string;query:string;time:string}[]>([]);
@@ -90,11 +90,11 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
   const [cveCache, setCveCache] = useState<Record<string, any>>({});
   // CHAIN INTEL carries two views: the daily brief needs no target, the wallet
   // lookup uses the shared query bar.
-  const [chainView, setChainView] = useState<'brief' | 'wallet'>('brief');
+  const [chainعرض, setChainعرض] = useState<'brief' | 'wallet'>('brief');
   /** Free-text filter over the toolkit — 19 modules is too many to scan. */
   const [toolFilter, setToolFilter] = useState('');
   // Owned here, not by the view: toggling the expanded view remounts it.
-  const fingerprint = useFingerprintSearch();
+  const fingerprint = useFingerprintبحث();
   /** DonBot's open token, kept for the same reason; its frame reloads on the remount, on the same token. */
   const [donbotQuery, setDonbotQuery] = useState<string | null>(null);
 
@@ -102,7 +102,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
     setActiveTab(id);
     setQuery('');
     setResults(null);
-    setError('');
+    setخطأ('');
     setSweepResult(null);
   }, []);
 
@@ -127,7 +127,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
   const [expandedDevice, setExpandedDevice] = useState<string | null>(null);
 
   // Fetch CVE details when a device is expanded in full-screen mode
-  const fetchCveDetails = useCallback(async (cveIds: string[]) => {
+  const fetchCveالتفاصيل = useCallback(async (cveIds: string[]) => {
     const missing = cveIds.filter(id => !cveCache[id]);
     if (missing.length === 0) return;
     // Mark as loading
@@ -153,10 +153,10 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
 
     const handleSelfTrack = () => {
       setLoading(true);
-      setError('');
+      setخطأ('');
       fetch('/api/geo')
         .then(r => {
-          if (!r.ok) throw new Error(`Server returned ${r.status}`);
+          if (!r.ok) throw new خطأ(`Server returned ${r.status}`);
           return r.json();
         })
         .then(geo => {
@@ -165,26 +165,26 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
             onScanGeolocate(geo.query || 'local', {
               lat: geo.lat,
               lng: geo.lon,
-              city: geo.city || 'Unknown',
-              country: geo.country || 'Unknown',
-              isp: geo.isp || 'Unknown',
-              org: geo.org || 'Unknown',
-              as: geo.as || 'Unknown',
+              city: geo.city || 'غير معروف',
+              country: geo.country || 'غير معروف',
+              isp: geo.isp || 'غير معروف',
+              org: geo.org || 'غير معروف',
+              as: geo.as || 'غير معروف',
               type: 'self_track'
             });
           } else {
-            setError("Could not retrieve your IP location.");
+            setخطأ("Could not retrieve your IP location.");
           }
         })
         .catch(err => {
           setLoading(false);
-          setError("Network error: " + err.message);
+          setخطأ("Network error: " + err.message);
         });
     };
 
   const runLookup = useCallback(async () => {
     if (!query.trim() || loading) return;
-    setLoading(true); setError(''); setResults(null);
+    setLoading(true); setخطأ(''); setResults(null);
 
     // IP Sweep — separate flow (only for the sweep tab)
     if (activeTab === 'sweep') {
@@ -195,7 +195,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
       try {
         const t0 = Date.now();
         const res = await fetch(`/api/osint/sweep?ip=${encodeURIComponent(query)}&cidr=${cidr}`);
-        if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.error || `Sweep failed (${res.status})`); }
+        if (!res.ok) { const e = await res.json().catch(() => ({})); throw new خطأ(e.error || `Sweep failed (${res.status})`); }
         const initData = await res.json();
 
         const ipParts = initData.target_ip.split('.').map(Number) as [number, number, number, number];
@@ -248,7 +248,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
         setSweepProgress(null);
         setHistory(prev => [{ tab: activeTab, query, time: new Date().toLocaleTimeString() }, ...prev.slice(0, 9)]);
       } catch (err: any) {
-        setError(err.message);
+        setخطأ(err.message);
         setSweepProgress(null);
       } finally {
         setLoading(false);
@@ -335,9 +335,9 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
             .catch(() => {});
         }
       } else {
-        setError(data.error || 'Lookup failed');
+        setخطأ(data.error || 'Lookup failed');
       }
-    } catch { setError('Network error'); }
+    } catch { setخطأ('Network error'); }
     finally { setLoading(false); }
   }, [query, activeTab, scanType, loading, sweepCidr]);
 
@@ -406,7 +406,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
   const renderStructuredResults = () => {
     // The daily brief is self-loading and needs no query, so it renders
     // regardless of whether a lookup has been run.
-    if (activeTab === 'crypto' && chainView === 'brief') {
+    if (activeTab === 'crypto' && chainعرض === 'brief') {
       return (
         <div>
           <SectionHeader title="CHAIN INTEL — DAILY BRIEF" icon={Bitcoin} color="#F7931A" />
@@ -429,7 +429,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
           <ResultRow label="Duration" value={r.duration || r.scan_time} />
           {Array.isArray(ports) && ports.length > 0 && (
             <>
-              <SectionHeader title={`OPEN PORTS (${ports.length})`} icon={Wifi} color="#00E676" />
+              <SectionHeader title={`فتح PORTS (${ports.length})`} icon={Wifi} color="#00E676" />
               <div className="space-y-0.5">
                 {ports.map((p: any, i: number) => (
                   <PortRow key={i} port={p.port || p} state={p.state || 'open'} service={p.service || p.name} version={p.version} />
@@ -471,7 +471,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
           
           {exploits.length > 0 && (
             <div className="mt-4">
-              <SectionHeader title={`POSSIBLE EXPLOITS (${exploits.length})`} icon={AlertTriangle} color="#FF9500" />
+              <SectionHeader title={`POSSIBLE عمليات الاستغلال (${exploits.length})`} icon={AlertTriangle} color="#FF9500" />
               <div className="mt-2 space-y-1">
                 {exploits.slice(0, 10).map((e: any, i: number) => (
                   <div key={i} className="p-2 rounded-lg border border-orange-500/30 bg-orange-500/10 flex flex-col">
@@ -480,7 +480,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
                       <span className="text-[9px] font-mono font-bold px-1.5 py-0.5 rounded bg-orange-500/20 text-orange-400">استغلال الثغرات</span>
                     </div>
                     <div className="text-[10px] font-mono text-[var(--text-muted)] mt-1 flex justify-between">
-                      <span>Source: {e.type?.toUpperCase() || 'UNKNOWN'}</span>
+                      <span>المصدر: {e.type?.toUpperCase() || 'UNKNOWN'}</span>
                       {e.cvss && <span>CVSS: {e.cvss}</span>}
                     </div>
                   </div>
@@ -501,7 +501,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
       return (
         <div>
           <SectionHeader title="DNS RECORDS" icon={Server} color="#448AFF" />
-          <ResultRow label="Domain" value={r.domain || query} color="#448AFF" />
+          <ResultRow label="النطاق" value={r.domain || query} color="#448AFF" />
           {r.A && <ResultRow label="A Records" value={Array.isArray(r.A) ? r.A.join(', ') : r.A} />}
           {r.AAAA && <ResultRow label="AAAA" value={Array.isArray(r.AAAA) ? r.AAAA.join(', ') : r.AAAA} />}
           {r.MX && <ResultRow label="MX" value={Array.isArray(r.MX) ? r.MX.map((m:any) => m.exchange || m).join(', ') : r.MX} />}
@@ -520,11 +520,11 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
         <div>
           <SectionHeader title="WHOIS INTELLIGENCE" icon={FileText} color="#FFD700" />
           <SanctionsBadge match={r.sanctions_match} />
-          <ResultRow label="Domain" value={r.domain_name || r.domainName || query} color="#FFD700" />
+          <ResultRow label="النطاق" value={r.domain_name || r.domainName || query} color="#FFD700" />
           <ResultRow label="Registrar" value={r.registrar} />
           <ResultRow label="Created" value={r.creation_date || r.createdDate} />
           <ResultRow label="Expires" value={r.expiration_date || r.expiresDate} />
-          <ResultRow label="Updated" value={r.updated_date || r.updatedDate} />
+          <ResultRow label="آخر تحديث" value={r.updated_date || r.updatedDate} />
           <ResultRow label="Status" value={Array.isArray(r.status) ? r.status.join(', ') : r.status} />
           <ResultRow label="Nameservers" value={Array.isArray(r.name_servers || r.nameServers) ? (r.name_servers || r.nameServers).join(', ') : r.name_servers} />
           {renderFallbackExcluding(['domain_name','domainName','registrar','creation_date','createdDate','expiration_date','expiresDate','updated_date','updatedDate','status','name_servers','nameServers','timestamp','cached','raw','sanctions_match'])}
@@ -645,7 +645,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
               {r.recent_repos.map((repo: any, i: number) => (
                 <div key={i} className="flex justify-between text-[10px] font-mono mb-0.5">
                   <span className="text-[#E8E6E0]">{repo.name}</span>
-                  <span className="text-[var(--text-muted)]">{repo.language || 'Unknown'}</span>
+                  <span className="text-[var(--text-muted)]">{repo.language || 'غير معروف'}</span>
                 </div>
               ))}
             </div>
@@ -767,21 +767,21 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
             {r.verified
               ? 'Every positive re-tested against a random control handle; sites that accepted it are listed as unverifiable. Calibration catches most soft 404s but is not exhaustive — confirm before acting.'
               : 'Calibration disabled — positives are unfiltered and include soft 404s.'}
-            <br />Source: {r.source}
+            <br />المصدر: {r.source}
           </div>
         </div>
       );
     }
 
     // ── CHAIN INTEL ──
-    // Shares /api/osint/crypto with the standalone CHAIN panel; this is the
+    // مشاركةs /api/osint/crypto with the standalone CHAIN panel; this is the
     // in-toolkit view of the same wallet report.
     if (activeTab === 'crypto') {
       const ACCENT = '#F7931A';
-      const RISK_COLOR: Record<string, string> = {
+      const المخاطر_COLOR: Record<string, string> = {
         critical: '#FF1744', high: '#FF3D3D', medium: '#FF9500', low: '#FFD700', info: '#00E676',
       };
-      const riskColor = RISK_COLOR[r.risk?.level] || '#00E676';
+      const riskColor = المخاطر_COLOR[r.risk?.level] || '#00E676';
       const fmt = (n: number, d = 4) =>
         typeof n === 'number' && Number.isFinite(n)
           ? n.toLocaleString(undefined, { maximumFractionDigits: d })
@@ -816,7 +816,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
             </span>
             <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold border"
               style={{ color: riskColor, borderColor: `${riskColor}55`, background: `${riskColor}18` }}>
-              RISK {r.risk?.score} · {String(r.risk?.level || '').toUpperCase()}
+              المخاطر {r.risk?.score} · {String(r.risk?.level || '').toUpperCase()}
             </span>
           </div>
 
@@ -860,11 +860,11 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
 
           {r.risk?.factors?.length > 0 && (
             <>
-              <SectionHeader title="RISK FACTORS" icon={AlertTriangle} color={riskColor} />
+              <SectionHeader title="المخاطر FACTORS" icon={AlertTriangle} color={riskColor} />
               {r.risk.factors.map((f: any, i: number) => (
                 <div key={i} className="py-1.5 border-b border-[var(--border-secondary)]/20 last:border-0">
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono font-bold" style={{ color: RISK_COLOR[f.severity] || '#00E676' }}>
+                    <span className="text-[10px] font-mono font-bold" style={{ color: المخاطر_COLOR[f.severity] || '#00E676' }}>
                       {f.label}
                     </span>
                     {f.weight > 0 && (
@@ -934,7 +934,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
           )}
 
           <div className="mt-2 text-[9px] font-mono text-[var(--text-muted)]">
-            Sources: {(r.sources || []).join(' · ')}
+            المصدرs: {(r.sources || []).join(' · ')}
             {r.activity && ` · sampled ${r.activity.sample_size} tx${r.activity.history_complete ? ' (full history)' : ' of a longer history'}`}
           </div>
         </div>
@@ -983,8 +983,8 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
       return (
         <div>
           <SectionHeader title="CERTIFICATE TRANSPARENCY" icon={Lock} color="#E040FB" />
-          <ResultRow label="Domain" value={query} color="#E040FB" />
-          <ResultRow label="Certificates" value={Array.isArray(certs) ? certs.length : 0} />
+          <ResultRow label="النطاق" value={query} color="#E040FB" />
+          <ResultRow label="الشهادةs" value={Array.isArray(certs) ? certs.length : 0} />
           {Array.isArray(certs) && certs.slice(0, 15).map((c: any, i: number) => (
             <div key={i} className="mt-1.5 p-2 rounded border border-[var(--border-secondary)]/30 bg-[var(--bg-tertiary)]/30">
               <ResultRow label="Issuer" value={c.issuer_name || c.issuer} />
@@ -1071,7 +1071,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
   const renderToolRail = () => (
     <div className="flex flex-col h-full">
       <div className="relative p-3 pb-2 flex-shrink-0">
-        <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--text-muted)]" />
+        <بحث className="absolute left-5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--text-muted)]" />
         <input
           value={toolFilter}
           onChange={e => setToolFilter(e.target.value)}
@@ -1163,7 +1163,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
         <div className="grid grid-cols-2 gap-2">
           {TABS.filter(t => t.id === 'sweep').map(tab => (
             <button key={tab.id} onClick={() => { 
-                  setActiveTab(tab.id); setQuery(''); setResults(null); setError(''); setSweepResult(null); 
+                  setActiveTab(tab.id); setQuery(''); setResults(null); setخطأ(''); setSweepResult(null); 
                 }}
                 className={`w-full py-4 rounded-lg border flex flex-col items-center justify-center gap-2 transition-all ${
                   activeTab === tab.id ? 'bg-[var(--bg-tertiary)] border-opacity-50' : 'bg-[#0D0D0C] hover:bg-[var(--hover-accent)] border-transparent'
@@ -1191,7 +1191,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
             every label fits without truncation. */}
         <div className="mt-2">
           <div className="relative mb-1.5">
-            <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-[var(--text-muted)]" />
+            <بحث className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-[var(--text-muted)]" />
             <input
               value={toolFilter}
               onChange={e => setToolFilter(e.target.value)}
@@ -1236,7 +1236,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
       )}
 
       {/* FINGERPRINT brings its own search bar, results and history. */}
-      {activeTab === 'fingerprint' && <FingerprintSearch fp={fingerprint} isFullScreen={isFullScreen} />}
+      {activeTab === 'fingerprint' && <Fingerprintبحث fp={fingerprint} isFullScreen={isFullScreen} />}
 
       {/* So does DONBOT — the same scan as Markets → Crypto, sealed in its own frame. */}
       {activeTab === 'donbot' && <DonBotScan initial={donbotQuery} onScan={setDonbotQuery} />}
@@ -1250,12 +1250,12 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
             {([['brief', 'DAILY BRIEF'], ['wallet', 'WALLET FORENSICS']] as const).map(([id, label]) => (
               <button
                 key={id}
-                onClick={() => setChainView(id)}
+                onClick={() => setChainعرض(id)}
                 className="px-2 py-1 rounded text-[10px] font-mono font-bold tracking-wider transition-colors"
                 style={{
-                  color: chainView === id ? currentTab?.color : 'var(--text-muted)',
-                  background: chainView === id ? `${currentTab?.color}1a` : 'transparent',
-                  border: `1px solid ${chainView === id ? `${currentTab?.color}55` : 'rgba(255,255,255,0.1)'}`,
+                  color: chainعرض === id ? currentTab?.color : 'var(--text-muted)',
+                  background: chainعرض === id ? `${currentTab?.color}1a` : 'transparent',
+                  border: `1px solid ${chainعرض === id ? `${currentTab?.color}55` : 'rgba(255,255,255,0.1)'}`,
                 }}
               >
                 {label}
@@ -1264,10 +1264,10 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
           </div>
         )}
 
-        {!(activeTab === 'crypto' && chainView === 'brief') && (
+        {!(activeTab === 'crypto' && chainعرض === 'brief') && (
         <div className="flex gap-1.5">
           <div className="flex-1 relative">
-            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--text-muted)]" />
+            <بحث className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[var(--text-muted)]" />
             <input type="text" value={query} onChange={e => setQuery(e.target.value)} onKeyDown={e => e.key === 'Enter' && runLookup()}
               placeholder={currentTab?.placeholder}
               className="w-full bg-[var(--bg-primary)]/60 border border-[var(--border-primary)] rounded-lg pl-8 pr-3 py-2.5 text-[10px] font-mono text-[var(--text-primary)] placeholder:text-[var(--text-muted)]/40 focus:outline-none transition-colors"
@@ -1387,7 +1387,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
                     if (!isFullScreen) return;
                     const next = isExpanded ? null : device.ip;
                     setExpandedDevice(next);
-                    if (next && device.vulns.length > 0) fetchCveDetails(device.vulns);
+                    if (next && device.vulns.length > 0) fetchCveالتفاصيل(device.vulns);
                   }}
                 >
                   <div className="flex items-center gap-2 min-w-0 flex-1 pr-2">
@@ -1533,7 +1533,7 @@ function OsintPanelInner({ isMobile, onSweepVisualize, onScanGeolocate }: OsintP
         </div>
       )}
 
-      {(results || (activeTab === 'crypto' && chainView === 'brief')) && !(sweepResult && !loading) && (
+      {(results || (activeTab === 'crypto' && chainعرض === 'brief')) && !(sweepResult && !loading) && (
         <div className="bg-[var(--bg-primary)]/40 border border-[var(--border-primary)] rounded-lg p-3 max-h-[50vh] overflow-y-auto styled-scrollbar">
           <div className="flex items-center justify-between mb-2">
             <span className="text-[10px] font-mono tracking-widest" style={{ color: currentTab?.color }}>{currentTab?.label} RESULTS</span>
