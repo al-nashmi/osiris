@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Keyboard, X } from 'lucide-react';
 
-const الاختصارات = [
+const SHORTCUTS = [
   { key: 'F', desc: 'تبديل وضع ملء الشاشة' },
   { key: 'S', desc: 'مشاركة العرض الحالي' },
   { key: 'L', desc: 'إظهار/إخفاء لوحة الطبقات' },
@@ -17,13 +17,13 @@ const الاختصارات = [
 ];
 
 export default function KeyboardShortcuts() {
-  const [isفتح, setIsفتح] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (['INPUT', 'TEXTAREA'].includes((e.target as Element)?.tagName)) return;
-      if (e.key === '?' || (e.key === '/' && e.shiftKey)) setIsفتح(p => !p);
-      if (e.key === 'Escape') setIsفتح(false);
+      if (e.key === '?' || (e.key === '/' && e.shiftKey)) setIsOpen(p => !p);
+      if (e.key === 'Escape') setIsOpen(false);
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
@@ -37,7 +37,7 @@ export default function KeyboardShortcuts() {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
           className="fixed inset-0 z-[500] flex items-center justify-center pointer-events-auto"
-          onClick={() => setIsفتح(false)}
+          onClick={() => setIsOpen(false)}
         >
           <div className="absolute inset-0 bg-[var(--bg-void)]/80 backdrop-blur-sm" />
           <motion.div
@@ -49,12 +49,12 @@ export default function KeyboardShortcuts() {
                 <Keyboard className="w-4 h-4 text-[var(--gold-primary)]" />
                 <span className="text-sm font-mono font-bold text-[var(--text-heading)] tracking-wider">اختصارات لوحة المفاتيح</span>
               </div>
-              <button onClick={() => setIsفتح(false)} className="text-[var(--text-muted)] hover:text-[var(--text-primary)]">
+              <button onClick={() => setIsOpen(false)} className="text-[var(--text-muted)] hover:text-[var(--text-primary)]">
                 <X className="w-4 h-4" />
               </button>
             </div>
             <div className="space-y-2">
-              {الاختصارات.map(s => (
+              {SHORTCUTS.map(s => (
                 <div key={s.key} className="flex items-center justify-between">
                   <span className="text-[10px] font-mono text-[var(--text-secondary)]">{s.desc}</span>
                   <kbd className="px-2 py-0.5 rounded text-[9px] font-mono font-bold text-[var(--gold-primary)] bg-[var(--bg-void)] border border-[var(--border-primary)]">
