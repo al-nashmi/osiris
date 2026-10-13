@@ -786,7 +786,7 @@ export default function Dashboard() {
   // Keyboard shortcuts
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (['INPUT', 'TEXTالمساحة'].includes((e.target as Element)?.tagName)) return;
+      if (['INPUT', 'TEXTAREA'].includes((e.target as Element)?.tagName)) return;
       if (e.key === 'f' && !e.ctrlKey) {
         if (document.fullscreenElement) document.exitFullscreen();
         else document.documentElement.requestFullscreen();
