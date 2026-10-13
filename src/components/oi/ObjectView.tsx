@@ -331,7 +331,7 @@ export function ObjectView({ s, sel, onSelect, onLocate, onAsk, onGraph, variant
             </Group>
           )}
           {rel.length > 0 && <Group label="Relations" count={rel.length}><LinkRows s={s} links={rel} from={sel.key} onSelect={onSelect} /></Group>}
-          {ev.length > 0 && <Group label="Evidence" count={ev.length}><LinkRows s={s} links={ev} from={sel.key} onSelect={onSelect} /></Group>}
+          {ev.length > 0 && <Group label="الأدلة" count={ev.length}><LinkRows s={s} links={ev} from={sel.key} onSelect={onSelect} /></Group>}
           {a.persona && (
             <button onClick={() => onAsk(a.id)} className="oi-btn self-start">
               <MessageSquare className="w-3 h-3" /> Ask {a.name.split(' ').slice(0, 2).join(' ')}
@@ -354,7 +354,7 @@ export function ObjectView({ s, sel, onSelect, onLocate, onAsk, onGraph, variant
       const behind = s.moves.filter(m => m.world === e.world && m.period === e.period && (e.actors.length === 0 || e.actors.includes(m.actor)));
       props = [
         ['World', <ObjectChip key="w" s={s} k={`w:${e.world}`} onSelect={onSelect} />],
-        ['Date', <span key="d">{e.date}{period && <span className="text-[var(--text-muted)]"> · P{period.index}, {period.label}</span>}</span>],
+        ['التاريخ', <span key="d">{e.date}{period && <span className="text-[var(--text-muted)]"> · P{period.index}, {period.label}</span>}</span>],
         ['Pushes', <PushTag key="p" c={e} frame={s.frame} />],
         ['Where', e.place],
         ['Involves', e.actors.length ? <div key="a" className="flex flex-wrap gap-1.5">{e.actors.map(id => <ObjectChip key={id} s={s} k={`a:${id}`} onSelect={onSelect} />)}</div> : null],
@@ -426,7 +426,7 @@ export function ObjectView({ s, sel, onSelect, onLocate, onAsk, onGraph, variant
         ['Swings', q ? `${Math.round(q.vol * 100)}% a year` : null],
         ['Baseline', q ? (q.probability !== undefined ? <span key="b" className="font-mono" style={{ color: ANCHOR.baseline }}>{pct(q.probability)} by the horizon</span> : `${priceText(q.p10, q.currency)}–${priceText(q.p90, q.currency)} at the horizon (80%)`) : null],
         ['Priced sim.', q?.simulated ? (q.simulated.probability !== undefined ? <span key="sp" className="font-mono" style={{ color: ANCHOR.simulation }}>{pct(q.simulated.probability)}</span> : `${priceText(q.simulated.p10, q.currency)}–${priceText(q.simulated.p90, q.currency)} (80%)`) : null],
-        [c.kind === 'data' ? 'From' : 'Source', <span key="s" className="inline-flex items-center gap-1.5">{sourceLabel(c, c.id)}<SourceLink url={c.url} /></span>],
+        [c.kind === 'data' ? 'From' : 'المصدر', <span key="s" className="inline-flex items-center gap-1.5">{sourceLabel(c, c.id)}<SourceLink url={c.url} /></span>],
         ['Location', c.place],
         ['Published', c.published ? `${new Date(c.published).toLocaleString()} · ${ago(c.published)}` : ''],
         ['Quoted', quotedBy.length ? <span key="q" className="font-mono tabular-nums">{quotedBy.length}× by {quoters} actor{quoters === 1 ? '' : 's'}</span> : null],
@@ -487,7 +487,7 @@ export function ObjectView({ s, sel, onSelect, onLocate, onAsk, onGraph, variant
       const used = [...new Set(r.drivers.flatMap(d => d.sources ?? []))];
       props = [
         ['Answer', <span key="a" className="font-mono text-[var(--gold-light)]">{r.answer}</span>],
-        ['Sources', used.length ? <span key="s" className="font-mono tabular-nums">{used.length}</span> : null],
+        ['المصادر', used.length ? <span key="s" className="font-mono tabular-nums">{used.length}</span> : null],
       ];
       body = (
         <>
@@ -528,7 +528,7 @@ export function ObjectView({ s, sel, onSelect, onLocate, onAsk, onGraph, variant
     <>
       {locate && <IconButton title="Show on the globe" onClick={() => onLocate(locate!.lat, locate!.lng, locate!.zoom)}><LocateFixed className="w-3.5 h-3.5" /></IconButton>}
       {onGraph && inGraph && <IconButton title="Show in the graph" onClick={onGraph}><Network className="w-3.5 h-3.5" /></IconButton>}
-      <IconButton title="Close" onClick={() => onSelect(null)}><X className="w-3.5 h-3.5" /></IconButton>
+      <IconButton title="إغلاق" onClick={() => onSelect(null)}><X className="w-3.5 h-3.5" /></IconButton>
     </>
   );
   const header = (
@@ -560,7 +560,7 @@ export function ObjectView({ s, sel, onSelect, onLocate, onAsk, onGraph, variant
       <div className="flex flex-col h-full min-h-0" aria-label={`${type}: ${typeof title === 'string' ? title : ''}`}>
         <div className="flex items-center gap-1 h-11 px-2 border-b border-[var(--border-secondary)] flex-shrink-0 relative">
           {onBack && <button onClick={onBack} className={`inline-flex items-center gap-1.5 h-7 px-2 rounded-md ${LABEL} text-[var(--text-muted)] hover:text-[var(--text-primary)] hover:bg-[var(--hover-accent)]`}><ArrowLeft className="w-3 h-3" /> Lists</button>}
-          <span className={`ml-1 ${LABEL} text-[var(--text-secondary)]`}>Object</span>
+          <span className={`ml-1 ${LABEL} text-[var(--text-secondary)]`}>العنصر</span>
           <span className="ml-auto flex items-center">{actions}</span>
         </div>
         <div className="flex-1 min-h-0 overflow-y-auto styled-scrollbar p-4 flex flex-col gap-5">{content}</div>

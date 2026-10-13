@@ -35,7 +35,7 @@ const COLUMN_LABEL: Record<GraphNodeKind, string> = { evidence: 'SOURCES', actor
 const NODE_COLOR: Record<GraphNodeKind, string> = { actor: T.gold, evidence: T.body, report: T.goldLight };
 /** A quote's thread: dotted, so it reads apart from the arcs. */
 const CITE_DASH = '1.5 3.5';
-const LINK_FILTER_LABEL: Record<LinkKind, string> = { relation: 'Relations', evidence: 'Evidence', move: 'Moves', cite: 'Quotes' };
+const LINK_FILTER_LABEL: Record<LinkKind, string> = { relation: 'Relations', evidence: 'الأدلة', move: 'Moves', cite: 'Quotes' };
 const FILTER_W = 196;
 
 const clip = (s: string, n: number) => (s.length > n ? `${s.slice(0, n - 1)}…` : s);

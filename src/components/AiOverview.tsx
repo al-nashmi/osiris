@@ -226,7 +226,7 @@ export default function AiOverview({
                   <button onClick={generate} disabled={loading} className="hover:opacity-70 transition-opacity" title="Regenerate" aria-label="Regenerate overview">
                     <RefreshCw className={`w-3 h-3 ${loading ? 'animate-spin' : ''}`} style={{ color: accent }} />
                   </button>
-                  <button onClick={() => setOpen(false)} className="hover:opacity-70 transition-opacity" title="Close" aria-label="Close overview">
+                  <button onClick={() => setOpen(false)} className="hover:opacity-70 transition-opacity" title="إغلاق" aria-label="Close overview">
                     <X className="w-3 h-3 text-[var(--text-muted)]" />
                   </button>
                 </div>

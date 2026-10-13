@@ -272,7 +272,7 @@ export default function EndpointCard({ ep, origin }: { ep: ApiEndpoint; origin: 
                       <path d="M8 5v14l11-7z" />
                     </svg>
                   )}
-                  {running ? 'Running' : 'Send request'}
+                  {running ? 'Running' : 'إرسال الطلب'}
                 </button>
                 {missingRequired.length > 0 && (
                   <span className="text-[11px] font-mono text-[var(--text-muted)]">

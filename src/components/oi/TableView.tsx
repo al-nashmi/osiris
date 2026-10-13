@@ -63,8 +63,8 @@ function specs(s: RunState) {
     rows: [...s.actors.filter(a => a.persona), ...s.actors.filter(a => !a.persona)], key: a => `a:${a.id}`, text: a => `${a.name} ${a.kind} ${a.role} ${a.place} ${a.persona?.goal ?? ''}`,
     columns: [
       { id: 'name', label: 'Actor', width: 'minmax(170px,2fr)', sort: a => a.name, cell: a => <NameCell k={`a:${a.id}`} subtype={a.kind} title={a.name} sub={a.persona?.goal || a.role} /> },
-      { id: 'kind', label: 'Type', width: '96px', sort: a => a.kind, cell: a => <span className={`${LABEL} text-[var(--text-secondary)]`}>{a.kind}</span> },
-      { id: 'plays', label: 'Plays', width: '56px', sort: a => (a.persona ? 1 : 0), cell: a => a.persona ? <span className={`${LABEL} text-[var(--gold-primary)]`}>Yes</span> : <span className="text-[var(--text-muted)]">—</span> },
+      { id: 'kind', label: 'النوع', width: '96px', sort: a => a.kind, cell: a => <span className={`${LABEL} text-[var(--text-secondary)]`}>{a.kind}</span> },
+      { id: 'plays', label: 'Plays', width: '56px', sort: a => (a.persona ? 1 : 0), cell: a => a.persona ? <span className={`${LABEL} text-[var(--gold-primary)]`}>نعم</span> : <span className="text-[var(--text-muted)]">—</span> },
       {
         id: 'lean', label: 'Lean', width: '64px', align: 'right', sort: a => a.lean,
         cell: a => s.frame?.kind === 'choice' ? num('—') : <span className="font-mono tabular-nums" style={{ color: a.lean > 0.15 ? T.gold : a.lean < -0.15 ? T.heading : T.body }}>{a.lean > 0 ? '+' : ''}{a.lean.toFixed(2)}</span>,
@@ -90,7 +90,7 @@ function specs(s: RunState) {
   const events: TableSpec<RunState['events'][number]> = {
     rows: s.events, key: e => `e:${e.id}`, text: e => `${e.title} ${e.detail} ${e.place} world ${e.world}`,
     columns: [
-      { id: 'date', label: 'Date', width: '92px', sort: e => e.date, cell: e => <span className="font-mono tabular-nums text-[var(--text-secondary)]">{e.date}</span> },
+      { id: 'date', label: 'التاريخ', width: '92px', sort: e => e.date, cell: e => <span className="font-mono tabular-nums text-[var(--text-secondary)]">{e.date}</span> },
       { id: 'world', label: 'World', width: '64px', sort: e => e.world, cell: e => <span className={`${LABEL} text-[var(--text-secondary)]`} title={worldName(e.world)}>{e.world}</span> },
       { id: 'title', label: 'Event', width: 'minmax(220px,3fr)', sort: e => e.title, cell: e => <NameCell k={`e:${e.id}`} subtype={e.kind} title={e.title} sub={e.actors.map(name).join(', ')} /> },
       { id: 'kind', label: 'Kind', width: '80px', sort: e => e.kind, cell: e => <span className={`${LABEL}`} style={{ color: e.kind === 'event' ? T.body : T.goldLight }}>{e.kind === 'shock' ? 'Surprise' : e.kind === 'injected' ? 'Injected' : 'Event'}</span> },
@@ -101,7 +101,7 @@ function specs(s: RunState) {
   const sources: TableSpec<RunState['context'][number]> = {
     rows: s.context, key: c => `c:${c.id}`, text: c => `${c.title} ${c.source} ${c.place}`,
     columns: [
-      { id: 'title', label: 'Source', width: 'minmax(220px,3fr)', sort: c => c.title, cell: c => <NameCell k={`c:${c.id}`} subtype={c.kind} title={c.title} sub={c.source} /> },
+      { id: 'title', label: 'المصدر', width: 'minmax(220px,3fr)', sort: c => c.title, cell: c => <NameCell k={`c:${c.id}`} subtype={c.kind} title={c.title} sub={c.source} /> },
       { id: 'kind', label: 'Kind', width: '84px', sort: c => c.kind, cell: c => <span className={`${LABEL} text-[var(--text-secondary)]`}>{SOURCE_KIND[c.kind] ?? c.kind}</span> },
       { id: 'place', label: 'Location', width: 'minmax(80px,1fr)', sort: c => c.place, cell: c => <span className="truncate text-[var(--text-secondary)]">{c.place || '—'}</span> },
       { id: 'age', label: 'Age', width: '64px', align: 'right', sort: c => Date.parse(c.published) || 0, cell: c => num(ago(c.published) || '—') },
@@ -124,7 +124,7 @@ function specs(s: RunState) {
       },
       { id: 'to', label: 'To', width: 'minmax(120px,1.4fr)', sort: l => nodeName(s, l.to), cell: l => <span className="truncate text-[var(--text-primary)]">{nodeName(s, l.to)}</span> },
       { id: 'strength', label: 'Str.', width: '52px', align: 'right', sort: l => l.strength, cell: l => num(Math.round(l.strength * 100)) },
-      { id: 'round', label: 'When', width: '62px', align: 'right', sort: l => l.round, cell: l => num(l.from === 'r:report' ? 'Report' : l.round ? `${l.id.split(':')[1]} · P${l.round}` : 'Model') },
+      { id: 'round', label: 'When', width: '62px', align: 'right', sort: l => l.round, cell: l => num(l.from === 'r:report' ? 'Report' : l.round ? `${l.id.split(':')[1]} · P${l.round}` : 'النموذج') },
       { id: 'label', label: 'Says', width: 'minmax(140px,2fr)', sort: l => l.label, cell: l => <span className="truncate text-[var(--text-muted)]" title={l.label}>{l.label || '—'}</span> },
     ],
   };
@@ -197,7 +197,7 @@ export function TableView({ s, selected, onSelect }: { s: RunState; selected: st
     <div className="h-full flex flex-col">
       <div ref={head} className="flex items-center gap-3 px-4 pt-3 pb-3 border-b border-[var(--border-secondary)]">
         <div className={narrow ? 'hidden' : ''}>
-          <div className="hud-text text-[10px] text-[var(--gold-primary)]">Objects</div>
+          <div className="hud-text text-[10px] text-[var(--gold-primary)]">العناصر</div>
           <div className="mt-0.5 text-[10px] font-mono tracking-[0.1em] text-[var(--text-muted)]">{counts[kind]} {kind.toUpperCase()}</div>
         </div>
         <div className="flex-1 min-w-0 max-w-[560px]">

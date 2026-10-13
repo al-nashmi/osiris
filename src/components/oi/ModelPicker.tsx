@@ -145,7 +145,7 @@ export function ModelPicker({ provider, models, value, onChange, suggested, defa
                   aria-controls="oi-model-list"
                   className="w-full h-8 pl-7 pr-2 bg-transparent text-[11px] font-mono text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none" />
               </div>
-              <div ref={list} id="oi-model-list" role="listbox" aria-label="Models" className="max-h-[272px] overflow-y-auto styled-scrollbar p-1">
+              <div ref={list} id="oi-model-list" role="listbox" aria-label="النماذج" className="max-h-[272px] overflow-y-auto styled-scrollbar p-1">
                 {groups.map(g => (
                   <div key={g.key} role="group" aria-label={g.label}>
                     <div className="sticky top-0 z-10 flex items-center gap-2 px-2.5 pt-2 pb-1" style={{ background: 'var(--oi-solid)' }}>

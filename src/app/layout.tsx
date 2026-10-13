@@ -4,8 +4,8 @@ import "./globals.css";
 
 const SITE_URL = "https://osirisai.live";
 const SITE_NAME = "OSIRIS";
-const SITE_TITLE = "OSIRIS — Open Source Intelligence Platform | Live Flight Tracking, CCTV, OSINT Tools & More";
-const SITE_DESCRIPTION = "The open-source Palantir alternative. Track live aircraft, satellites, and worldwide CCTV cameras on a 3D globe. Run Nmap scans, DNS lookups, WHOIS queries, SSL cert analysis & threat intelligence — all from your browser. 20+ data sources including live earthquake, wildfire, cyber threat and conflict feeds, plus mapped reference data such as nuclear facilities. Free & open source.";
+const SITE_TITLE = "OSIRIS — منصة الاستخبارات مفتوحة المصدر | تتبع الرحلات والكاميرات وأدوات OSINT";
+const SITE_DESCRIPTION = "منصة استخبارات مفتوحة المصدر لمتابعة الطائرات والأقمار الصناعية والكاميرات حول العالم على كرة أرضية ثلاثية الأبعاد، مع أدوات OSINT وبيانات مباشرة للزلازل والحرائق والتهديدات السيبرانية.";
 
 export const viewport: Viewport = {
   themeColor: "#D4AF37",
@@ -95,7 +95,7 @@ export const metadata: Metadata = {
     description: "Track 10K+ aircraft, 2K satellites & worldwide CCTV on a 3D globe. Run Nmap, DNS, WHOIS & threat intel scans from your browser. 20+ live intelligence feeds. Free. Open source.",
     type: "website",
     siteName: SITE_NAME,
-    locale: "en_US",
+    locale: "ar_SA",
     url: SITE_URL,
     images: [
       {
@@ -180,7 +180,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" dir="ltr">
+    <html lang="ar" dir="rtl">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

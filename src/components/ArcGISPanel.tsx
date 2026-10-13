@@ -61,7 +61,7 @@ export interface ArcGISPanelProps {
 const CATEGORIES = [
   { label: 'Pipelines', query: 'pipeline' },
   { label: 'Power Grid', query: 'power grid transmission' },
-  { label: 'Infrastructure', query: 'critical infrastructure' },
+  { label: 'البنية التحتية', query: 'critical infrastructure' },
   { label: 'Military', query: 'military base installation' },
   { label: 'Emergency', query: 'emergency shelter evacuation' },
 ] as const;

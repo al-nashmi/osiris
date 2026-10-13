@@ -350,9 +350,9 @@ export function AssistView(p: AssistViewProps) {
               </button>
             )}
             {assist.busy ? (
-              <button onClick={assist.stop} title="Stop" aria-label="Stop" className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-[var(--alert-red)] bg-[rgba(255,61,61,0.08)] hover:bg-[rgba(255,61,61,0.16)]"><Square className="w-3 h-3" /></button>
+              <button onClick={assist.stop} title="إيقاف" aria-label="إيقاف" className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-[var(--alert-red)] bg-[rgba(255,61,61,0.08)] hover:bg-[rgba(255,61,61,0.16)]"><Square className="w-3 h-3" /></button>
             ) : (
-              <button onClick={() => send(text)} disabled={!canSend} title="Send (Enter)" aria-label="Send"
+              <button onClick={() => send(text)} disabled={!canSend} title="Send (Enter)" aria-label="إرسال"
                 className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-all disabled:opacity-35 disabled:pointer-events-none"
                 style={canSend ? { background: T.blue, color: '#04121a', boxShadow: `0 4px 14px ${blue(0.3)}` } : { color: T.blue, boxShadow: `inset 0 0 0 1px ${blue(0.4)}` }}>
                 <ArrowUp className="w-4 h-4" strokeWidth={2.5} />

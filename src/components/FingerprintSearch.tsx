@@ -47,7 +47,7 @@ const CATEGORY_COLOR: Record<Category, string> = {
 };
 
 const MODES: { id: SearchType; label: string; icon: typeof AtSign; placeholder: string; covers: string }[] = [
-  { id: 'username', label: 'Username', icon: AtSign, placeholder: 'Enter a username…', covers: 'Every public site in the Sherlock database, checked in parallel' },
+  { id: 'username', label: 'اسم المستخدم', icon: AtSign, placeholder: 'Enter a username…', covers: 'Every public site in the Sherlock database, checked in parallel' },
   { id: 'email', label: 'Email', icon: Mail, placeholder: 'Enter an email address…', covers: 'Known breach corpora and the address’s mail domain' },
   { id: 'phone', label: 'Phone', icon: Phone, placeholder: 'Enter a phone number (+1 …)', covers: 'Numbering plan: validity, region, format and line type' },
 ];
@@ -888,7 +888,7 @@ export default function FingerprintSearch({ fp, isFullScreen }: { fp: Fingerprin
                   ['International', s.data?.international],
                   ['National', s.data?.national],
                   ['Country code', s.data?.country_code],
-                  ['Region', s.data?.region_code && s.data.region_code !== 'Unknown' ? `${s.data.region} (${s.data.region_code})` : s.data?.region],
+                  ['Region', s.data?.region_code && s.data.region_code !== 'غير معروف' ? `${s.data.region} (${s.data.region_code})` : s.data?.region],
                   ['Line type', s.data?.line_type?.replace(/_/g, ' ')],
                 ].filter(([, v]) => v).map(([k, v, c]) => (
                   <div key={k} className="min-w-0">

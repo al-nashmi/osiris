@@ -120,7 +120,7 @@ function ChainBriefInner() {
         <button
           onClick={() => load(days, true)}
           className="ml-auto text-[9px] font-mono text-[var(--text-muted)] hover:text-white/70 transition-colors"
-          title="Refresh now"
+          title="تحديث الآن"
         >
           {lastRefresh ? lastRefresh.toLocaleTimeString() : 'refresh'}
         </button>
@@ -138,9 +138,9 @@ function ChainBriefInner() {
         <>
           <div className="grid grid-cols-3 gap-1.5 mb-2">
             {[
-              { label: 'LOSSES', value: usd(t?.exploit_losses_usd), color: '#FF3D3D' },
-              { label: 'EXPLOITS', value: t?.exploit_count ?? 0, color: '#FF9500' },
-              { label: 'CVES', value: t?.cve_count ?? 0, color: '#E040FB' },
+              { label: 'الخسائر', value: usd(t?.exploit_losses_usd), color: '#FF3D3D' },
+              { label: 'عمليات الاستغلال', value: t?.exploit_count ?? 0, color: '#FF9500' },
+              { label: 'ثغرات CVE', value: t?.cve_count ?? 0, color: '#E040FB' },
             ].map(c => (
               <div key={c.label} className="rounded border px-2 py-1.5" style={{ borderColor: `${c.color}33`, background: `${c.color}0d` }}>
                 <div className="text-[9px] font-mono text-[var(--text-muted)]">{c.label}</div>
@@ -165,7 +165,7 @@ function ChainBriefInner() {
             </div>
           )}
 
-          <Head title="ON-CHAIN EXPLOITS" icon={Flame} color="#FF3D3D" right={`${brief.exploits.length} shown`} />
+          <Head title="عمليات الاستغلال على البلوك تشين" icon={Flame} color="#FF3D3D" right={`${brief.exploits.length} shown`} />
           {brief.exploits.length === 0 && (
             <div className="text-[10px] font-mono text-[var(--text-muted)] py-1">None in window.</div>
           )}
@@ -184,7 +184,7 @@ function ChainBriefInner() {
             </div>
           ))}
 
-          <Head title="CRYPTO CVES" icon={Bug} color="#E040FB" right={`${brief.cves.length} shown`} />
+          <Head title="ثغرات العملات الرقمية" icon={Bug} color="#E040FB" right={`${brief.cves.length} shown`} />
           {brief.cves.length === 0 && (
             <div className="text-[10px] font-mono text-[var(--text-muted)] py-1">None published in window.</div>
           )}
@@ -207,7 +207,7 @@ function ChainBriefInner() {
             );
           })}
 
-          <Head title="OFAC DESIGNATED WALLETS" icon={ShieldAlert} color="#FFD700" right={`${t?.sanctioned_wallet_count ?? 0} total`} />
+          <Head title="محافظ مدرجة على قائمة OFAC" icon={ShieldAlert} color="#FFD700" right={`${t?.sanctioned_wallet_count ?? 0} total`} />
           {brief.sanctioned_wallets.slice(0, 10).map((w: any, i: number) => (
             <div key={i} className="flex items-center gap-2 py-1 text-[10px] font-mono">
               <span className="w-[34px] font-bold text-[#FFD700]">{w.asset}</span>

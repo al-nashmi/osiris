@@ -61,13 +61,13 @@ export interface ApiGroup {
 export const API_GROUPS: ApiGroup[] = [
   {
     id: 'system',
-    title: 'System',
-    blurb: 'Liveness and aggregate counters. Safe to poll from monitoring.',
+    title: 'النظام',
+    blurb: 'فحوصات سلامة الخدمة والعدادات المجمعة، آمنة للاستعلام الدوري من أنظمة المراقبة.',
     endpoints: [
       {
         path: '/api/health',
         method: 'GET',
-        summary: 'Liveness probe. Never touches an upstream feed, so it stays fast under load.',
+        summary: 'فحص حيوية الخدمة. لا يتصل بمصادر خارجية، لذلك يظل سريعاً حتى تحت الضغط.',
         returns: ['status', 'platform', 'version', 'uptime', 'timestamp', 'endpoints'],
         notes: '`status` is the literal string `operational`. `uptime` is process uptime in seconds.',
       },
@@ -75,7 +75,7 @@ export const API_GROUPS: ApiGroup[] = [
         path: '/api/stats',
         method: 'GET',
         summary:
-          'Fans out to the heavy feeds in parallel and returns only the counts — roughly 100 bytes instead of 10 MB of GeoJSON.',
+          'يستعلم من مصادر البيانات الثقيلة بالتوازي ويعيد الأعداد فقط — نحو 100 بايت بدلاً من 10 ميغابايت من بيانات GeoJSON.',
         returns: ['stats', 'timestamp'],
         notes:
           '`stats` contains `flights`, `sats`, `cctv`, `weather`, `nuclear`, `incidents`. Cached `s-maxage=30, stale-while-revalidate=60`, so 10k concurrent dashboard boots collapse into one upstream fetch per minute.',
@@ -84,13 +84,13 @@ export const API_GROUPS: ApiGroup[] = [
   },
   {
     id: 'aviation-space',
-    title: 'Aviation & Space',
-    blurb: 'Aircraft, orbital objects, and heliophysics.',
+    title: 'الطيران والفضاء',
+    blurb: 'الطائرات والأجسام المدارية وفيزياء الشمس.',
     endpoints: [
       {
         path: '/api/flights',
         method: 'GET',
-        summary: 'Live ADS-B aircraft, bucketed by class.',
+        summary: 'بيانات الطائرات المباشرة عبر ADS-B مصنفة حسب الفئة.',
         returns: ['commercial_flights', 'private_flights', 'private_jets', 'military_flights', 'source'],
         notes:
           'Keyless via adsb.lol. Each bucket is an array; sum them for a total. `OPENSKY_CLIENT_ID` / `OPENSKY_CLIENT_SECRET` are reserved for higher rate limits and are not required.',
@@ -98,14 +98,14 @@ export const API_GROUPS: ApiGroup[] = [
       {
         path: '/api/satellites',
         method: 'GET',
-        summary: 'Tracked orbital objects with TLE-derived positions.',
+        summary: 'أجسام مدارية متعقبة مع مواقع محسوبة من بيانات TLE.',
         returns: ['satellites', 'total', 'category_counts', 'raw_count', 'timestamp'],
         notes: 'Sourced from celestrak.org. `category_counts` breaks the set down by mission type.',
       },
       {
         path: '/api/space-weather',
         method: 'GET',
-        summary: 'Geomagnetic conditions and solar flare activity from NOAA SWPC.',
+        summary: 'الظروف المغناطيسية الأرضية ونشاط التوهجات الشمسية من NOAA SWPC.',
         returns: [
           'kp_index',
           'kp_available',
@@ -307,20 +307,20 @@ export const API_GROUPS: ApiGroup[] = [
       {
         path: '/api/infrastructure',
         method: 'GET',
-        summary: 'Fixed strategic infrastructure — nuclear sites, plants, and facilities.',
+        summary: 'البنية التحتية الاستراتيجية الثابتة — المواقع النووية والمحطات والمنشآت.',
         returns: ['infrastructure', 'total', 'timestamp'],
       },
       {
         path: '/api/maritime',
         method: 'GET',
-        summary: 'Ports, chokepoints, and vessel positions.',
+        summary: 'الموانئ والممرات البحرية الحيوية ومواقع السفن.',
         returns: ['ports', 'chokepoints', 'ships', 'total_ports', 'total_chokepoints', 'total_ships', 'timestamp'],
         env: ['AIS_API_KEY'],
       },
       {
         path: '/api/arcgis',
         method: 'GET',
-        summary: 'Queries a configured ArcGIS feature service.',
+        summary: 'يستعلم من خدمة معالم ArcGIS مهيأة.',
         params: [
           { name: 'service', desc: 'Service identifier to query.' },
           { name: 'q', desc: 'Attribute query string.' },
@@ -331,109 +331,109 @@ export const API_GROUPS: ApiGroup[] = [
       {
         path: '/api/proxy-tiles',
         method: 'GET',
-        summary: 'Same-origin raster tile proxy for basemaps that block cross-origin reads.',
+        summary: 'وكيل لبلاطات الخرائط النقطية من النطاق نفسه لخرائط الأساس التي تمنع القراءة من نطاقات أخرى.',
         params: [{ name: 'url', required: true, desc: 'Upstream tile URL.' }],
         returns: ['…binary tile'],
       },
       {
         path: '/api/geo',
         method: 'GET',
-        summary: 'Geolocates the calling client by IP.',
+        summary: 'يحدد الموقع الجغرافي للعميل الطالب عبر عنوان IP.',
         returns: ['status', 'query', 'city', 'regionName', 'country', 'lat', 'lon', 'isp', 'org'],
       },
     ],
   },
   {
     id: 'cyber',
-    title: 'Cyber Threat',
-    blurb: 'Vulnerability, attack, and malware telemetry.',
+    title: 'التهديدات السيبرانية',
+    blurb: 'بيانات الثغرات والهجمات والبرمجيات الخبيثة.',
     endpoints: [
       {
         path: '/api/cyber-threats',
         method: 'GET',
-        summary: 'Recent CVE disclosures with rollup statistics.',
+        summary: 'إفصاحات CVE الحديثة مع إحصاءات مجمعة.',
         returns: ['threats', 'stats'],
       },
       {
         path: '/api/cyber-attacks',
         method: 'GET',
-        summary: 'Listed botnet C2 servers from abuse.ch Feodo Tracker — blocklist entries, not observed attacks.',
+        summary: 'خوادم التحكم والسيطرة للشبكات الروبوتية من abuse.ch Feodo Tracker — إدخالات قائمة حظر وليست هجمات مرصودة.',
         returns: ['indicators', 'total', 'online', 'fetched_at', 'source', 'source_url'],
       },
       {
         path: '/api/malware',
         method: 'GET',
-        summary: 'Live malware hosts from abuse.ch URLhaus, geolocated per address.',
+        summary: 'مضيفو البرمجيات الخبيثة المباشرون من abuse.ch URLhaus مع تحديد الموقع لكل عنوان.',
         returns: ['threats', 'total', 'cursor', 'last_poll', 'stream', 'source', 'timestamp'],
       },
       {
         path: '/api/malware/stream',
         method: 'GET',
         summary:
-          'Server-sent events for the malware layer: a snapshot on connect, then new detections as URLhaus reports them.',
+          'أحداث يرسلها الخادم لطبقة البرمجيات الخبيثة: لقطة عند الاتصال ثم اكتشافات جديدة حسب تقارير URLhaus.',
         returns: ['snapshot', 'detections', 'status', 'heartbeat'],
       },
     ],
   },
   {
     id: 'osint',
-    title: 'OSINT Toolkit',
+    title: 'أدوات OSINT',
     blurb:
-      'The lookup tools behind the RECON panel. Every route takes a single subject and returns a normalised result, so they compose well in scripts.',
+      'أدوات البحث خلف لوحة الاستطلاع. يستقبل كل مسار موضوعاً واحداً ويعيد نتيجة موحدة، مما يسهل دمجها في السكربتات.',
     endpoints: [
       {
         path: '/api/osint/dns',
         method: 'GET',
-        summary: 'Resolves A, AAAA, MX, NS, TXT, and SOA records.',
+        summary: 'يستعلم عن سجلات A وAAAA وMX وNS وTXT وSOA.',
         params: [{ name: 'domain', required: true, desc: 'Domain to resolve.', example: 'example.com' }],
         returns: ['…record sets'],
       },
       {
         path: '/api/osint/whois',
         method: 'GET',
-        summary: 'Registration and registrar detail for a domain.',
+        summary: 'تفاصيل تسجيل النطاق وجهة التسجيل.',
         params: [{ name: 'domain', required: true, desc: 'Domain to look up.', example: 'example.com' }],
         returns: ['…registration record'],
       },
       {
         path: '/api/osint/certs',
         method: 'GET',
-        summary: 'Certificate transparency search — an effective passive subdomain enumerator.',
+        summary: 'بحث شفافية الشهادات — وسيلة فعالة لحصر النطاقات الفرعية بشكل سلبي.',
         params: [{ name: 'domain', required: true, desc: 'Apex domain to search.', example: 'example.com' }],
         returns: ['certificates', 'subdomains', 'total_certs', 'unique_subdomains', 'timestamp'],
       },
       {
         path: '/api/osint/ip',
         method: 'GET',
-        summary: 'Geolocation, ASN, and network ownership for an address.',
+        summary: 'الموقع الجغرافي ورقم النظام المستقل ASN وملكية الشبكة لعنوان محدد.',
         params: [{ name: 'ip', required: true, desc: 'IPv4 or IPv6 address.', example: '8.8.8.8' }],
         returns: ['…address record'],
       },
       {
         path: '/api/osint/shodan',
         method: 'GET',
-        summary: 'Exposed services, banners, and known vulnerabilities for a host.',
+        summary: 'الخدمات المكشوفة واللافتات والثغرات المعروفة للمضيف.',
         params: [{ name: 'ip', required: true, desc: 'Address to query.', example: '8.8.8.8' }],
         returns: ['status', 'ports', 'hostnames', 'cpes', 'vulns', 'tags', 'detail'],
       },
       {
         path: '/api/osint/bgp',
         method: 'GET',
-        summary: 'ASN, prefix, and peering relationships.',
+        summary: 'علاقات ASN والبادئات والربط بين الشبكات.',
         params: [{ name: 'query', required: true, desc: 'ASN, prefix, or IP.', example: 'AS15169' }],
         returns: ['…routing record'],
       },
       {
         path: '/api/osint/mac',
         method: 'GET',
-        summary: 'Resolves a MAC address or OUI prefix to its hardware vendor.',
+        summary: 'يحدد الشركة المصنّعة للجهاز من عنوان MAC أو بادئة OUI.',
         params: [{ name: 'mac', required: true, desc: 'MAC address or OUI prefix.', example: '00:1A:2B:3C:4D:5E' }],
         returns: ['mac', 'prefix', 'vendor', 'address', 'detail'],
       },
       {
         path: '/api/osint/phone',
         method: 'GET',
-        summary: 'Validates and classifies a phone number in E.164 form.',
+        summary: 'يتحقق من رقم الهاتف ويصنفه وفق تنسيق E.164.',
         params: [{ name: 'number', required: true, desc: 'Number in international format.', example: '+442071234567' }],
         returns: [
           'valid',
@@ -450,7 +450,7 @@ export const API_GROUPS: ApiGroup[] = [
       {
         path: '/api/osint/github',
         method: 'GET',
-        summary: 'Public profile metadata for a GitHub account.',
+        summary: 'بيانات الملف العام لحساب GitHub.',
         params: [{ name: 'user', required: true, desc: 'GitHub username.', example: 'torvalds' }],
         returns: ['username', 'name', 'bio', 'company', 'location', 'blog', 'email', 'twitter', 'public_repos'],
       },

@@ -7,7 +7,7 @@ export interface PaletteItem {
   id: string;
   label: string;
   hint: string;
-  kind: 'Guide' | 'Endpoint';
+  kind: 'دليل' | 'نقطة نهاية';
   group?: string;
 }
 
@@ -16,7 +16,7 @@ export function buildPaletteItems(guideSections: { id: string; title: string }[]
     id: s.id,
     label: s.title,
     hint: 'Guide section',
-    kind: 'Guide',
+    kind: 'دليل',
   }));
 
   const endpoints: PaletteItem[] = API_GROUPS.flatMap(g =>
@@ -24,7 +24,7 @@ export function buildPaletteItems(guideSections: { id: string; title: string }[]
       id: endpointId(ep),
       label: ep.path,
       hint: ep.summary,
-      kind: 'Endpoint' as const,
+      kind: 'نقطة نهاية' as const,
       group: g.title,
     }))
   );
@@ -114,7 +114,7 @@ export default function CommandPalette({
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-label="Search documentation"
+      aria-label="ابحث في التوثيق"
     >
       <div
         onClick={e => e.stopPropagation()}
@@ -130,8 +130,8 @@ export default function CommandPalette({
             value={query}
             onChange={e => setQuery(e.target.value)}
             onKeyDown={onKeyDown}
-            placeholder="Search sections and endpoints…"
-            aria-label="Search documentation"
+            placeholder="ابحث في الأقسام ونقاط API…"
+            aria-label="ابحث في التوثيق"
             className="flex-1 bg-transparent text-[12px] font-mono text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none"
           />
           <kbd className="text-[10px] font-mono px-1.5 py-0.5 rounded border border-white/10 text-[var(--text-muted)]">
@@ -157,12 +157,12 @@ export default function CommandPalette({
             >
               <span
                 className={`text-[9px] font-mono tracking-widest uppercase px-1.5 py-0.5 rounded border shrink-0 ${
-                  it.kind === 'Endpoint'
+                  it.kind === 'نقطة نهاية'
                     ? 'text-[var(--cyan-primary)] border-[var(--cyan-primary)]/25'
                     : 'text-[var(--gold-primary)] border-[var(--gold-primary)]/25'
                 }`}
               >
-                {it.kind === 'Endpoint' ? 'API' : 'Doc'}
+                {it.kind === 'نقطة نهاية' ? 'API' : 'مستند'}
               </span>
               <span className="min-w-0 flex-1">
                 <span className="block font-mono text-[11px] text-[var(--text-primary)] truncate">{it.label}</span>

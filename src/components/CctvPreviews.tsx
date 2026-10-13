@@ -363,7 +363,7 @@ function CctvPreviews({ mapRef, active, onOpen }: {
       candidates.push({
         cam: {
           id,
-          name: String(p.name ?? 'CAMERA'),
+          name: String(p.name ?? 'الكاميرا'),
           lng: coords[0],
           lat: coords[1],
           feed_url: String(p.feed_url ?? ''),

@@ -28,6 +28,25 @@ const EMPTY: Stats = { flights: 0, sats: 0, cctv: 0, weather: 0, nuclear: 0, inc
    ~100 bytes. Now there is at most one computation per TTL, concurrent callers
    share it, and a stale snapshot answers instantly while a fresh one is
    computed behind it. */
+/** Read one upstream response without letting an HTML error page fail every dashboard stat. */
+async function readFeedJson(res: Response, source: string): Promise<any | null> {
+  if (!res.ok) {
+    console.warn(`[OSIRIS] stats: ${source} returned HTTP ${res.status}`);
+    return null;
+  }
+  const contentType = res.headers.get('content-type') || '';
+  if (!contentType.toLowerCase().includes('json')) {
+    console.warn(`[OSIRIS] stats: ${source} returned non-JSON content-type: ${contentType || 'missing'}`);
+    return null;
+  }
+  try {
+    return await res.json();
+  } catch (error) {
+    console.warn(`[OSIRIS] stats: ${source} returned invalid JSON`, error instanceof Error ? error.message : error);
+    return null;
+  }
+}
+
 const TTL_MS = 30_000;
 let snapshot: Snapshot | undefined;
 let inflight: Promise<Snapshot> | undefined;
@@ -54,36 +73,36 @@ async function computeStats(origin: string): Promise<Partial<Stats>> {
 
   // Safely parse counts
   if (flightsRes.status === 'fulfilled' && flightsRes.value.ok) {
-    const data = await flightsRes.value.json();
-    fresh.flights = (data.commercial_flights?.length || 0) +
+    const data = await readFeedJson(flightsRes.value, 'flights');
+    if (data) fresh.flights = (data.commercial_flights?.length || 0) +
               (data.private_flights?.length || 0) +
               (data.private_jets?.length || 0) +
               (data.military_flights?.length || 0);
   }
 
   if (satsRes.status === 'fulfilled' && satsRes.value.ok) {
-    const data = await satsRes.value.json();
-    fresh.sats = data.satellites?.length || 0;
+    const data = await readFeedJson(satsRes.value, 'satellites');
+    if (data) fresh.sats = data.satellites?.length || 0;
   }
 
   if (cctvRes.status === 'fulfilled' && cctvRes.value.ok) {
-    const data = await cctvRes.value.json();
-    fresh.cctv = data.cameras?.length || 0;
+    const data = await readFeedJson(cctvRes.value, 'cctv');
+    if (data) fresh.cctv = data.cameras?.length || 0;
   }
 
   if (weatherRes.status === 'fulfilled' && weatherRes.value.ok) {
-    const data = await weatherRes.value.json();
-    fresh.weather = data.events?.length || 0;
+    const data = await readFeedJson(weatherRes.value, 'weather');
+    if (data) fresh.weather = data.events?.length || 0;
   }
 
   if (infraRes.status === 'fulfilled' && infraRes.value.ok) {
-    const data = await infraRes.value.json();
-    fresh.nuclear = data.infrastructure?.length || 0;
+    const data = await readFeedJson(infraRes.value, 'infrastructure');
+    if (data) fresh.nuclear = data.infrastructure?.length || 0;
   }
 
   if (gdeltRes.status === 'fulfilled' && gdeltRes.value.ok) {
-      const data = await gdeltRes.value.json();
-      fresh.incidents = data.events?.length || 0;
+      const data = await readFeedJson(gdeltRes.value, 'gdelt');
+      if (data) fresh.incidents = data.events?.length || 0;
   }
 
   return fresh;

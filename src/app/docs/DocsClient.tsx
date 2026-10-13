@@ -8,9 +8,9 @@ import EndpointCard from './EndpointCard';
 import CommandPalette, { buildPaletteItems } from './CommandPalette';
 
 const GUIDE_SECTIONS = [
-  { id: 'overview', title: 'Overview' },
-  { id: 'quickstart', title: 'Quick Start' },
-  { id: 'self-hosting', title: 'Self-Hosting' },
+  { id: 'overview', title: 'نظرة عامة' },
+  { id: 'quickstart', title: 'البدء السريع' },
+  { id: 'self-hosting', title: 'الاستضافة الذاتية' },
   { id: 'configuration', title: 'Configuration' },
   { id: 'interface', title: 'Interface Guide' },
   { id: 'oi', title: 'OI & MCP' },
@@ -167,7 +167,7 @@ export default function DocsClient() {
           <button
             onClick={() => setPaletteOpen(true)}
             className="group flex items-center gap-2 px-3 h-8 rounded-lg border border-white/[0.08] bg-white/[0.02] hover:border-[var(--gold-primary)]/30 hover:bg-white/[0.04] transition-colors"
-            aria-label="Search documentation"
+            aria-label="ابحث في التوثيق"
           >
             <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover:text-[var(--gold-primary)] transition-colors" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
               <circle cx="11" cy="11" r="7" />
@@ -203,7 +203,7 @@ export default function DocsClient() {
 
           <button
             onClick={() => setNavOpen(v => !v)}
-            aria-label="Toggle navigation"
+            aria-label="تبديل التنقل"
             aria-expanded={navOpen}
             className="lg:hidden w-8 h-8 flex items-center justify-center rounded-lg border border-white/[0.08] text-[var(--text-muted)] hover:text-[var(--gold-primary)]"
           >
@@ -314,7 +314,7 @@ export default function DocsClient() {
           </div>
 
           {/* ── GUIDE ── */}
-          <Section id="overview" eyebrow="Guide" title="Overview">
+          <Section id="overview" eyebrow="دليل" title="نظرة عامة">
             <p>
               Every data point on the map is rendered through WebGL via MapLibre GL, which is what lets the interface
               hold thousands of concurrent entities at 60fps. The application is a Next.js app: the map and HUD run in
@@ -325,19 +325,19 @@ export default function DocsClient() {
               That boundary is deliberate. Upstream sources disagree about formats, rate limits, and CORS policy, so
               the API layer absorbs those differences and hands back consistent JSON.
             </p>
-            <Callout tone="good" title="No credentials needed">
+            <Callout tone="good" title="لا حاجة إلى بيانات اعتماد">
               Aviation, maritime, satellites, fires, earthquakes, weather, news, and CVE data all come from public
               keyless feeds. Keys only matter for the optional RECON scanner and for raising rate limits.
             </Callout>
           </Section>
 
-          <Section id="quickstart" eyebrow="Guide" title="Quick Start">
+          <Section id="quickstart" eyebrow="دليل" title="البدء السريع">
             <p>
               Every read endpoint is a plain <Code>GET</Code> returning JSON. Nothing below needs authentication —
               paste any of it into a terminal.
             </p>
             <CodeBlock
-              label="Fetch live aircraft"
+              label="جلب الطائرات المباشرة"
               tabs={[
                 { label: 'cURL', lang: 'bash', code: `curl -s ${origin}/api/flights | jq '.commercial_flights | length'` },
                 {
@@ -361,26 +361,26 @@ print(len(data["commercial_flights"]), "commercial")`,
               If you only need magnitudes rather than geometry, <Code>/api/stats</Code> is the right endpoint to poll —
               it collapses the heavy feeds into a handful of counters.
             </p>
-            <Pre label="Aggregate counters" lang="bash">{`curl -s ${origin}/api/stats
+            <Pre label="إحصاءات مجمعة" lang="bash">{`curl -s ${origin}/api/stats
 # { "stats": { "flights": 9241, "sats": 2043, "cctv": 2117,
 #              "weather": 58, "nuclear": 191, "incidents": 412 },
 #   "timestamp": "2026-07-29T12:00:00Z" }`}</Pre>
             <p>The OSINT lookups each take one subject, so they compose cleanly in a pipeline:</p>
-            <Pre label="Passive subdomain enumeration" lang="bash">{`curl -s "${origin}/api/osint/certs?domain=example.com" | jq -r '.subdomains[]'`}</Pre>
-            <Callout tone="info" title="Try before you write code">
+            <Pre label="حصر النطاقات الفرعية بشكل سلبي" lang="bash">{`curl -s "${origin}/api/osint/certs?domain=example.com" | jq -r '.subdomains[]'`}</Pre>
+            <Callout tone="info" title="جرّب قبل كتابة الكود">
               Every GET endpoint in the reference below has a <strong>Send request</strong> button that runs it against
               this instance and shows the live response.
             </Callout>
           </Section>
 
-          <Section id="self-hosting" eyebrow="Guide" title="Self-Hosting">
+          <Section id="self-hosting" eyebrow="دليل" title="الاستضافة الذاتية">
             <p>OSIRIS needs Node 20+ and no database. A local instance is three commands:</p>
-            <Pre label="Local development" lang="bash">{`git clone https://github.com/simplifaisoul/osiris.git
+            <Pre label="التطوير المحلي" lang="bash">{`git clone https://github.com/simplifaisoul/osiris.git
 cd osiris
 npm install
 npm run dev        # http://localhost:3000`}</Pre>
             <p>For a production build, or to run the checks:</p>
-            <Pre label="Build and test" lang="bash">{`npm run build && npm start
+            <Pre label="البناء والاختبار" lang="bash">{`npm run build && npm start
 npm run lint
 npm test           # vitest
 npm run test:live  # includes tests that hit live upstream feeds`}</Pre>
@@ -389,11 +389,11 @@ npm run test:live  # includes tests that hit live upstream feeds`}</Pre>
               always listens on port 3000 internally; <Code>OSIRIS_PORT</Code> controls the host port it is published
               on.
             </p>
-            <Pre label="Docker" lang="bash">{`cp .env.example .env
+            <Pre label="دوكر" lang="bash">{`cp .env.example .env
 docker compose up -d`}</Pre>
           </Section>
 
-          <Section id="configuration" eyebrow="Guide" title="Configuration">
+          <Section id="configuration" eyebrow="دليل" title="Configuration">
             <p>
               Copy <Code>.env.example</Code> to <Code>.env</Code>. Read that file before filling anything in — most of
               the keys it lists are reserved for future sources and are not consumed by the current code.
@@ -443,7 +443,7 @@ docker compose up -d`}</Pre>
             </Callout>
           </Section>
 
-          <Section id="interface" eyebrow="Guide" title="Interface Guide">
+          <Section id="interface" eyebrow="دليل" title="Interface Guide">
             <p>
               The map fills the viewport and every control floats above it. Panels are toggles rather than
               destinations, so you can build up exactly the picture you need and drop the rest.
@@ -486,7 +486,7 @@ docker compose up -d`}</Pre>
             </div>
           </Section>
 
-          <Section id="oi" eyebrow="Guide" title="OI & MCP">
+          <Section id="oi" eyebrow="دليل" title="OI & MCP">
             <p>
               OI is the AI in OSIRIS, on your own model key, and it works two ways. <strong>Assist</strong> is a
               conversation (press <kbd>O</kbd>): ask in words, typed or spoken, and OI works the map for you. It flies
@@ -618,7 +618,7 @@ mcp_servers:
             </p>
           </Section>
 
-          <Section id="shortcuts" eyebrow="Guide" title="Keyboard Shortcuts">
+          <Section id="shortcuts" eyebrow="دليل" title="Keyboard Shortcuts">
             <p>
               Press <Code>?</Code> at any time inside the application to bring up this list.
             </p>

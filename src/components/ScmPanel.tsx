@@ -30,7 +30,7 @@ export default function ScmPanel({ data }: ScmPanelProps) {
       <button onClick={() => setExpanded(!expanded)} className="flex items-center justify-between w-full mb-2">
         <div className="flex items-center gap-2">
           <Target className="w-3.5 h-3.5 text-[#00BCD4]" />
-          <span className="hud-text text-[11px] text-[var(--text-primary)]">SCM RISK COMMAND</span>
+          <span className="hud-text text-[11px] text-[var(--text-primary)]">مركز قيادة مخاطر سلاسل الإمداد</span>
           {totalRisks > 0 && (
             <span className="gotham-tag gotham-tag--critical" style={{ fontSize: '9px', padding: '1px 4px' }}>{totalRisks} ALERTS</span>
           )}
@@ -50,7 +50,7 @@ export default function ScmPanel({ data }: ScmPanelProps) {
                 <div>
                   <div className="flex items-center gap-1.5 mb-1.5">
                     <AlertCircle className="w-3 h-3 text-[#FF9500]" />
-                    <span className="text-[10px] font-mono text-[#FF9500] tracking-widest font-bold">MARKET IMPACT ALERTS</span>
+                    <span className="text-[10px] font-mono text-[#FF9500] tracking-widest font-bold">تنبيهات تأثير السوق</span>
                   </div>
                   <div className="space-y-1">
                     {marketAlerts.map((alert: string, i: number) => (
@@ -66,10 +66,10 @@ export default function ScmPanel({ data }: ScmPanelProps) {
               <div>
                 <div className="flex items-center gap-1.5 mb-1.5">
                   <AlertTriangle className="w-3 h-3 text-[#FF1744]" />
-                  <span className="text-[10px] font-mono text-[var(--text-muted)] tracking-widest">CRITICAL SUPPLIERS</span>
+                  <span className="text-[10px] font-mono text-[var(--text-muted)] tracking-widest">المورّدون الحرجون</span>
                 </div>
                 {criticalSuppliers.length === 0 ? (
-                  <div className="text-[10px] font-mono text-[#00E676] px-2">✓ All monitored Tier 1/2 nodes operational.</div>
+                  <div className="text-[10px] font-mono text-[#00E676] px-2">✓ جميع العقد من المستوى الأول والثاني تعمل.</div>
                 ) : (
                   <div className="space-y-1">
                     {criticalSuppliers.map((s: any, i: number) => {
@@ -92,10 +92,10 @@ export default function ScmPanel({ data }: ScmPanelProps) {
               <div>
                 <div className="flex items-center gap-1.5 mb-1.5">
                   <Anchor className="w-3 h-3 text-[#FF9500]" />
-                  <span className="text-[10px] font-mono text-[var(--text-muted)] tracking-widest">CONGESTED NODES</span>
+                  <span className="text-[10px] font-mono text-[var(--text-muted)] tracking-widest">العقد المزدحمة</span>
                 </div>
                 {(congestedPorts.length === 0 && riskyChokes.length === 0) ? (
-                  <div className="text-[10px] font-mono text-[#00E676] px-2">✓ Global maritime flow optimal.</div>
+                  <div className="text-[10px] font-mono text-[#00E676] px-2">✓ حركة الملاحة البحرية العالمية طبيعية.</div>
                 ) : (
                   <div className="space-y-1">
                     {riskyChokes.map((c: any, i: number) => (

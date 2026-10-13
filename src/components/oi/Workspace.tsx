@@ -90,9 +90,9 @@ function useWindowWidth(): number {
 
 const STAGE_OPTIONS = (hasRun: boolean) => [
   { value: 'globe' as Stage, label: 'Globe', icon: <Globe2 className="w-3 h-3" />, title: 'The live globe (1)' },
-  { value: 'graph' as Stage, label: 'Graph', icon: <Network className="w-3 h-3" />, title: hasRun ? 'The research graph (2)' : 'Run a forecast to see its graph', disabled: !hasRun },
-  { value: 'timeline' as Stage, label: 'Timeline', icon: <GanttChart className="w-3 h-3" />, title: hasRun ? 'The simulated worlds over time (3)' : 'Run a forecast to see its timeline', disabled: !hasRun },
-  { value: 'table' as Stage, label: 'Table', icon: <Table2 className="w-3 h-3" />, title: hasRun ? 'Every object in tables (4)' : 'Run a forecast to see its objects', disabled: !hasRun },
+  { value: 'graph' as Stage, label: 'الرسم البياني', icon: <Network className="w-3 h-3" />, title: hasRun ? 'The research graph (2)' : 'Run a forecast to see its graph', disabled: !hasRun },
+  { value: 'timeline' as Stage, label: 'الخط الزمني', icon: <GanttChart className="w-3 h-3" />, title: hasRun ? 'The simulated worlds over time (3)' : 'Run a forecast to see its timeline', disabled: !hasRun },
+  { value: 'table' as Stage, label: 'الجدول', icon: <Table2 className="w-3 h-3" />, title: hasRun ? 'Every object in tables (4)' : 'Run a forecast to see its objects', disabled: !hasRun },
 ];
 
 export function Workspace(p: WorkspaceProps) {
@@ -165,7 +165,7 @@ export function Workspace(p: WorkspaceProps) {
                 <span className="flex items-center gap-1.5 min-w-0">
                   <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${s.status === 'running' ? 'animate-osiris-pulse' : ''}`}
                     style={{ background: s.status === 'running' || s.status === 'done' ? T.gold : s.status === 'failed' ? T.red : T.mute, boxShadow: s.status === 'running' ? `0 0 6px ${gold(0.8)}` : undefined }} />
-                  <span className="truncate normal-case tracking-[0.02em] text-[11px] font-sans text-[var(--text-secondary)]">{s.status === 'running' ? s.phaseLabel : s.status === 'done' ? 'Forecast complete' : s.status === 'failed' ? (s.message || 'Failed') : 'Stopped'}</span>
+                  <span className="truncate normal-case tracking-[0.02em] text-[11px] font-sans text-[var(--text-secondary)]">{s.status === 'running' ? s.phaseLabel : s.status === 'done' ? 'Forecast complete' : s.status === 'failed' ? (s.message || 'فشل') : 'Stopped'}</span>
                 </span>
               </div>
             </>
@@ -183,7 +183,7 @@ export function Workspace(p: WorkspaceProps) {
         <div className="flex items-center gap-1.5 flex-shrink-0">
           {p.engineMenu}
           {s && <Controls s={s} oi={oi} focus={p.focus} onFocus={p.onFocus} following={p.following} onFollow={p.onFollow} />}
-          {s && <Chip onClick={share} on={copied} title="Copy a link that replays this run">{copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />} {copied ? 'Copied' : 'Link'}</Chip>}
+          {s && <Chip onClick={share} on={copied} title="Copy a link that replays this run">{copied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />} {copied ? 'تم النسخ' : 'Link'}</Chip>}
           {s && <IconButton title="New forecast" onClick={p.onNewForecast}><Plus className="w-3.5 h-3.5" /></IconButton>}
           <IconButton title="Leave full screen (Esc)" onClick={() => onTheater?.(false)}><Minimize2 className="w-3.5 h-3.5" /></IconButton>
         </div>
@@ -211,8 +211,8 @@ export function Workspace(p: WorkspaceProps) {
             {p.errorBox}
             <div className="px-3 pt-3 flex-shrink-0">
               <Segmented id="left" size="sm" value={left} onChange={setLeftTab} options={[
-                { value: 'assessment', label: s.report ? 'Report' : 'Sources' },
-                { value: 'trace', label: 'Trace' },
+                { value: 'assessment', label: s.report ? 'Report' : 'المصادر' },
+                { value: 'trace', label: 'التتبّع' },
               ]} />
             </div>
             <div className="flex-1 min-h-0 overflow-y-auto styled-scrollbar p-4">
@@ -232,7 +232,7 @@ export function Workspace(p: WorkspaceProps) {
 
       {/* ── Right: the selected object, or the run's lists ── */}
       {s && (
-        <aside className="glass-panel oi-glass absolute pointer-events-auto flex flex-col overflow-hidden" style={{ right: L.gap, top: L.top, bottom: L.gap, width: L.right }} aria-label={selection ? 'Object' : 'Lists'}>
+        <aside className="glass-panel oi-glass absolute pointer-events-auto flex flex-col overflow-hidden" style={{ right: L.gap, top: L.top, bottom: L.gap, width: L.right }} aria-label={selection ? 'العنصر' : 'Lists'}>
           {selection
             ? <ObjectView key={selection.key} s={s} sel={selection} onSelect={onSelect} onLocate={p.onLocate} onAsk={p.onAsk} onGraph={() => onStage('graph')} variant="panel" onBack={() => onSelect(null)} />
             : p.lists}

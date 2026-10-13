@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 /**
  * Thin proxy to the OSIRIS Intelligence Layer (osiris-intel).
  *
- * In Docker: fetches from http://osiris-intel:4000/resolve
+ * In Vercel: uses the private INTEL_URL service binding.
  * In dev:    fetches from http://localhost:4000/resolve
  *
  * All intelligence logic lives in the intel container — this route
@@ -14,9 +14,7 @@ export const dynamic = 'force-dynamic';
  */
 
 const INTEL_URL = process.env.INTEL_URL || (
-  process.env.NODE_ENV === 'production'
-    ? 'http://osiris-intel:4000'
-    : 'http://localhost:4000'
+  process.env.NODE_ENV === 'production' ? '' : 'http://localhost:4000'
 );
 
 const ALLOWED_TYPES = new Set(['aircraft', 'vessel', 'company', 'person', 'ip', 'country']);
@@ -39,6 +37,13 @@ export async function GET(req: Request) {
   }
   if (!id || id.length < 2 || id.length > 200) {
     return NextResponse.json({ error: 'Invalid id (2-200 chars)' }, { status: 400 });
+  }
+
+  if (!INTEL_URL) {
+    return NextResponse.json(
+      { error: 'Intelligence service is not configured' },
+      { status: 503 },
+    );
   }
 
   try {
