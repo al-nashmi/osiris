@@ -16,11 +16,11 @@ interface CameraViewerProps {
   besideOi?: boolean;
 }
 
-export default function CameraViewer({ camera, onإغلاق, onLocate, besideOi = false }: CameraViewerProps) {
+export default function CameraViewer({ camera, onClose, onLocate, besideOi = false }: CameraViewerProps) {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setخطأ] = useState(false);
-  const [retryCount, setإعادة المحاولةCount] = useState(0);
+  const [error, setError] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
   const [fullscreen, setFullscreen] = useState(false);
   const [currentTime, setCurrentTime] = useState<string>('');
 
@@ -60,7 +60,7 @@ export default function CameraViewer({ camera, onإغلاق, onLocate, besideOi 
   // Snapshot cameras are checked too, in the background: the picture shows
   // immediately and is withdrawn only if the source says the camera is gone.
   const resolveKey: string | null =
-    (needsResolution(camera) ? camera.external_url : null) ?? liveFeedAtالمصدر(camera);
+    (needsResolution(camera) ? camera.external_url : null) ?? liveFeedAtSource(camera);
   const [resolution, setResolution] = useState<{ key: string; embed: string | null; offline: boolean; kind?: string } | null>(null);
   const resolvedEmbed = directEmbed ?? (resolution && resolution.key === resolveKey ? resolution.embed : null);
   const resolving = Boolean(resolveKey) && resolution?.key !== resolveKey;
@@ -286,7 +286,7 @@ export default function CameraViewer({ camera, onإغلاق, onLocate, besideOi 
             ) : view === 'offline' ? (
               <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/90 z-30 backdrop-blur-sm p-4 text-center">
                 <CameraOff className="w-6 h-6 mb-3 opacity-50 text-[var(--text-muted)]" />
-                <p className="text-[11px] font-mono uppercase tracking-widest text-[var(--text-secondary)]">{gone ? 'CAMERA WITHDRAWN' : 'CAMERA غير متصل'}</p>
+                <p className="text-[11px] font-mono uppercase tracking-widest text-[var(--text-secondary)]">{gone ? 'CAMERA WITHDRAWN' : 'CAMERA OFFLINE'}</p>
                 <p className="text-[9px] font-mono text-[var(--text-muted)] mt-2 max-w-[80%] uppercase">{gone ? 'No longer published at source' : 'The operator has this feed off air'}</p>
                 {/* No ACCESS TERMINAL button: the page it would open is either
                     showing the same 'offline' banner we just read, or a 404. */}
@@ -367,7 +367,7 @@ export default function CameraViewer({ camera, onإغلاق, onLocate, besideOi 
               <div className="absolute top-3 left-3 flex items-center gap-2 bg-black/80 border border-[var(--gold-primary)]/50 px-2 py-1 shadow-[0_0_10px_rgba(0,0,0,0.8)]">
                 <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse shadow-[0_0_8px_#ef4444]" />
                 <span className="text-[9px] font-mono text-white tracking-[0.2em]">
-                  {watchLiveUrl ? 'SNAPSHOT' : streamType === 'jpg' ? 'مباشر SAT-LINK' : 'مباشر FEED'}
+                  {watchLiveUrl ? 'SNAPSHOT' : streamType === 'jpg' ? 'LIVE SAT-LINK' : 'LIVE FEED'}
                 </span>
               </div>
             )}
@@ -382,7 +382,7 @@ export default function CameraViewer({ camera, onإغلاق, onLocate, besideOi 
                 style={{ borderColor: 'var(--gold-primary)', color: 'var(--gold-primary)', background: 'rgba(0,0,0,0.75)' }}
                 title="Live video is hosted by the camera operator — opens their page"
               >
-                <PlayCircle className="w-3 h-3" /> WATCH مباشر
+                <PlayCircle className="w-3 h-3" /> WATCH LIVE
               </a>
             )}
 
@@ -405,14 +405,14 @@ export default function CameraViewer({ camera, onإغلاق, onLocate, besideOi 
                 <div className="flex flex-col">
                   <span className="text-[9px] text-[var(--text-muted)] font-mono tracking-widest">FEED TYPE</span>
                   <span className="text-[9px] text-white font-mono tracking-widest uppercase">
-                    {view === 'offline' ? (gone ? 'WITHDRAWN' : 'غير متصل') : watchLiveUrl ? 'SNAPSHOT' : externalOnly ? 'EXTERNAL' : resolvedEmbed ? 'YOUTUBE مباشر' : streamType}
+                    {view === 'offline' ? (gone ? 'WITHDRAWN' : 'غير متصل') : watchLiveUrl ? 'SNAPSHOT' : externalOnly ? 'EXTERNAL' : resolvedEmbed ? 'YOUTUBE LIVE' : streamType}
                   </span>
                 </div>
                 <div className="flex flex-col border-l border-white/10 pl-4">
                   <span className="text-[9px] text-[var(--text-muted)] font-mono tracking-widest">STATUS</span>
                   {/* Nothing is being received locally for an external feed — don't claim otherwise. */}
                   <span className={`text-[9px] font-mono tracking-widest ${externalOnly ? 'text-[var(--gold-primary)]' : 'text-[var(--alert-green)]'}`}>
-                    {view === 'offline' ? (gone ? 'REMOVED BY SOURCE' : 'OFF AIR AT SOURCE') : watchLiveUrl ? 'مباشر VIDEO AT SOURCE' : externalOnly ? 'HOSTED OFF-PLATFORM' : 'ACTIVE / RECORDING'}
+                    {view === 'offline' ? (gone ? 'REMOVED BY SOURCE' : 'OFF AIR AT SOURCE') : watchLiveUrl ? 'LIVE VIDEO AT SOURCE' : externalOnly ? 'HOSTED OFF-PLATFORM' : 'ACTIVE / RECORDING'}
                   </span>
                 </div>
               </div>
