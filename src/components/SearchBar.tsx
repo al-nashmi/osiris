@@ -217,8 +217,8 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
           value={value}
           onChange={e => search(e.target.value)}
           onKeyDown={onKeyDown}
-          placeholder="Search places, addresses or coordinates"
-          aria-label="Search places"
+          placeholder="ابحث عن الأماكن أو العناوين أو الإحداثيات"
+          aria-label="البحث عن الأماكن"
           role="combobox"
           aria-expanded={items.length > 0}
           aria-controls={listId}
@@ -227,9 +227,9 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
           autoComplete="off"
           spellCheck={false}
         />
-        {loading && <Loader2 className="w-4 h-4 flex-shrink-0 animate-spin text-[var(--gold-primary)]" aria-label="Searching" />}
+        {loading && <Loader2 className="w-4 h-4 flex-shrink-0 animate-spin text-[var(--gold-primary)]" aria-label="جارٍ البحث" />}
         {value ? (
-          <button onClick={() => { search(''); inputRef.current?.focus(); }} aria-label="Clear the search"
+          <button onClick={() => { search(''); inputRef.current?.focus(); }} aria-label="مسح البحث"
             className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 text-[var(--text-muted)] hover:text-[var(--text-heading)] hover:bg-white/[0.06] transition-colors">
             <X className="w-4 h-4" />
           </button>
@@ -247,7 +247,7 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
             {recent.length ? 'Jump to' : 'Start here'}
           </span>
         )}
-        <div id={listId} role="listbox" aria-label={typing ? 'Places found' : 'Suggestions'} className="flex flex-col gap-0.5">
+        <div id={listId} role="listbox" aria-label={typing ? 'الأماكن التي تم العثور عليها' : 'اقتراحات'} className="flex flex-col gap-0.5">
           {items.map((h, i) => (
             <PlaceRow key={`${h.kind}-${h.label}-${h.lat}-${i}`} id={`${listId}-${i}`} place={h} query={typing ? value : ''} on={i === active}
               onPick={() => go(h)} onHover={() => setSelected(i)} from={center}
@@ -255,7 +255,7 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
               trailing={h.kind === 'current'
                 ? (locating ? <Loader2 className="w-4 h-4 mr-2 animate-spin text-[var(--gold-primary)]" /> : undefined)
                 : onDirections && (
-                  <button onClick={() => directions(h)} aria-label={`Directions to ${h.label}`} title="Directions (Shift+Enter)"
+                  <button onClick={() => directions(h)} aria-label={`الاتجاهات إلى ${h.label}`} title="الاتجاهات (Shift+Enter)"
                     className={`w-8 h-8 rounded-full flex items-center justify-center border transition-all ${i === active ? 'opacity-100' : 'opacity-0 group-hover:opacity-100 focus:opacity-100'} border-[rgba(var(--gold-rgb),0.35)] text-[var(--gold-light)] bg-[rgba(var(--gold-rgb),0.06)] hover:bg-[rgba(var(--gold-rgb),0.16)]`}>
                     <Route className="w-4 h-4" />
                   </button>
@@ -272,7 +272,7 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
 
         {!typing && (
           <div className={`mt-3 mb-1 flex flex-wrap items-center gap-1.5 ${embedded ? '' : 'px-3'}`}>
-            <span className="text-[10px] font-mono tracking-[0.14em] uppercase text-[var(--text-muted)] mr-1">Try</span>
+            <span className="text-[10px] font-mono tracking-[0.14em] uppercase text-[var(--text-muted)] mr-1">جرّب</span>
             {TRY.map(t => (
               <button key={t} onClick={() => { search(t); inputRef.current?.focus(); }}
                 className="h-7 px-2.5 rounded-full border border-[var(--border-secondary)] bg-white/[0.02] text-[11px] text-[var(--text-secondary)] hover:text-[var(--text-heading)] hover:border-[var(--border-primary)] transition-colors">
@@ -313,10 +313,10 @@ export default function SearchBar({ onLocate, center = null, onClose, onDirectio
       <div className={`flex items-center gap-3 flex-shrink-0 text-[10px] text-[var(--text-muted)] ${embedded ? 'pt-2' : 'px-4 h-9 border-t border-[var(--border-secondary)]'}`}>
         {!embedded && (
           <span className="hidden md:flex items-center gap-2.5">
-            <span className="flex items-center gap-1"><Key>↑</Key><Key>↓</Key> move</span>
+            <span className="flex items-center gap-1"><Key>↑</Key><Key>↓</Key> تحريك</span>
             <span className="flex items-center gap-1"><Key>↵</Key> go</span>
             {onDirections && <span className="flex items-center gap-1"><Key>⇧</Key><Key>↵</Key><Navigation className="w-3 h-3" /> route</span>}
-            <span className="flex items-center gap-1"><Key>Esc</Key> close</span>
+            <span className="flex items-center gap-1"><Key>Esc</Key> إغلاق</span>
           </span>
         )}
         <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" className="ml-auto hover:text-[var(--gold-light)] transition-colors">
