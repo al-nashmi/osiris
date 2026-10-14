@@ -163,17 +163,17 @@ export default function GlobalStatusBar({ revealed = true }: { revealed?: boolea
             <XIcon />
           </a>
           {/* Documentation & API reference */}
-          <Link href="/docs" prefetch title="Documentation & API Reference" aria-label="Documentation & API Reference"
+          <Link href="/docs" prefetch title="التوثيق ومرجع API" aria-label="التوثيق ومرجع API"
             className="h-full px-3 flex items-center gap-1.5 bg-[var(--gold-primary)]/10 text-[var(--gold-primary)]/80 hover:text-[var(--gold-primary)] hover:bg-[var(--gold-primary)]/25 border-r border-white/[0.04] transition-all duration-200"
           >
             <DocsIcon />
-            <span className="text-[9px] font-bold tracking-[0.15em] uppercase">Docs</span>
+            <span className="text-[9px] font-bold tracking-[0.15em] uppercase">التوثيق</span>
           </Link>
           {/* Data & privacy — what leaves this instance, and when */}
-          <Link href="/privacy" title="Data & Privacy" aria-label="Data and Privacy"
+          <Link href="/privacy" title="البيانات والخصوصية" aria-label="البيانات والخصوصية"
             className="h-full px-3 hidden sm:flex items-center text-white/40 hover:text-white hover:bg-white/[0.04] border-r border-white/[0.04] transition-all duration-200"
           >
-            <span className="text-[9px] font-bold tracking-[0.15em] uppercase">Privacy</span>
+            <span className="text-[9px] font-bold tracking-[0.15em] uppercase">الخصوصية</span>
           </Link>
         </div>
 
@@ -237,8 +237,8 @@ export default function GlobalStatusBar({ revealed = true }: { revealed?: boolea
               {hoveredQuake.place}
             </div>
             <div className="flex flex-col gap-1 text-[10px]">
-              <div className="text-white/50"><span className="text-white/30">Depth:</span> {hoveredQuake.depth} km</div>
-              <div className="text-white/50 mt-1"><span className="text-white/30">Time:</span> {new Date(hoveredQuake.time).toLocaleString()}</div>
+              <div className="text-white/50"><span className="text-white/30">العمق:</span> {hoveredQuake.depth} km</div>
+              <div className="text-white/50 mt-1"><span className="text-white/30">الوقت:</span> {new Date(hoveredQuake.time).toLocaleString()}</div>
             </div>
           </div>
         </div>
