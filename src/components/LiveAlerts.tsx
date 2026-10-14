@@ -345,7 +345,7 @@ function NewsCard({ item, now, open, wide, onToggle, onLocate }: {
       <button type="button" onClick={onToggle} aria-expanded={open} className="w-full text-left px-2.5 pt-2 pb-2 outline-none focus-visible:ring-1 focus-visible:ring-white/30 rounded-lg">
         <div className="flex items-start gap-2">
           <div className="flex-1 min-w-0 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[9.5px] font-mono uppercase tracking-wider">
-            {fresh && <span className="w-1.5 h-1.5 rounded-full animate-osiris-pulse" style={{ background: ACCENT }} title="Posted in the last 15 minutes" />}
+            {fresh && <span className="w-1.5 h-1.5 rounded-full animate-osiris-pulse" style={{ background: ACCENT }} title="نُشر خلال آخر 15 دقيقة" />}
             <span className="font-semibold text-[#E8E6E0]">{item.source_name}</span>
             {item.lean && <span style={{ color }} title={item.bloc ? BLOCS[item.bloc].label : undefined}>{item.lean}</span>}
           </div>
@@ -355,7 +355,7 @@ function NewsCard({ item, now, open, wide, onToggle, onLocate }: {
         </div>
 
         <h4 className={`mt-1 font-sans text-[12.5px] font-medium leading-snug text-[#F2EFE8] ${open ? '' : 'line-clamp-3'}`}>
-          {item.flag && <span className="mr-1.5 inline-block translate-y-[-1px] rounded bg-[#FF3D3D]/15 px-1 text-[8.5px] font-mono font-bold tracking-wider text-[#FF6B6B]">BREAKING</span>}
+          {item.flag && <span className="mr-1.5 inline-block translate-y-[-1px] rounded bg-[#FF3D3D]/15 px-1 text-[8.5px] font-mono font-bold tracking-wider text-[#FF6B6B]">عاجل</span>}
           {item.title}
         </h4>
         {!open && item.summary && (
@@ -365,30 +365,30 @@ function NewsCard({ item, now, open, wide, onToggle, onLocate }: {
         <div className="mt-1.5 flex flex-wrap items-center gap-1">
           {item.alertKind !== 'news' && <Chip color={kind.color}>{kind.label}</Chip>}
           {item.place && (
-            <Chip color={kind.color} title={`Pinned to ${item.place.label} — the place the post names`}>
+            <Chip color={kind.color} title={`مثبّت على ${item.place.label} — الموقع المذكور في المنشور`}>
               <MapPin className="w-2 h-2" /> <span className="max-w-[110px] truncate normal-case">{item.place.name}</span>
             </Chip>
           )}
           {item.media && (
-            <Chip title={item.media.count > 1 ? `${item.media.count} media items` : undefined}>
+            <Chip title={item.media.count > 1 ? `${item.media.count} عناصر وسائط` : undefined}>
               {item.media.kind === 'video' ? <Play className="w-2 h-2" /> : <ImageIcon className="w-2 h-2" />}
               {item.media.kind === 'video' ? (item.media.duration || 'video') : 'photo'}
               {item.media.count > 1 && ` +${item.media.count - 1}`}
             </Chip>
           )}
           {item.carriers.length > 0 && (
-            <Chip color="#00E5FF" title={`Also carried by ${item.carriers.map(c => c.source_name).join(', ')}`}>
+            <Chip color="#00E5FF" title={`نُشر أيضًا عبر ${item.carriers.map(c => c.source_name).join(', ')}`}>
               <Layers className="w-2 h-2" /> +{item.carriers.length} channel{item.carriers.length > 1 ? 's' : ''}
             </Chip>
           )}
           {item.forwarded_from && (
-            <Chip title={`Forwarded from ${item.forwarded_from.name}`}>
+            <Chip title={`أُعيد توجيهه من ${item.forwarded_from.name}`}>
               <Repeat2 className="w-2 h-2" /> <span className="max-w-[110px] truncate normal-case">{item.forwarded_from.name}</span>
             </Chip>
           )}
-          {item.reply_to && <Chip><CornerDownRight className="w-2 h-2" /> reply</Chip>}
+          {item.reply_to && <Chip><CornerDownRight className="w-2 h-2" /> رد</Chip>}
           {item.keywords.slice(0, 2).map(k => (
-            <Chip key={k} color="#FF9500" title="Matched by the conflict-keyword filter — a word match, not an assessment">{k}</Chip>
+            <Chip key={k} color="#FF9500" title="تطابق مع كلمات مفتاحية للنزاع — تطابق لفظي وليس تقييمًا">{k}</Chip>
           ))}
           {item.views != null && (
             <span className="ml-auto inline-flex items-center gap-0.5 text-[8.5px] font-mono text-[#5C5A54]" title={`${item.views.toLocaleString()} views`}>
@@ -450,7 +450,7 @@ function NewsCard({ item, now, open, wide, onToggle, onLocate }: {
 
           {item.carriers.length > 0 && (
             <div>
-              <div className="mb-1 text-[8.5px] font-mono tracking-widest text-[#5C5A54]">ALSO CARRIED BY</div>
+              <div className="mb-1 text-[8.5px] font-mono tracking-widest text-[#5C5A54]">نُشر أيضًا عبر</div>
               <ul className="space-y-0.5">
                 {item.carriers.map(c => (
                   <li key={c.source} className="flex items-center gap-1.5 text-[10px] font-mono">
@@ -459,7 +459,7 @@ function NewsCard({ item, now, open, wide, onToggle, onLocate }: {
                     {c.lean && <span className="truncate uppercase text-[8.5px]" style={{ color: blocColor(c.bloc) }}>{c.lean}</span>}
                     <span className="ml-auto flex-shrink-0 text-[#5C5A54]">{c.published ? timeAgo(c.published, now) : ''}</span>
                     {c.link && (
-                      <a href={c.link} target="_blank" rel="noopener noreferrer" className="flex-shrink-0 text-[var(--cyan-primary)] hover:opacity-70" aria-label={`Open ${c.source_name} post`}>
+                      <a href={c.link} target="_blank" rel="noopener noreferrer" className="flex-shrink-0 text-[var(--cyan-primary)] hover:opacity-70" aria-label={`فتح منشور ${c.source_name}`}>
                         <ExternalLink className="w-2.5 h-2.5" />
                       </a>
                     )}
@@ -544,7 +544,7 @@ function StatementCard({ speaker, items, now, open, wide, onToggle }: {
       <button type="button" onClick={onToggle} aria-expanded={open} className="w-full text-left px-2.5 pt-2 pb-1.5 outline-none focus-visible:ring-1 focus-visible:ring-white/30 rounded-lg">
         <div className="flex items-start gap-2">
           <div className="flex-1 min-w-0 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[9.5px] font-mono uppercase tracking-wider">
-            {fresh && <span className="w-1.5 h-1.5 rounded-full animate-osiris-pulse" style={{ background: ACCENT }} title="Posted in the last 15 minutes" />}
+            {fresh && <span className="w-1.5 h-1.5 rounded-full animate-osiris-pulse" style={{ background: ACCENT }} title="نُشر خلال آخر 15 دقيقة" />}
             <span className="font-semibold text-[#E8E6E0]">{lead.source_name}</span>
             {lead.lean && <span style={{ color }}>{lead.lean}</span>}
           </div>
@@ -553,7 +553,7 @@ function StatementCard({ speaker, items, now, open, wide, onToggle }: {
           </time>
         </div>
         <h4 className="mt-1 font-sans text-[12.5px] font-medium leading-snug text-[#F2EFE8]">
-          {items.some(i => i.flag) && <span className="mr-1.5 inline-block translate-y-[-1px] rounded bg-[#FF3D3D]/15 px-1 text-[8.5px] font-mono font-bold tracking-wider text-[#FF6B6B]">BREAKING</span>}
+          {items.some(i => i.flag) && <span className="mr-1.5 inline-block translate-y-[-1px] rounded bg-[#FF3D3D]/15 px-1 text-[8.5px] font-mono font-bold tracking-wider text-[#FF6B6B]">عاجل</span>}
           {speaker}
           <span className="ml-1.5 whitespace-nowrap text-[9px] font-mono font-normal tracking-wider text-[#8A8880]">{items.length} STATEMENTS</span>
         </h4>
@@ -568,7 +568,7 @@ function StatementCard({ speaker, items, now, open, wide, onToggle }: {
               {item.media && (item.media.kind === 'video' ? <Play className="w-2.5 h-2.5" /> : <ImageIcon className="w-2.5 h-2.5" />)}
               {timeAgo(item.ts, now).replace(' ago', '')}
               {item.link && (
-                <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-[var(--cyan-primary)] hover:opacity-70" aria-label="Open this statement on Telegram">
+                <a href={item.link} target="_blank" rel="noopener noreferrer" className="text-[var(--cyan-primary)] hover:opacity-70" aria-label="فتح هذا التصريح على تيليجرام">
                   <ExternalLink className="w-2.5 h-2.5" />
                 </a>
               )}
@@ -588,12 +588,12 @@ function QuakeCard({ item, now, onLocate }: { item: QuakeAlert; now: number; onL
         <button
           type="button"
           onClick={() => onLocate(item.lat, item.lng)}
-          title="Show on map"
+          title="عرض على الخريطة"
           className="flex h-10 w-10 flex-shrink-0 flex-col items-center justify-center rounded-md font-mono transition-transform hover:scale-105"
           style={{ background: `${color}1c`, border: `1px solid ${color}55`, color }}
         >
           <span className="text-[13px] font-bold leading-none">{item.magnitude.toFixed(1)}</span>
-          <span className="mt-0.5 text-[7px] tracking-widest">MAG</span>
+          <span className="mt-0.5 text-[7px] tracking-widest">مغناطيسي</span>
         </button>
         <div className="flex-1 min-w-0">
           <div className="font-sans text-[12px] leading-snug text-[#F2EFE8] line-clamp-2">{item.place}</div>
@@ -604,17 +604,17 @@ function QuakeCard({ item, now, onLocate }: { item: QuakeAlert; now: number; onL
           </div>
           {(item.tsunami || item.pager) && (
             <div className="mt-1 flex flex-wrap gap-1">
-              {item.tsunami && <Chip color="#448AFF"><Waves className="w-2 h-2" /> tsunami flag</Chip>}
-              {item.pager && <Chip color={PAGER_COLORS[item.pager] || '#8A8880'} title="USGS PAGER impact alert level">PAGER {item.pager}</Chip>}
+              {item.tsunami && <Chip color="#448AFF"><Waves className="w-2 h-2" />تحذير تسونامي</Chip>}
+              {item.pager && <Chip color={PAGER_COLORS[item.pager] || '#8A8880'} title="مستوى تنبيه التأثير من USGS PAGER">PAGER {item.pager}</Chip>}
             </div>
           )}
         </div>
         <div className="flex flex-col items-end gap-1 flex-shrink-0">
-          <button type="button" onClick={() => onLocate(item.lat, item.lng)} className="p-1 rounded text-[#8A8880] hover:text-white hover:bg-white/10" aria-label="Show on map">
+          <button type="button" onClick={() => onLocate(item.lat, item.lng)} className="p-1 rounded text-[#8A8880] hover:text-white hover:bg-white/10" aria-label="عرض على الخريطة">
             <MapPin className="w-3 h-3" />
           </button>
           {item.url && (
-            <a href={item.url} target="_blank" rel="noopener noreferrer" className="p-1 rounded text-[var(--cyan-primary)] hover:bg-white/10" aria-label="Open USGS event page">
+            <a href={item.url} target="_blank" rel="noopener noreferrer" className="p-1 rounded text-[var(--cyan-primary)] hover:bg-white/10" aria-label="فتح صفحة الحدث لدى USGS">
               <ExternalLink className="w-3 h-3" />
             </a>
           )}
